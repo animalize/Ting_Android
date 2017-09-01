@@ -2,28 +2,22 @@ package com.github.animalize.ting.Database;
 
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.github.animalize.ting.Data.Item;
-import com.github.animalize.ting.FenJu.Ju;
-import com.github.animalize.ting.FenJu.TTSUtils;
 import com.github.animalize.ting.Message.Methods;
 import com.github.animalize.ting.MyApplication;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import static java.lang.Integer.max;
 
 public class DataManager {
     private static final String DATA_DIR_NAME = "data";
@@ -37,13 +31,6 @@ public class DataManager {
     private Map<String, ArrayList<Item>> cateMap;
     private Map<String, Item> aidMap;
 
-    public static DataManager getInstance() {
-        if (singleton == null) {
-            singleton = new DataManager();
-        }
-        return singleton;
-    }
-
     private DataManager() {
         // 创建data目录
         File fileDir = MyApplication.getContext().getFilesDir();
@@ -54,6 +41,13 @@ public class DataManager {
         dataDirPath = dataDir.getAbsolutePath();
 
         loadListFromDB();
+    }
+
+    public static DataManager getInstance() {
+        if (singleton == null) {
+            singleton = new DataManager();
+        }
+        return singleton;
     }
 
     public synchronized void loadListFromDB() {
@@ -168,7 +162,6 @@ public class DataManager {
 
         // 已存在？
         if (path.isFile()) {
-            Log.i("cleByAid: ", "忆存在" + aid);
             return true;
         }
 
@@ -177,24 +170,6 @@ public class DataManager {
         if (b == null) {
             return false;
         }
-
-        // test
-        try {
-            String s = new String(b, "GB18030");
-
-            List<Ju> jus = TTSUtils.fenJu(s);
-
-            Log.i("rticleByAid: ", "数量" + jus.size());
-            for (Ju ju : jus) {
-                Log.i("rticleByAid: ",
-                        "起始" + ju.begin + " 结束" + ju.end + " 长度" + (ju.end - ju.begin));
-                Log.i("rticleByAid: ", s.substring(ju.begin, ju.end));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
 
         // 存盘
         OutputStream out = null;
@@ -215,5 +190,25 @@ public class DataManager {
         }
 
         return true;
+    }
+
+    @Nullable
+    public synchronized String readArticleByAid(String aid) {
+        File file = new File(dataDirPath, aid);
+
+        byte[] fileData = new byte[(int) file.length()];
+        DataInputStream dis = null;
+        try {
+            dis = new DataInputStream(new FileInputStream(file));
+            dis.readFully(fileData);
+            dis.close();
+
+            String s = new String(fileData, "GB18030");
+
+            return s;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

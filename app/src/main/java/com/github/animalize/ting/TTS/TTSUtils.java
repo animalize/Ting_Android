@@ -1,4 +1,4 @@
-package com.github.animalize.ting.FenJu;
+package com.github.animalize.ting.TTS;
 
 import java.util.ArrayList;
 import java.util.List;

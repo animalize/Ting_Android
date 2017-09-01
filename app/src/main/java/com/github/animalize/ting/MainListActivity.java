@@ -1,22 +1,22 @@
 package com.github.animalize.ting;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.Database.MyDatabaseHelper;
 import com.github.animalize.ting.ListView.RVAdapter;
-import com.github.animalize.ting.Message.Methods;
+import com.github.animalize.ting.TTS.ArticleTTS;
 
 import java.util.List;
 
@@ -28,13 +28,13 @@ public class MainListActivity
 
     private DataManager dataManager = DataManager.getInstance();
 
-    private SpeechSynthesizer speechSynthesizer;
-
     private RecyclerView mainList;
     private RVAdapter listAdapter;
 
     private Spinner nameSpinner;
     private NameListAdapter nameAdapter;
+
+    private ArticleTTS articleTTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,13 @@ public class MainListActivity
         listAdapter = new RVAdapter() {
             @Override
             public void onItemClick(String aid) {
+                String title = dataManager.getItemByAid(aid).getTitle();
+                String text = dataManager.readArticleByAid(aid);
 
+                Log.i("onItemClick: ", "text为空：" + (text == null));
+
+                articleTTS.setArticle(title, text);
+                articleTTS.play();
             }
         };
         mainList.setAdapter(listAdapter);
@@ -73,11 +79,15 @@ public class MainListActivity
         nameAdapter.setList(dataManager.getCateNameList());
         nameSpinner.setAdapter(nameAdapter);
 
-        // TTS
-        TTSHelper.initialEnv(this);
-        speechSynthesizer = TTSHelper.initTTS(this, null);
+        articleTTS = new ArticleTTS(this);
+    }
 
-        speechSynthesizer.speak("测试一下声音效果");
+    private SpeechSynthesizeBag getSpeechSynthesizeBag(String text, String utteranceId) {
+        SpeechSynthesizeBag speechSynthesizeBag = new SpeechSynthesizeBag();
+        //需要合成的文本text的长度不能超过1024个GBK字节。
+        speechSynthesizeBag.setText(text);
+        speechSynthesizeBag.setUtteranceId(utteranceId);
+        return speechSynthesizeBag;
     }
 
     @Override

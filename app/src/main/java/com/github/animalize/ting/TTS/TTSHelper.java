@@ -1,10 +1,9 @@
-package com.github.animalize.ting;
+package com.github.animalize.ting.TTS;
 
 import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 
 import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 
 import java.io.File;
