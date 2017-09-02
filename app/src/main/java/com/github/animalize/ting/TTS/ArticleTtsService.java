@@ -45,9 +45,9 @@ public class ArticleTtsService
         Notification notification = new NotificationCompat.Builder(this)
                 .setContentTitle("ting正在运行")
                 .setContentText("前台服务保证ting不被销毁")
-                .setContentIntent(pendingIntent).build();
-
-        startForeground(1337, notification);
+                .setContentIntent(pendingIntent)
+                .build();
+        startForeground(828, notification);
 
         // tts引擎
         TTSHelper.initialEnv(this);
@@ -111,8 +111,7 @@ public class ArticleTtsService
 
             mJus = TTSUtils.fenJu(text);
 
-            mSpeechSynthesizer.stop();
-            mNowJuIndex = 0;
+            stop();
         }
 
         @SuppressWarnings("unused")
@@ -136,6 +135,12 @@ public class ArticleTtsService
 
             mNowJuIndex = end;
             mSpeechSynthesizer.batchSpeak(bags);
+        }
+
+        @SuppressWarnings("unused")
+        public void stop() {
+            mSpeechSynthesizer.stop();
+            mNowJuIndex = 0;
         }
     }
 }
