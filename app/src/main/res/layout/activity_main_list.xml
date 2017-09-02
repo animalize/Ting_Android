@@ -30,18 +30,6 @@
             android:layout_height="wrap_content"
             android:text="刷新列表" />
 
-        <Button
-            android:id="@+id/cache_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="缓存所有" />
-
-        <Button
-            android:id="@+id/clear_cache"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="清空缓存" />
-
     </LinearLayout>
 
 </LinearLayout>

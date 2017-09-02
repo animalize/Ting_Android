@@ -3,6 +3,8 @@ package com.github.animalize.ting.Data;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.github.animalize.ting.Database.MyDatabaseHelper;
+
 import org.json.JSONObject;
 
 /**
@@ -134,6 +136,8 @@ public class Item {
 
     public void setCached(boolean cached) {
         this.cached = cached;
+
+        MyDatabaseHelper.setCached(aid, cached);
     }
 
     public int getPosi() {

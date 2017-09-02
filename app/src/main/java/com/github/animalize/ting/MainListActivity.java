@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
-import com.github.animalize.ting.Database.MyDatabaseHelper;
 import com.github.animalize.ting.ListView.RVAdapter;
 import com.github.animalize.ting.TTS.ArticleTTS;
 
@@ -54,17 +53,15 @@ public class MainListActivity
 
                 Log.i("onItemClick: ", "text为空：" + (text == null));
 
-                articleTTS.setArticle(title, text);
-                articleTTS.play();
+                if (text != null) {
+                    articleTTS.setArticle(title, text);
+                    articleTTS.play();
+                }
             }
         };
         mainList.setAdapter(listAdapter);
 
         Button bt = (Button) findViewById(R.id.refresh);
-        bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.cache_all);
-        bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.clear_cache);
         bt.setOnClickListener(this);
 
         // 读数据库list
@@ -96,15 +93,6 @@ public class MainListActivity
             case R.id.refresh:
                 new GetListAsyncTask().execute();
                 break;
-
-            case R.id.cache_all:
-                new CacheAllAsyncTask().execute(listAdapter.getAidList());
-                break;
-
-            case R.id.clear_cache:
-                dataManager.clearCache();
-                listAdapter.notifyDataSetChanged();
-                break;
         }
     }
 
@@ -126,6 +114,8 @@ public class MainListActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        nameAdapter.setCurrentIndex(position);
+
         String name = nameAdapter.getItem(position);
 
         List<Item> list;
@@ -139,31 +129,25 @@ public class MainListActivity
 
     }
 
-    private class GetListAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class GetListAsyncTask extends AsyncTask<Void, String, Void> {
         @Override
         protected Void doInBackground(Void... params) {
+            // 下载列表
             dataManager.loadListFromServer();
-            return null;
-        }
+            publishProgress("");
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+            // 缓存文章
+            List<Item> list = dataManager.getFullList();
+            for (Item item : list) {
+                if (item.isCached()) {
+                    continue;
+                }
 
-            if (isAlive()) {
-                nameAdapter.setList(dataManager.getCateNameList());
-            }
-        }
-    }
-
-    private class CacheAllAsyncTask extends AsyncTask<List<String>, String, Void> {
-        @Override
-        protected Void doInBackground(List<String>... params) {
-            for (String aid : params[0]) {
+                String aid = item.getAid();
                 boolean r = dataManager.downloadAndSaveArticleByAid(aid);
                 if (r) {
+                    item.setCached(true);
                     publishProgress(aid);
-                    MyDatabaseHelper.setCached(aid, true);
                 }
             }
 
@@ -173,16 +157,18 @@ public class MainListActivity
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
+            String v = values[0];
 
-            String aid = values[0];
-            Item item = dataManager.getItemByAid(aid);
-            item.setCached(true);
-        }
+            if ("".equals(v)) {
+                if (isAlive()) {
+                    nameAdapter.setList(dataManager.getCateNameList());
+                    String cate = nameAdapter.getItem(nameAdapter.getCurrentIndex());
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            listAdapter.notifyDataSetChanged();
+                    listAdapter.setArrayList(dataManager.getCateList(cate));
+                }
+            } else {
+                listAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

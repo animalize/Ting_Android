@@ -33,6 +33,9 @@ public class ArticleTTS implements SpeechSynthesizerListener {
         this.text = text;
 
         jus = TTSUtils.fenJu(text);
+
+        ss.stop();
+        nowJuIndex = 0;
     }
 
     public void play() {
@@ -45,6 +48,7 @@ public class ArticleTTS implements SpeechSynthesizerListener {
         for (int i = nowJuIndex; i < end; i++) {
             final Ju ju = jus.get(i);
             final String s = text.substring(ju.begin, ju.end);
+            Log.i("onSpeechFinish: ", s);
 
             SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
             bag.setText(s);
@@ -74,12 +78,7 @@ public class ArticleTTS implements SpeechSynthesizerListener {
             final String temp = text.substring(ju.begin, ju.end);
 
             Log.i("onSpeechFinish: ", temp);
-
-            SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
-            bag.setText(temp);
-            bag.setUtteranceId(String.valueOf(nowJuIndex));
-
-            ss.speak(bag);
+            ss.speak(temp, String.valueOf(nowJuIndex));
 
             nowJuIndex += 1;
         }
