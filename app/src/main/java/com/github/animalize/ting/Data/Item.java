@@ -1,27 +1,33 @@
 package com.github.animalize.ting.Data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import org.json.JSONObject;
 
 /**
- * # json
- * one = {'cate': cate,
- * 'aid': aid,
- * 'chars': chn_count,
- * 'time': unixtime,
- * 'title': title
- * }
+ * # json:
+ * 键	       值	     备注
+ * cate	     字符串	    分类
+ * aid	     字符串	    文章ID
+ * title     字符串	    标题
+ * time	     整数	    unix时间戳
+ * cjk_chars 整数	    汉字数
+ * file_size 整数	    文件字节数
+ * crc32     无符号整数	crc32
  */
 
 public class Item {
     private String cate;
     private String aid;
-    private int chars;
-    private int time;
     private String title;
 
-    private boolean chached = false;
+    private int time;
+    private int cjk_chars;
+    private int file_size;
+    private long crc32;
+
+    private boolean cached = false;
     private int posi = 0;
 
     public Item(JSONObject object) {
@@ -36,9 +42,10 @@ public class Item {
         }
 
         try {
-            this.chars = object.getInt("chars");
+            this.title = object.getString("title");
         } catch (Exception e) {
         }
+
 
         try {
             this.time = object.getInt("time");
@@ -46,7 +53,17 @@ public class Item {
         }
 
         try {
-            this.title = object.getString("title");
+            this.cjk_chars = object.getInt("cjk_chars");
+        } catch (Exception e) {
+        }
+
+        try {
+            this.file_size = object.getInt("file_size");
+        } catch (Exception e) {
+        }
+
+        try {
+            this.crc32 = object.getLong("crc32");
         } catch (Exception e) {
         }
     }
@@ -54,60 +71,69 @@ public class Item {
     public Item(Cursor c) {
         cate = c.getString(c.getColumnIndex("cate"));
         aid = c.getString(c.getColumnIndex("aid"));
-        chars = c.getInt(c.getColumnIndex("chars"));
-        time = c.getInt(c.getColumnIndex("time"));
         title = c.getString(c.getColumnIndex("title"));
 
-        chached = c.getInt(c.getColumnIndex("cached")) == 1;
+        time = c.getInt(c.getColumnIndex("time"));
+        cjk_chars = c.getInt(c.getColumnIndex("cjk_chars"));
+        file_size = c.getInt(c.getColumnIndex("file_size"));
+        crc32 = c.getInt(c.getColumnIndex("crc32"));
+
+        cached = c.getInt(c.getColumnIndex("cached")) == 1;
         posi = c.getInt(c.getColumnIndex("posi"));
+    }
+
+    public ContentValues getContentValues() {
+        ContentValues cv = new ContentValues();
+
+        cv.put("cate", cate);
+        cv.put("aid", aid);
+        cv.put("title", title);
+
+        cv.put("time", time);
+        cv.put("cjk_chars", cjk_chars);
+        cv.put("file_size", file_size);
+        cv.put("crc32", crc32);
+
+        cv.put("cached", cached);
+        cv.put("posi", posi);
+
+        return cv;
     }
 
     public String getCate() {
         return cate;
     }
 
-    public void setCate(String cate) {
-        this.cate = cate;
-    }
-
     public String getAid() {
         return aid;
-    }
-
-    public void setAid(String aid) {
-        this.aid = aid;
-    }
-
-    public int getChars() {
-        return chars;
-    }
-
-    public void setChars(int chars) {
-        this.chars = chars;
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public int getTime() {
+        return time;
     }
 
-    public boolean isChached() {
-        return chached;
+    public int getCjk_chars() {
+        return cjk_chars;
     }
 
-    public void setChached(boolean chached) {
-        this.chached = chached;
+    public int getFile_size() {
+        return file_size;
+    }
+
+    public long getCrc32() {
+        return crc32;
+    }
+
+    public boolean isCached() {
+        return cached;
+    }
+
+    public void setCached(boolean cached) {
+        this.cached = cached;
     }
 
     public int getPosi() {

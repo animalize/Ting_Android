@@ -176,7 +176,7 @@ public class MainListActivity
 
             String aid = values[0];
             Item item = dataManager.getItemByAid(aid);
-            item.setChached(true);
+            item.setCached(true);
         }
 
         @Override

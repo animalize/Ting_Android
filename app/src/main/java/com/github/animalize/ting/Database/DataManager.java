@@ -68,7 +68,7 @@ public class DataManager {
         for (Item item : list) {
             Item old = aidMap.get(item.getAid());
             if (old != null) {
-                item.setChached(old.isChached());
+                item.setCached(old.isCached());
                 item.setPosi(old.getPosi());
             }
         }
@@ -152,7 +152,7 @@ public class DataManager {
 
         // 更新 数据库
         for (Item item : fullList) {
-            item.setChached(false);
+            item.setCached(false);
             MyDatabaseHelper.setCached(item.getAid(), false);
         }
     }

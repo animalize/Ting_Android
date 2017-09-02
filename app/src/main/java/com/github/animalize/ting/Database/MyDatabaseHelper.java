@@ -1,6 +1,5 @@
 package com.github.animalize.ting.Database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,34 +32,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public static void setList(List<Item> list) {
-        init();
-
-        mDb.execSQL("BEGIN");
-
-        // 删所有
-        String sql = "DELETE FROM list";
-        mDb.execSQL(sql);
-
-        // 添新的
-        for (Item item : list) {
-            ContentValues cv = new ContentValues();
-
-            cv.put("cate", item.getCate());
-            cv.put("aid", item.getAid());
-            cv.put("time", item.getTime());
-            cv.put("chars", item.getChars());
-            cv.put("title", item.getTitle());
-
-            cv.put("cached", item.isChached());
-            cv.put("posi", item.getPosi());
-
-            mDb.insert("list", null, cv);
-        }
-
-        mDb.execSQL("COMMIT");
-    }
-
     public static List<Item> getList() {
         init();
 
@@ -79,6 +50,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return l;
     }
 
+    public static void setList(List<Item> list) {
+        init();
+
+        mDb.execSQL("BEGIN");
+
+        // 删所有
+        String sql = "DELETE FROM list";
+        mDb.execSQL(sql);
+
+        // 添新的
+        for (Item item : list) {
+            mDb.insert("list", null, item.getContentValues());
+        }
+
+        mDb.execSQL("COMMIT");
+    }
+
     public static void setCached(String aid, boolean v) {
         init();
 
@@ -94,9 +82,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         String sql = "CREATE TABLE list (" +
                 "cate TEXT," +
                 "aid TEXT," +
-                "time INTEGER," +
-                "chars INTEGER," +
                 "title TEXT," +
+
+                "time INTEGER," +
+                "cjk_chars INTEGER," +
+                "file_size INTEGER," +
+                "crc32 INTEGER," +
 
                 "cached INTEGER," +
                 "posi INTEGER" +

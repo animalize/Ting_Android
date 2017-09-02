@@ -63,9 +63,9 @@ public abstract class RVAdapter
 
         holder.title.setText(item.getTitle());
         holder.cate.setText(item.getCate());
-        holder.chars.setText("" + item.getChars());
+        holder.chars.setText("" + item.getCjk_chars());
 
-        holder.cached.setText(item.isChached() ? "已缓存" : "未缓存");
+        holder.cached.setText(item.isCached() ? "已缓存" : "未缓存");
     }
 
     @Override
