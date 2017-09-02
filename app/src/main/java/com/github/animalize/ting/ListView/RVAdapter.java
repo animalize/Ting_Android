@@ -25,10 +25,28 @@ public abstract class RVAdapter
 
     public List<String> getAidList() {
         ArrayList<String> list = new ArrayList<>();
-        for (Item item : mList) {
-            list.add(item.getAid());
+
+        if (mList != null) {
+            for (Item item : mList) {
+                list.add(item.getAid());
+            }
         }
+
         return list;
+    }
+
+    public void refreshItemByAid(String aid) {
+        if (mList == null) {
+            return;
+        }
+
+        for (int i = 0; i < mList.size(); i++) {
+            Item item = mList.get(i);
+            if (item.getAid().equals(aid)) {
+                notifyItemChanged(i);
+                break;
+            }
+        }
     }
 
     @Override

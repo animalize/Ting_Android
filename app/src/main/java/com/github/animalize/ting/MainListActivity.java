@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
@@ -32,8 +31,8 @@ public class MainListActivity
     private RecyclerView mainList;
     private RVAdapter listAdapter;
 
-    private Spinner nameSpinner;
-    private NameListAdapter nameAdapter;
+//    private Spinner nameSpinner;
+//    private NameListAdapter nameAdapter;
 
     private ArticleTtsService.ArticleTtsBinder mBinder;
     private ServiceConnection mServerConn = new ServiceConnection() {
@@ -89,12 +88,12 @@ public class MainListActivity
         listAdapter.setArrayList(list);
 
 
-        nameSpinner = (Spinner) findViewById(R.id.cate_spinner);
-        nameSpinner.setOnItemSelectedListener(this);
-
-        nameAdapter = new NameListAdapter(this);
-        nameAdapter.setList(dataManager.getCateNameList());
-        nameSpinner.setAdapter(nameAdapter);
+//        nameSpinner = (Spinner) findViewById(R.id.cate_spinner);
+//        nameSpinner.setOnItemSelectedListener(this);
+//
+//        nameAdapter = new NameListAdapter(this);
+//        nameAdapter.setList(dataManager.getCateNameList());
+//        nameSpinner.setAdapter(nameAdapter);
 
 
         Intent intent = new Intent(this, ArticleTtsService.class);
@@ -118,7 +117,6 @@ public class MainListActivity
 
             case R.id.delall:
                 dataManager.delall();
-                nameAdapter.setList(dataManager.getCateNameList());
                 listAdapter.setArrayList(dataManager.getFullList());
                 break;
 
@@ -148,12 +146,12 @@ public class MainListActivity
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        nameAdapter.setCurrentIndex(position);
-
-        String name = nameAdapter.getItem(position);
+//        nameAdapter.setCurrentIndex(position);
+//
+//        String name = nameAdapter.getItem(position);
 
         List<Item> list;
-        list = dataManager.getCateList(name);
+        list = dataManager.getFullList();
 
         listAdapter.setArrayList(list);
     }
@@ -195,13 +193,10 @@ public class MainListActivity
 
             if ("".equals(v)) {
                 if (isAlive()) {
-                    nameAdapter.setList(dataManager.getCateNameList());
-                    String cate = nameAdapter.getItem(nameAdapter.getCurrentIndex());
-
-                    listAdapter.setArrayList(dataManager.getCateList(cate));
+                    listAdapter.setArrayList(dataManager.getFullList());
                 }
             } else {
-                listAdapter.notifyDataSetChanged();
+                listAdapter.refreshItemByAid(v);
             }
         }
     }
