@@ -75,6 +75,8 @@ public class MainListActivity
 
         Button bt = (Button) findViewById(R.id.refresh);
         bt.setOnClickListener(this);
+        bt = (Button) findViewById(R.id.delall);
+        bt.setOnClickListener(this);
         bt = (Button) findViewById(R.id.pause);
         bt.setOnClickListener(this);
         bt = (Button) findViewById(R.id.resume);
@@ -112,6 +114,12 @@ public class MainListActivity
         switch (v.getId()) {
             case R.id.refresh:
                 new GetListAsyncTask().execute();
+                break;
+
+            case R.id.delall:
+                dataManager.delall();
+                nameAdapter.setList(dataManager.getCateNameList());
+                listAdapter.setArrayList(dataManager.getFullList());
                 break;
 
             case R.id.pause:

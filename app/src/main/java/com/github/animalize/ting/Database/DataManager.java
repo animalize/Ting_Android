@@ -140,6 +140,13 @@ public class DataManager {
         return aidMap.get(aid);
     }
 
+    public synchronized void delall() {
+        List<Item> list = new ArrayList<>();
+        loadDataFromList(list);
+
+        clearCache();
+    }
+
     public void clearCache() {
         // 清空目录
         File dir = new File(dataDirPath);
