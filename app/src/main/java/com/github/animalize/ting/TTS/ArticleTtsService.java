@@ -13,6 +13,7 @@ import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.github.animalize.ting.MainListActivity;
+import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,12 @@ public class ArticleTtsService
 
         // 前台服务
         Intent notificationIntent = new Intent(this, MainListActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notificationIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(this)
+                // https://www.iconfinder.com/icons/1054973/audio_speaker_volume_icon
+                .setSmallIcon(R.drawable.notifiy_icon)
                 .setContentTitle("ting正在运行")
                 .setContentText("前台服务保证ting不被销毁")
                 .setContentIntent(pendingIntent)
