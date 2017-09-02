@@ -75,6 +75,12 @@ public class MainListActivity
 
         Button bt = (Button) findViewById(R.id.refresh);
         bt.setOnClickListener(this);
+        bt = (Button) findViewById(R.id.pause);
+        bt.setOnClickListener(this);
+        bt = (Button) findViewById(R.id.resume);
+        bt.setOnClickListener(this);
+        bt = (Button) findViewById(R.id.stop);
+        bt.setOnClickListener(this);
 
         // 读数据库list
         List<Item> list = dataManager.getFullList();
@@ -106,6 +112,18 @@ public class MainListActivity
         switch (v.getId()) {
             case R.id.refresh:
                 new GetListAsyncTask().execute();
+                break;
+
+            case R.id.pause:
+                mBinder.pause();
+                break;
+
+            case R.id.resume:
+                mBinder.resume();
+                break;
+
+            case R.id.stop:
+                mBinder.stop();
                 break;
         }
     }

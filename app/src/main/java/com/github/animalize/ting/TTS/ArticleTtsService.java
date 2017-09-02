@@ -145,5 +145,15 @@ public class ArticleTtsService
             mSpeechSynthesizer.stop();
             mNowJuIndex = 0;
         }
+
+        @SuppressWarnings("unused")
+        public void pause() {
+            mSpeechSynthesizer.pause();
+        }
+
+        @SuppressWarnings("unused")
+        public void resume() {
+            mSpeechSynthesizer.resume();
+        }
     }
 }
