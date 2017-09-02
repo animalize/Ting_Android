@@ -1,21 +1,23 @@
 package com.github.animalize.ting;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.ListView.RVAdapter;
-import com.github.animalize.ting.TTS.ArticleTTS;
+import com.github.animalize.ting.TTS.ArticleTtsService;
 
 import java.util.List;
 
@@ -33,7 +35,19 @@ public class MainListActivity
     private Spinner nameSpinner;
     private NameListAdapter nameAdapter;
 
-    private ArticleTTS articleTTS;
+    private ArticleTtsService.ArticleTtsBinder mBinder;
+    private ServiceConnection mServerConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBinder = (ArticleTtsService.ArticleTtsBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +65,9 @@ public class MainListActivity
                 String title = dataManager.getItemByAid(aid).getTitle();
                 String text = dataManager.readArticleByAid(aid);
 
-                Log.i("onItemClick: ", "text为空：" + (text == null));
-
                 if (text != null) {
-                    articleTTS.setArticle(title, text);
-                    articleTTS.play();
+                    mBinder.setArticle(title, text);
+                    mBinder.play();
                 }
             }
         };
@@ -76,15 +88,17 @@ public class MainListActivity
         nameAdapter.setList(dataManager.getCateNameList());
         nameSpinner.setAdapter(nameAdapter);
 
-        articleTTS = new ArticleTTS(this);
+
+        Intent intent = new Intent(this, ArticleTtsService.class);
+        bindService(intent, mServerConn, BIND_AUTO_CREATE);
     }
 
-    private SpeechSynthesizeBag getSpeechSynthesizeBag(String text, String utteranceId) {
-        SpeechSynthesizeBag speechSynthesizeBag = new SpeechSynthesizeBag();
-        //需要合成的文本text的长度不能超过1024个GBK字节。
-        speechSynthesizeBag.setText(text);
-        speechSynthesizeBag.setUtteranceId(utteranceId);
-        return speechSynthesizeBag;
+    @Override
+    protected void onDestroy() {
+        setNotAlive();
+        unbindService(mServerConn);
+
+        super.onDestroy();
     }
 
     @Override
@@ -104,12 +118,6 @@ public class MainListActivity
     @Override
     public boolean isAlive() {
         return isAlive;
-    }
-
-    @Override
-    protected void onDestroy() {
-        setNotAlive();
-        super.onDestroy();
     }
 
     @Override
