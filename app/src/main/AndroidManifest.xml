@@ -30,7 +30,9 @@
         <service
             android:name=".TTS.ArticleTtsService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".PlayerUI.TextPlayerActivity"></activity>
     </application>
 
 </manifest>

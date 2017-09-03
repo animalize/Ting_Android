@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 
 public class TTSUtils {
-    private static final int SIZE = 256;
+    private static final int SIZE = 64;//256;
 
     private static Pattern biaodian;
 

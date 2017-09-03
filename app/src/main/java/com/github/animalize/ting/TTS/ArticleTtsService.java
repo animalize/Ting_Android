@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 
 import com.baidu.tts.client.SpeechError;
@@ -22,14 +23,15 @@ public class ArticleTtsService
         extends Service
         implements SpeechSynthesizerListener {
     private static final int WINDOW = 2;
-
     private final IBinder mBinder = new ArticleTtsBinder();
-
+    private LocalBroadcastManager localBroadcastManager;
     private SpeechSynthesizer mSpeechSynthesizer;
 
     private String mTitle, mText;
     private List<Ju> mJus;
     private int mNowJuIndex = 0;
+
+    private int nowIndex = 0;
 
     public ArticleTtsService() {
     }
@@ -37,6 +39,8 @@ public class ArticleTtsService
     @Override
     public void onCreate() {
         super.onCreate();
+
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         // 前台服务
         Intent notificationIntent = new Intent(this, MainListActivity.class);
@@ -68,6 +72,11 @@ public class ArticleTtsService
 
     @Override
     public void onSpeechStart(String s) {
+        // 进度
+        nowIndex = Integer.parseInt(s);
+        localBroadcastManager.sendBroadcast(new Intent("SpeechStart"));
+
+        // 队列
         if (mNowJuIndex < mJus.size()) {
             final Ju ju = mJus.get(mNowJuIndex);
             final String temp = mText.substring(ju.begin, ju.end);
@@ -153,6 +162,11 @@ public class ArticleTtsService
         @SuppressWarnings("unused")
         public void resume() {
             mSpeechSynthesizer.resume();
+        }
+
+        @SuppressWarnings("unused")
+        public Ju getNowJu() {
+            return mJus.get(nowIndex);
         }
     }
 }

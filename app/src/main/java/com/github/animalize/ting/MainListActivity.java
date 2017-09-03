@@ -18,6 +18,7 @@ import android.widget.Button;
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.ListView.RVAdapter;
+import com.github.animalize.ting.PlayerUI.TextPlayerActivity;
 import com.github.animalize.ting.TTS.ArticleTtsService;
 
 import java.util.ArrayList;
@@ -64,13 +65,7 @@ public class MainListActivity
         listAdapter = new RVAdapter() {
             @Override
             public void onItemClick(String aid) {
-                String title = dataManager.getItemByAid(aid).getTitle();
-                String text = dataManager.readArticleByAid(aid);
-
-                if (text != null) {
-                    mBinder.setArticle(title, text);
-                    mBinder.play();
-                }
+                TextPlayerActivity.actionStart(MainListActivity.this, aid);
             }
         };
         mainList.setAdapter(listAdapter);
