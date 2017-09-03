@@ -1,11 +1,13 @@
 package com.github.animalize.ting;
 
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,7 @@ import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.ListView.RVAdapter;
 import com.github.animalize.ting.TTS.ArticleTtsService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainListActivity
@@ -116,8 +119,25 @@ public class MainListActivity
                 break;
 
             case R.id.delall:
-                dataManager.delall();
-                listAdapter.setArrayList(dataManager.getFullList());
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle("确认删除所有文章？");
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<String> temp = new ArrayList<>();
+                        List<Item> full = dataManager.getFullList();
+
+                        for (Item item : full) {
+                            temp.add(item.getAid());
+                        }
+
+                        new DeleteAidListAsyncTask().execute(temp);
+                    }
+                });
+                builder.setNegativeButton("取消", null);
+                builder.show();
+
                 break;
 
             case R.id.pause:
@@ -198,6 +218,21 @@ public class MainListActivity
             } else {
                 listAdapter.refreshItemByAid(v);
             }
+        }
+    }
+
+    private class DeleteAidListAsyncTask extends AsyncTask<List<String>, Void, Void> {
+
+        @Override
+        protected Void doInBackground(List<String>... params) {
+            dataManager.deleteAidList(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            listAdapter.setArrayList(dataManager.getFullList());
         }
     }
 }

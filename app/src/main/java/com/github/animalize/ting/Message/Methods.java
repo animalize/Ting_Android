@@ -7,13 +7,12 @@ import com.github.animalize.ting.Data.Item;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -63,6 +62,29 @@ public class Methods {
         return b;
     }
 
+    public static void deleteAids(List<String> aids) {
+        String url = HOST + "/del_article";
+
+        JSONArray jsonarray = new JSONArray(aids);
+        String j = jsonarray.toString();
+
+        try {
+            byte[] b = j.getBytes(ENCODING);
+
+            OkHttpClient client = new OkHttpClient();
+
+            RequestBody requestBody = RequestBody.create(null, b);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(requestBody)
+                    .build();
+
+            client.newCall(request).execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Nullable
     private static byte[] downloadUrl(String url) {
@@ -82,5 +104,4 @@ public class Methods {
 
         return null;
     }
-
 }

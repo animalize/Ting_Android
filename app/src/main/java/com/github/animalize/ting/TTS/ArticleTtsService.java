@@ -44,7 +44,6 @@ public class ArticleTtsService
                 this, 0, notificationIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(this)
-                // https://www.iconfinder.com/icons/1054973/audio_speaker_volume_icon
                 .setSmallIcon(R.drawable.notifiy_icon)
                 .setContentTitle("ting正在运行")
                 .setContentText("前台服务保证ting不被销毁")

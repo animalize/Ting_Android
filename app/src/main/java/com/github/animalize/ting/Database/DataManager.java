@@ -140,11 +140,25 @@ public class DataManager {
         return aidMap.get(aid);
     }
 
-    public synchronized void delall() {
+    public synchronized void deleteAidList(List<String> aidList) {
+        // 数据库
         List<Item> list = new ArrayList<>();
+        for (Item item : fullList) {
+            if (!aidList.contains(item.getAid())) {
+                list.add(item);
+            }
+        }
+
         loadDataFromList(list);
 
+        // 清缓存
         clearCache();
+
+        // 写数据库
+        MyDatabaseHelper.setList(list);
+
+        // 从服务器删除
+        Methods.deleteAids(aidList);
     }
 
     public void clearCache() {
