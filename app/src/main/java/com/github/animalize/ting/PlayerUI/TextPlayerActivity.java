@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.R;
@@ -24,7 +25,9 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
     private DataManager dataManager = DataManager.getInstance();
     private String mTitle, mText;
 
+    private TextView mTitleTextView;
     private PlayerTextWidget playerText;
+    private PlayerPanelWidget playerPanel;
 
     private ArticleTtsService.ArticleTtsBinder mBinder;
 
@@ -43,10 +46,13 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         Intent intent = getIntent();
         String aid = intent.getStringExtra("aid");
 
+        mTitleTextView = (TextView) findViewById(R.id.title);
         playerText = (PlayerTextWidget) findViewById(R.id.player_text_view);
+        playerPanel = (PlayerPanelWidget) findViewById(R.id.player_panel_view);
 
         // 读取文章
         mTitle = dataManager.getItemByAid(aid).getTitle();
+        mTitleTextView.setText(mTitle);
 
         mText = dataManager.readArticleByAid(aid);
         playerText.setPlayerText(mText);
@@ -74,9 +80,9 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         mBinder = (ArticleTtsService.ArticleTtsBinder) service;
-
         mBinder.setArticle(mTitle, mText);
-        mBinder.play();
+
+        playerPanel.setTTSBinder(mBinder);
     }
 
     @Override
@@ -94,6 +100,18 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         public void onReceive(Context context, Intent intent) {
             Ju ju = mBinder.getNowJu();
             playerText.setSelect(ju.begin, ju.end);
+        }
+    }
+
+    private class OnEventReciver extends BroadcastReceiver {
+
+        public IntentFilter getIntentFilter() {
+            return new IntentFilter("TTSEvent");
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
         }
     }
 }

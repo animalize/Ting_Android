@@ -6,7 +6,6 @@ import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -23,12 +22,10 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
 
     private Spannable spannable;
 
-    private int tempBegin;
-
     public PlayerTextWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         LayoutInflater.from(context).inflate(R.layout.view_player_text, this);
+
         mTextView = (TextView) findViewById(R.id.text_view);
         mTextView.setMovementMethod(new ScrollingMovementMethod());
     }
@@ -47,9 +44,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
                 0, spannable.length(),
                 Object.class);
         for (Object span : spansToRemove) {
-            if (span instanceof CharacterStyle) {
-                spannable.removeSpan(span);
-            }
+            spannable.removeSpan(span);
         }
 
         // 新

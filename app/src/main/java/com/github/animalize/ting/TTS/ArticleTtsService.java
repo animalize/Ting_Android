@@ -22,16 +22,22 @@ import java.util.List;
 public class ArticleTtsService
         extends Service
         implements SpeechSynthesizerListener {
+    public static final int EMPTY = 0;
+    public static final int STOP = 1;
+    public static final int PLAYING = 2;
+    public static final int PAUSING = 3;
+
     private static final int WINDOW = 2;
     private final IBinder mBinder = new ArticleTtsBinder();
+
     private LocalBroadcastManager localBroadcastManager;
     private SpeechSynthesizer mSpeechSynthesizer;
 
+    private int mNowState = EMPTY;
     private String mTitle, mText;
     private List<Ju> mJus;
-    private int mNowJuIndex = 0;
-
-    private int nowIndex = 0;
+    private int mNowQueueIndex = 0;
+    private int mNowSpeechIndex = 0;
 
     public ArticleTtsService() {
     }
@@ -62,28 +68,24 @@ public class ArticleTtsService
 
     @Override
     public void onDestroy() {
+        mSpeechSynthesizer.release();
         super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
     }
 
     @Override
     public void onSpeechStart(String s) {
         // 进度
-        nowIndex = Integer.parseInt(s);
+        mNowSpeechIndex = Integer.parseInt(s);
         localBroadcastManager.sendBroadcast(new Intent("SpeechStart"));
 
         // 队列
-        if (mNowJuIndex < mJus.size()) {
-            final Ju ju = mJus.get(mNowJuIndex);
+        if (mNowQueueIndex < mJus.size()) {
+            final Ju ju = mJus.get(mNowQueueIndex);
             final String temp = mText.substring(ju.begin, ju.end);
 
-            mSpeechSynthesizer.speak(temp, String.valueOf(mNowJuIndex));
+            mSpeechSynthesizer.speak(temp, String.valueOf(mNowQueueIndex));
 
-            mNowJuIndex += 1;
+            mNowQueueIndex += 1;
         }
     }
 
@@ -94,12 +96,16 @@ public class ArticleTtsService
 
     @Override
     public void onSpeechFinish(String s) {
-
+        if (mNowSpeechIndex >= mJus.size() - 1) {
+            mNowState = STOP;
+        }
     }
 
     @Override
     public void onError(String s, SpeechError speechError) {
-
+        if (mNowSpeechIndex >= mJus.size() - 1) {
+            mNowState = STOP;
+        }
     }
 
     @Override
@@ -114,6 +120,11 @@ public class ArticleTtsService
     public void onSynthesizeFinish(String s) {
     }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
     public class ArticleTtsBinder extends Binder {
         @SuppressWarnings("unused")
         public void setArticle(String title, String text) {
@@ -123,17 +134,18 @@ public class ArticleTtsService
             mJus = TTSUtils.fenJu(text);
 
             stop();
+            mNowState = STOP;
         }
 
         @SuppressWarnings("unused")
         public void play() {
             List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
-            int end = mNowJuIndex + WINDOW < mJus.size()
-                    ? mNowJuIndex + WINDOW
+            int end = mNowQueueIndex + WINDOW < mJus.size()
+                    ? mNowQueueIndex + WINDOW
                     : mJus.size();
 
-            for (int i = mNowJuIndex; i < end; i++) {
+            for (int i = mNowQueueIndex; i < end; i++) {
                 final Ju ju = mJus.get(i);
                 final String s = mText.substring(ju.begin, ju.end);
 
@@ -144,29 +156,41 @@ public class ArticleTtsService
                 bags.add(bag);
             }
 
-            mNowJuIndex = end;
+            mNowQueueIndex = end;
             mSpeechSynthesizer.batchSpeak(bags);
+
+            mNowState = PLAYING;
         }
 
         @SuppressWarnings("unused")
         public void stop() {
             mSpeechSynthesizer.stop();
-            mNowJuIndex = 0;
+            mNowQueueIndex = 0;
+            mNowSpeechIndex = 0;
+
+            mNowState = STOP;
         }
 
         @SuppressWarnings("unused")
         public void pause() {
             mSpeechSynthesizer.pause();
+            mNowState = PAUSING;
         }
 
         @SuppressWarnings("unused")
         public void resume() {
             mSpeechSynthesizer.resume();
+            mNowState = PLAYING;
         }
 
         @SuppressWarnings("unused")
         public Ju getNowJu() {
-            return mJus.get(nowIndex);
+            return mJus.get(mNowSpeechIndex);
+        }
+
+        @SuppressWarnings("unused")
+        public int getState() {
+            return mNowState;
         }
     }
 }
