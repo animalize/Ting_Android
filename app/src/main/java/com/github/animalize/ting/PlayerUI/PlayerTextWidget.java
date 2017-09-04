@@ -17,8 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.github.animalize.ting.R;
-import com.github.animalize.ting.TTS.ArticleTtsService;
 import com.github.animalize.ting.TTS.Ju;
+import com.github.animalize.ting.TTS.TTSService;
 
 
 public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.OnGlobalLayoutListener {
@@ -27,7 +27,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
 
     private Spannable spannable;
 
-    private ArticleTtsService.ArticleTtsBinder mBinder;
+    private TTSService.ArticleTtsBinder mBinder;
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
 
@@ -76,14 +76,14 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     public void onStart() {
         mLBM.registerReceiver(
                 mSpeechStartReciver,
-                ArticleTtsService.getSpeechStartIntentFilter());
+                TTSService.getSpeechStartIntentFilter());
     }
 
     public void onStop() {
         mLBM.unregisterReceiver(mSpeechStartReciver);
     }
 
-    public void setTTSBinder(ArticleTtsService.ArticleTtsBinder binder) {
+    public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
         mBinder = binder;
     }
 

@@ -14,13 +14,15 @@ import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.github.animalize.ting.Data.Item;
+import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.MainListActivity;
 import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleTtsService
+public class TTSService
         extends Service
         implements SpeechSynthesizerListener {
     public static final int EMPTY = 0;
@@ -33,17 +35,21 @@ public class ArticleTtsService
     private static String SPEECH_START_INTENT = "SpeechStart";
 
     private final IBinder mBinder = new ArticleTtsBinder();
-
     private LocalBroadcastManager mLBM;
     private SpeechSynthesizer mSpeechSynthesizer;
 
+    private DataManager dataManager = DataManager.getInstance();
+
     private int mNowState = EMPTY;
+
     private String mTitle, mText;
+    private int mCjkChars;
+
     private List<Ju> mJus;
     private int mNowQueueIndex = 0;
     private int mNowSpeechIndex = 0;
 
-    public ArticleTtsService() {
+    public TTSService() {
     }
 
     public static IntentFilter getSpeechEventIntentFilter() {
@@ -137,7 +143,7 @@ public class ArticleTtsService
         mLBM.sendBroadcast(new Intent(SPEECH_EVENT_INTENT));
     }
 
-    private void actionPlay() {
+    private void playAction() {
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
         int end = mNowQueueIndex + WINDOW < mJus.size()
@@ -172,14 +178,32 @@ public class ArticleTtsService
             mJus = TTSUtils.fenJu(text);
 
             stop();
-
             setEvent(STOP);
         }
 
-        public void play() {
-            actionPlay();
+        public boolean setArticle(String aid) {
+            Item item = dataManager.getItemByAid(aid);
+            if (item == null) {
+                return false;
+            }
 
-            setEvent(PLAYING);
+            mTitle = item.getTitle();
+            mText = dataManager.readArticleByAid(aid);
+            mCjkChars = item.getCjk_chars();
+
+            mJus = TTSUtils.fenJu(mText);
+
+            stop();
+            setEvent(STOP);
+
+            return true;
+        }
+
+        public void play() {
+            if (mText != null) {
+                playAction();
+                setEvent(PLAYING);
+            }
         }
 
         public void stop() {
@@ -200,6 +224,18 @@ public class ArticleTtsService
             mSpeechSynthesizer.resume();
 
             setEvent(PLAYING);
+        }
+
+        public String getTitle() {
+            return mTitle;
+        }
+
+        public String getText() {
+            return mText;
+        }
+
+        public int getCjkChars() {
+            return mCjkChars;
         }
 
         public int getTextLengh() {
@@ -227,7 +263,7 @@ public class ArticleTtsService
 
                 if (ju.begin <= posi && posi < ju.end) {
                     mNowQueueIndex = mNowSpeechIndex = i;
-                    actionPlay();
+                    playAction();
 
                     setEvent(PLAYING);
                     break;

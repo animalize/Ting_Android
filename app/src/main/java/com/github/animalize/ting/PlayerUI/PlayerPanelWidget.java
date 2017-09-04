@@ -6,21 +6,24 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.github.animalize.ting.R;
-import com.github.animalize.ting.TTS.ArticleTtsService;
+import com.github.animalize.ting.TTS.TTSService;
 
 
 public class PlayerPanelWidget extends LinearLayout implements View.OnClickListener {
-    private ArticleTtsService.ArticleTtsBinder mBinder;
+    private TTSService.ArticleTtsBinder mBinder;
 
     private SeekBar mProgress;
+    private TextView mTitleText, mProgressText, mCjkCharsText;
+    private int fullLengh;
+
     private Button mPlay, mStop;
 
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
@@ -31,8 +34,13 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_panel, this);
 
+        mTitleText = (TextView) findViewById(R.id.title);
+
         mProgress = (SeekBar) findViewById(R.id.progress);
         mProgress.setOnSeekBarChangeListener(new SeekBarListener());
+
+        mProgressText = (TextView) findViewById(R.id.progress_text);
+        mCjkCharsText = (TextView) findViewById(R.id.cjk_chars_text);
 
         mPlay = (Button) findViewById(R.id.play_pause);
         mPlay.setOnClickListener(this);
@@ -40,10 +48,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mStop.setOnClickListener(this);
     }
 
-    public void setTTSBinder(ArticleTtsService.ArticleTtsBinder binder) {
+    public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
         mBinder = binder;
-
-        mBinder.play();
     }
 
     @Override
@@ -52,11 +58,11 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             case R.id.play_pause:
                 int state = mBinder.getState();
 
-                if (state == ArticleTtsService.PLAYING) {
+                if (state == TTSService.PLAYING) {
                     mBinder.pause();
-                } else if (state == ArticleTtsService.PAUSING) {
+                } else if (state == TTSService.PAUSING) {
                     mBinder.resume();
-                } else if (state == ArticleTtsService.STOP) {
+                } else if (state == TTSService.STOP) {
                     mBinder.play();
                 }
                 break;
@@ -70,10 +76,12 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     public void onStart() {
         mLBM.registerReceiver(
                 mSpeechEventReciver,
-                ArticleTtsService.getSpeechEventIntentFilter());
+                TTSService.getSpeechEventIntentFilter());
         mLBM.registerReceiver(
                 mSpeechStartReciver,
-                ArticleTtsService.getSpeechStartIntentFilter());
+                TTSService.getSpeechStartIntentFilter());
+
+        mSpeechStartReciver.onReceive(null, null);
     }
 
     public void onStop() {
@@ -81,41 +89,69 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mLBM.unregisterReceiver(mSpeechStartReciver);
     }
 
+    private void setInfo() {
+        fullLengh = mBinder.getTextLengh();
+        if (fullLengh > 0) {
+            fullLengh -= 1;
+        }
+        mProgress.setMax(fullLengh);
+
+        mTitleText.setText(mBinder.getTitle());
+        mCjkCharsText.setText("" + mBinder.getCjkChars() + "字  ");
+
+    }
+
     private class SpeechStartReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("Panel onReceive: ", "开始");
-            mProgress.setProgress(mBinder.getTextPosition());
+            if (mBinder == null) {
+                return;
+            }
+
+            setInfo();
+
+            int nowPosi = mBinder.getTextPosition();
+            mProgress.setProgress(nowPosi);
+
+            int v = nowPosi * 100 / fullLengh;
+            mProgressText.setText("" + v + "% ");
         }
     }
 
     private class SpeechEventReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("Panel onReceive: ", "事件");
+            if (mBinder == null) {
+                return;
+            }
+
             int state = mBinder.getState();
 
             String play;
             boolean stop;
 
             switch (state) {
-                case ArticleTtsService.PLAYING:
+                case TTSService.PLAYING:
                     play = "暂停";
                     stop = true;
-                    mProgress.setMax(mBinder.getTextLengh());
+
+                    setInfo();
                     break;
 
-                case ArticleTtsService.PAUSING:
+                case TTSService.PAUSING:
                     play = "恢复";
                     stop = true;
                     break;
 
-                case ArticleTtsService.STOP:
+                case TTSService.STOP:
                     play = "播放";
                     stop = false;
+
+                    mProgress.setProgress(0);
+                    mProgressText.setText("0% ");
                     break;
 
-                case ArticleTtsService.EMPTY:
+                case TTSService.EMPTY:
                     play = "空文";
                     stop = false;
                     break;

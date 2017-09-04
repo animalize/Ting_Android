@@ -18,8 +18,9 @@ import android.widget.Button;
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.ListView.RVAdapter;
+import com.github.animalize.ting.PlayerUI.PlayerPanelWidget;
 import com.github.animalize.ting.PlayerUI.TextPlayerActivity;
-import com.github.animalize.ting.TTS.ArticleTtsService;
+import com.github.animalize.ting.TTS.TTSService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,17 +33,19 @@ public class MainListActivity
 
     private DataManager dataManager = DataManager.getInstance();
 
+    private PlayerPanelWidget playerPanel;
     private RecyclerView mainList;
     private RVAdapter listAdapter;
 
 //    private Spinner nameSpinner;
 //    private NameListAdapter nameAdapter;
 
-    private ArticleTtsService.ArticleTtsBinder mBinder;
+    private TTSService.ArticleTtsBinder mBinder;
     private ServiceConnection mServerConn = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mBinder = (ArticleTtsService.ArticleTtsBinder) service;
+            mBinder = (TTSService.ArticleTtsBinder) service;
+            playerPanel.setTTSBinder(mBinder);
         }
 
         @Override
@@ -64,6 +67,8 @@ public class MainListActivity
 
         setContentView(R.layout.activity_main_list);
 
+        playerPanel = (PlayerPanelWidget) findViewById(R.id.player_panel_view);
+
         mainList = (RecyclerView) findViewById(R.id.main_list);
         // 布局管理
         LinearLayoutManager lm = new LinearLayoutManager(this);
@@ -81,12 +86,6 @@ public class MainListActivity
         bt.setOnClickListener(this);
         bt = (Button) findViewById(R.id.delall);
         bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.pause);
-        bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.resume);
-        bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.stop);
-        bt.setOnClickListener(this);
 
         // 读数据库list
         List<Item> list = dataManager.getFullList();
@@ -101,7 +100,7 @@ public class MainListActivity
 //        nameSpinner.setAdapter(nameAdapter);
 
 
-        Intent intent = new Intent(this, ArticleTtsService.class);
+        Intent intent = new Intent(this, TTSService.class);
         bindService(intent, mServerConn, BIND_AUTO_CREATE);
     }
 
@@ -111,6 +110,20 @@ public class MainListActivity
         unbindService(mServerConn);
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        playerPanel.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        playerPanel.onStop();
+
+        super.onStop();
     }
 
     @Override
@@ -140,18 +153,6 @@ public class MainListActivity
                 builder.setNegativeButton("取消", null);
                 builder.show();
 
-                break;
-
-            case R.id.pause:
-                mBinder.pause();
-                break;
-
-            case R.id.resume:
-                mBinder.resume();
-                break;
-
-            case R.id.stop:
-                mBinder.stop();
                 break;
         }
     }

@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name=".TTS.ArticleTtsService"
+            android:name=".TTS.TTSService"
             android:enabled="true"
             android:exported="false" />
 
