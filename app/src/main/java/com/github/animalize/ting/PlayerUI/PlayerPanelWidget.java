@@ -20,9 +20,9 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private ArticleTtsService.ArticleTtsBinder mBinder;
 
     private SeekBar mProgress;
-    private Button mPlay;
+    private Button mPlay, mStop;
 
-    private LocalBroadcastManager mLBM;
+    private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
 
@@ -34,29 +34,14 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
         mPlay = (Button) findViewById(R.id.play_pause);
         mPlay.setOnClickListener(this);
-        Button bt = (Button) findViewById(R.id.stop);
-        bt.setOnClickListener(this);
+        mStop = (Button) findViewById(R.id.stop);
+        mStop.setOnClickListener(this);
     }
 
     public void setTTSBinder(ArticleTtsService.ArticleTtsBinder binder) {
         mBinder = binder;
 
         mBinder.play();
-        refreshPlayButton();
-    }
-
-    private void refreshPlayButton() {
-        int state = mBinder.getState();
-
-        String s;
-        if (state == ArticleTtsService.PLAYING) {
-            s = "暂停";
-        } else if (state == ArticleTtsService.PAUSING) {
-            s = "恢复";
-        } else {
-            s = "播放";
-        }
-        mPlay.setText(s);
     }
 
     @Override
@@ -72,12 +57,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 } else if (state == ArticleTtsService.STOP) {
                     mBinder.play();
                 }
-                refreshPlayButton();
                 break;
 
             case R.id.stop:
                 mBinder.stop();
-                refreshPlayButton();
                 break;
         }
     }
@@ -96,19 +79,50 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mLBM.unregisterReceiver(mSpeechStartReciver);
     }
 
-    public void setLBM(LocalBroadcastManager LBM) {
-        mLBM = LBM;
-    }
-
     private class SpeechStartReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            mProgress.setProgress(mBinder.getTextPosition());
         }
     }
 
     private class SpeechEventReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            int state = mBinder.getState();
+
+            String play;
+            boolean stop;
+
+            switch (state) {
+                case ArticleTtsService.PLAYING:
+                    play = "暂停";
+                    stop = true;
+                    mProgress.setMax(mBinder.getTextLengh());
+                    break;
+
+                case ArticleTtsService.PAUSING:
+                    play = "恢复";
+                    stop = true;
+                    break;
+
+                case ArticleTtsService.STOP:
+                    play = "播放";
+                    stop = false;
+                    break;
+
+                case ArticleTtsService.EMPTY:
+                    play = "空文";
+                    stop = false;
+                    break;
+
+                default:
+                    play = "播放";
+                    stop = true;
+            }
+
+            mPlay.setText(play);
+            mStop.setEnabled(stop);
         }
     }
 }

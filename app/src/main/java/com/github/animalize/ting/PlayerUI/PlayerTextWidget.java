@@ -28,7 +28,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     private Spannable spannable;
 
     private ArticleTtsService.ArticleTtsBinder mBinder;
-    private LocalBroadcastManager mLBM;
+    private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
 
     public PlayerTextWidget(Context context, AttributeSet attrs) {
@@ -81,10 +81,6 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
 
     public void onStop() {
         mLBM.unregisterReceiver(mSpeechStartReciver);
-    }
-
-    public void setLBM(LocalBroadcastManager lbm) {
-        mLBM = lbm;
     }
 
     public void setTTSBinder(ArticleTtsService.ArticleTtsBinder binder) {

@@ -28,11 +28,13 @@ public class ArticleTtsService
     public static final int PLAYING = 2;
     public static final int PAUSING = 3;
     private static final int WINDOW = 2;
+
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static String SPEECH_START_INTENT = "SpeechStart";
+
     private final IBinder mBinder = new ArticleTtsBinder();
 
-    private LocalBroadcastManager localBroadcastManager;
+    private LocalBroadcastManager mLBM;
     private SpeechSynthesizer mSpeechSynthesizer;
 
     private int mNowState = EMPTY;
@@ -56,7 +58,7 @@ public class ArticleTtsService
     public void onCreate() {
         super.onCreate();
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mLBM = LocalBroadcastManager.getInstance(this);
 
         // 前台服务
         Intent notificationIntent = new Intent(this, MainListActivity.class);
@@ -86,7 +88,7 @@ public class ArticleTtsService
     public void onSpeechStart(String s) {
         // 进度
         mNowSpeechIndex = Integer.parseInt(s);
-        localBroadcastManager.sendBroadcast(new Intent(SPEECH_START_INTENT));
+        mLBM.sendBroadcast(new Intent(SPEECH_START_INTENT));
 
         // 队列
         if (mNowQueueIndex < mJus.size()) {
@@ -130,6 +132,10 @@ public class ArticleTtsService
     public void onSynthesizeFinish(String s) {
     }
 
+    private void sendEventBroadcast() {
+        mLBM.sendBroadcast(new Intent(SPEECH_EVENT_INTENT));
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -144,7 +150,9 @@ public class ArticleTtsService
             mJus = TTSUtils.fenJu(text);
 
             stop();
+
             mNowState = STOP;
+            sendEventBroadcast();
         }
 
         @SuppressWarnings("unused")
@@ -170,6 +178,7 @@ public class ArticleTtsService
             mSpeechSynthesizer.batchSpeak(bags);
 
             mNowState = PLAYING;
+            sendEventBroadcast();
         }
 
         @SuppressWarnings("unused")
@@ -179,18 +188,33 @@ public class ArticleTtsService
             mNowSpeechIndex = 0;
 
             mNowState = STOP;
+            sendEventBroadcast();
         }
 
         @SuppressWarnings("unused")
         public void pause() {
             mSpeechSynthesizer.pause();
+
             mNowState = PAUSING;
+            sendEventBroadcast();
         }
 
         @SuppressWarnings("unused")
         public void resume() {
             mSpeechSynthesizer.resume();
+
             mNowState = PLAYING;
+            sendEventBroadcast();
+        }
+
+        @SuppressWarnings("unused")
+        public int getTextLengh() {
+            return mText.length();
+        }
+
+        @SuppressWarnings("unused")
+        public int getTextPosition() {
+            return mJus.get(mNowSpeechIndex).begin;
         }
 
         @SuppressWarnings("unused")

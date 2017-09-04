@@ -42,17 +42,11 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         Intent intent = getIntent();
         String aid = intent.getStringExtra("aid");
 
-        // 广播接收
-        mLBM = LocalBroadcastManager.getInstance(this);
-
         // 控件
         mTitleTextView = (TextView) findViewById(R.id.title);
 
         playerText = (PlayerTextWidget) findViewById(R.id.player_text_view);
-        playerText.setLBM(mLBM);
-
         playerPanel = (PlayerPanelWidget) findViewById(R.id.player_panel_view);
-        playerPanel.setLBM(mLBM);
 
         // 读取文章
         mTitle = dataManager.getItemByAid(aid).getTitle();
