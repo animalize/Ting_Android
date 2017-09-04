@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +32,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         LayoutInflater.from(context).inflate(R.layout.view_player_panel, this);
 
         mProgress = (SeekBar) findViewById(R.id.progress);
+        mProgress.setOnSeekBarChangeListener(new SeekBarListener());
 
         mPlay = (Button) findViewById(R.id.play_pause);
         mPlay.setOnClickListener(this);
@@ -82,6 +84,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private class SpeechStartReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i("Panel onReceive: ", "开始");
             mProgress.setProgress(mBinder.getTextPosition());
         }
     }
@@ -89,6 +92,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private class SpeechEventReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i("Panel onReceive: ", "事件");
             int state = mBinder.getState();
 
             String play;
@@ -123,6 +127,26 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
             mPlay.setText(play);
             mStop.setEnabled(stop);
+        }
+    }
+
+    private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
+        private int posi = 0;
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser) {
+                posi = progress;
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            mBinder.setPosi(posi);
         }
     }
 }

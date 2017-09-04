@@ -66,9 +66,9 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         // 滚动
         if (layout != null) {
             final int line = layout.getLineForOffset(begin);
-
             int y = (line + 2) * mTextView.getLineHeight()
                     - mTextView.getHeight() / 2;
+
             mTextView.scrollTo(0, y >= 0 ? y : 0);
         }
     }

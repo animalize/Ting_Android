@@ -132,8 +132,31 @@ public class ArticleTtsService
     public void onSynthesizeFinish(String s) {
     }
 
-    private void sendEventBroadcast() {
+    private void setEvent(int state) {
+        mNowState = state;
         mLBM.sendBroadcast(new Intent(SPEECH_EVENT_INTENT));
+    }
+
+    private void actionPlay() {
+        List<SpeechSynthesizeBag> bags = new ArrayList<>();
+
+        int end = mNowQueueIndex + WINDOW < mJus.size()
+                ? mNowQueueIndex + WINDOW
+                : mJus.size();
+
+        for (int i = mNowQueueIndex; i < end; i++) {
+            final Ju ju = mJus.get(i);
+            final String s = mText.substring(ju.begin, ju.end);
+
+            SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
+            bag.setText(s);
+            bag.setUtteranceId(String.valueOf(i));
+
+            bags.add(bag);
+        }
+
+        mNowQueueIndex = end;
+        mSpeechSynthesizer.batchSpeak(bags);
     }
 
     @Override
@@ -142,7 +165,6 @@ public class ArticleTtsService
     }
 
     public class ArticleTtsBinder extends Binder {
-        @SuppressWarnings("unused")
         public void setArticle(String title, String text) {
             mTitle = title;
             mText = text;
@@ -151,80 +173,66 @@ public class ArticleTtsService
 
             stop();
 
-            mNowState = STOP;
-            sendEventBroadcast();
+            setEvent(STOP);
         }
 
-        @SuppressWarnings("unused")
         public void play() {
-            List<SpeechSynthesizeBag> bags = new ArrayList<>();
+            actionPlay();
 
-            int end = mNowQueueIndex + WINDOW < mJus.size()
-                    ? mNowQueueIndex + WINDOW
-                    : mJus.size();
-
-            for (int i = mNowQueueIndex; i < end; i++) {
-                final Ju ju = mJus.get(i);
-                final String s = mText.substring(ju.begin, ju.end);
-
-                SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
-                bag.setText(s);
-                bag.setUtteranceId(String.valueOf(i));
-
-                bags.add(bag);
-            }
-
-            mNowQueueIndex = end;
-            mSpeechSynthesizer.batchSpeak(bags);
-
-            mNowState = PLAYING;
-            sendEventBroadcast();
+            setEvent(PLAYING);
         }
 
-        @SuppressWarnings("unused")
         public void stop() {
             mSpeechSynthesizer.stop();
             mNowQueueIndex = 0;
             mNowSpeechIndex = 0;
 
-            mNowState = STOP;
-            sendEventBroadcast();
+            setEvent(STOP);
         }
 
-        @SuppressWarnings("unused")
         public void pause() {
             mSpeechSynthesizer.pause();
 
-            mNowState = PAUSING;
-            sendEventBroadcast();
+            setEvent(PAUSING);
         }
 
-        @SuppressWarnings("unused")
         public void resume() {
             mSpeechSynthesizer.resume();
 
-            mNowState = PLAYING;
-            sendEventBroadcast();
+            setEvent(PLAYING);
         }
 
-        @SuppressWarnings("unused")
         public int getTextLengh() {
             return mText.length();
         }
 
-        @SuppressWarnings("unused")
         public int getTextPosition() {
             return mJus.get(mNowSpeechIndex).begin;
         }
 
-        @SuppressWarnings("unused")
         public Ju getNowJu() {
             return mJus.get(mNowSpeechIndex);
         }
 
-        @SuppressWarnings("unused")
         public int getState() {
             return mNowState;
+        }
+
+        public void setPosi(int posi) {
+            mSpeechSynthesizer.stop();
+
+            int i;
+            for (i = 0; i < mJus.size(); i++) {
+                Ju ju = mJus.get(i);
+
+                if (ju.begin <= posi && posi < ju.end) {
+                    mNowQueueIndex = mNowSpeechIndex = i;
+                    actionPlay();
+
+                    setEvent(PLAYING);
+                    break;
+                }
+            }
         }
     }
 }
