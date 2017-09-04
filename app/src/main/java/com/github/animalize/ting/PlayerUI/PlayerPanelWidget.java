@@ -1,7 +1,10 @@
 package com.github.animalize.ting.PlayerUI;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +20,11 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private ArticleTtsService.ArticleTtsBinder mBinder;
 
     private SeekBar mProgress;
-
     private Button mPlay;
+
+    private LocalBroadcastManager mLBM;
+    private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
+    private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
 
     public PlayerPanelWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -73,6 +79,36 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mBinder.stop();
                 refreshPlayButton();
                 break;
+        }
+    }
+
+    public void onStart() {
+        mLBM.registerReceiver(
+                mSpeechEventReciver,
+                ArticleTtsService.getSpeechEventIntentFilter());
+        mLBM.registerReceiver(
+                mSpeechStartReciver,
+                ArticleTtsService.getSpeechStartIntentFilter());
+    }
+
+    public void onStop() {
+        mLBM.unregisterReceiver(mSpeechEventReciver);
+        mLBM.unregisterReceiver(mSpeechStartReciver);
+    }
+
+    public void setLBM(LocalBroadcastManager LBM) {
+        mLBM = LBM;
+    }
+
+    private class SpeechStartReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        }
+    }
+
+    private class SpeechEventReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
         }
     }
 }

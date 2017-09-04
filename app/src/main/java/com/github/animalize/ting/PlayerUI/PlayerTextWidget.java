@@ -1,7 +1,10 @@
 package com.github.animalize.ting.PlayerUI;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -14,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.github.animalize.ting.R;
+import com.github.animalize.ting.TTS.ArticleTtsService;
+import com.github.animalize.ting.TTS.Ju;
 
 
 public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.OnGlobalLayoutListener {
@@ -21,6 +26,10 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     private Layout layout;
 
     private Spannable spannable;
+
+    private ArticleTtsService.ArticleTtsBinder mBinder;
+    private LocalBroadcastManager mLBM;
+    private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
 
     public PlayerTextWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -38,7 +47,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         vto.addOnGlobalLayoutListener(this);
     }
 
-    public void setSelect(int begin, int end) {
+    private void setSelect(int begin, int end) {
         // 移除
         Object spansToRemove[] = spannable.getSpans(
                 0, spannable.length(),
@@ -64,8 +73,35 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         }
     }
 
+    public void onStart() {
+        mLBM.registerReceiver(
+                mSpeechStartReciver,
+                ArticleTtsService.getSpeechStartIntentFilter());
+    }
+
+    public void onStop() {
+        mLBM.unregisterReceiver(mSpeechStartReciver);
+    }
+
+    public void setLBM(LocalBroadcastManager lbm) {
+        mLBM = lbm;
+    }
+
+    public void setTTSBinder(ArticleTtsService.ArticleTtsBinder binder) {
+        mBinder = binder;
+    }
+
     @Override
     public void onGlobalLayout() {
         layout = mTextView.getLayout();
     }
+
+    private class SpeechStartReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Ju ju = mBinder.getNowJu();
+            setSelect(ju.begin, ju.end);
+        }
+    }
+
 }

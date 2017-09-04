@@ -55,6 +55,13 @@ public class MainListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 防止从安装器打开出现问题
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_main_list);
 
         mainList = (RecyclerView) findViewById(R.id.main_list);

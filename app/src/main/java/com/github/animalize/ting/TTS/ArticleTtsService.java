@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,8 +27,9 @@ public class ArticleTtsService
     public static final int STOP = 1;
     public static final int PLAYING = 2;
     public static final int PAUSING = 3;
-
     private static final int WINDOW = 2;
+    private static String SPEECH_EVENT_INTENT = "TTSEvent";
+    private static String SPEECH_START_INTENT = "SpeechStart";
     private final IBinder mBinder = new ArticleTtsBinder();
 
     private LocalBroadcastManager localBroadcastManager;
@@ -40,6 +42,14 @@ public class ArticleTtsService
     private int mNowSpeechIndex = 0;
 
     public ArticleTtsService() {
+    }
+
+    public static IntentFilter getSpeechEventIntentFilter() {
+        return new IntentFilter(SPEECH_EVENT_INTENT);
+    }
+
+    public static IntentFilter getSpeechStartIntentFilter() {
+        return new IntentFilter(SPEECH_START_INTENT);
     }
 
     @Override
@@ -55,8 +65,8 @@ public class ArticleTtsService
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notifiy_icon)
-                .setContentTitle("ting正在运行")
-                .setContentText("前台服务保证ting不被销毁")
+                .setContentTitle("ting的前台服务")
+                .setContentText("")
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(828, notification);
@@ -76,7 +86,7 @@ public class ArticleTtsService
     public void onSpeechStart(String s) {
         // 进度
         mNowSpeechIndex = Integer.parseInt(s);
-        localBroadcastManager.sendBroadcast(new Intent("SpeechStart"));
+        localBroadcastManager.sendBroadcast(new Intent(SPEECH_START_INTENT));
 
         // 队列
         if (mNowQueueIndex < mJus.size()) {
