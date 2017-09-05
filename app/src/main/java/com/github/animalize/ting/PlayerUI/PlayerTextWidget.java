@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.github.animalize.ting.R;
-import com.github.animalize.ting.TTS.Ju;
 import com.github.animalize.ting.TTS.TTSService;
 
 
@@ -95,7 +94,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     private class SpeechStartReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Ju ju = mBinder.getNowJu();
+            TTSService.Ju ju = mBinder.getNowJu();
             setSelect(ju.begin, ju.end);
         }
     }

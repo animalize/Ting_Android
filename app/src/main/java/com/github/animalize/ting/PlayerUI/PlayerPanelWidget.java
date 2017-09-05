@@ -91,7 +91,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     }
 
     private void setInfo() {
-        fullLengh = mBinder.getTextLengh();
+        fullLengh = mBinder.getText().length();
         mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
 
         mTitleText.setText(mBinder.getTitle());
@@ -111,10 +111,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             setInfo();
             //}
 
-            int nowPosi = mBinder.getTextPosition();
-            mProgress.setProgress(nowPosi);
+            TTSService.Ju ju = mBinder.getNowJu();
+            mProgress.setProgress(ju.begin);
 
-            int v = nowPosi * 100 / fullLengh;
+            int v = ju.begin * 100 / fullLengh;
             mProgressText.setText("" + v + "% ");
         }
     }

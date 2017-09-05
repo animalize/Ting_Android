@@ -19,6 +19,8 @@ import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TTSService
         extends Service
@@ -27,15 +29,14 @@ public class TTSService
     public static final int STOP = 1;
     public static final int PLAYING = 2;
     public static final int PAUSING = 3;
-    private static final int WINDOW = 2;
 
+    private static final int THRESHOLD = 2;
+    private static final int WINDOW = 2;
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static String SPEECH_START_INTENT = "SpeechStart";
-
     private final IBinder mBinder = new ArticleTtsBinder();
-    private LocalBroadcastManager mLBM;
     private SpeechSynthesizer mSpeechSynthesizer;
-
+    private LocalBroadcastManager mLBM;
     private int mNowState = EMPTY;
 
     private IArticle mArticle;
@@ -92,14 +93,20 @@ public class TTSService
         mNowSpeechIndex = Integer.parseInt(s);
         mLBM.sendBroadcast(new Intent(SPEECH_START_INTENT));
 
-        // 队列
-        if (mNowQueueIndex < mJus.size()) {
-            final Ju ju = mJus.get(mNowQueueIndex);
-            final String temp = mText.substring(ju.begin, ju.end);
+        if (mNowQueueIndex - mNowSpeechIndex <= THRESHOLD) {
+            // 剩余低于阈值
+            for (int i = 0; i < WINDOW; i++) {
+                if (mNowQueueIndex >= mJus.size()) {
+                    // 已读完
+                    break;
+                }
 
-            mSpeechSynthesizer.speak(temp, String.valueOf(mNowQueueIndex));
+                final Ju ju = mJus.get(mNowQueueIndex);
+                final String str = mText.substring(ju.begin, ju.end);
+                mSpeechSynthesizer.speak(str, String.valueOf(mNowQueueIndex));
 
-            mNowQueueIndex += 1;
+                mNowQueueIndex += 1;
+            }
         }
     }
 
@@ -111,14 +118,14 @@ public class TTSService
     @Override
     public void onSpeechFinish(String s) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            mNowState = STOP;
+            setEvent(STOP);
         }
     }
 
     @Override
     public void onError(String s, SpeechError speechError) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            mNowState = STOP;
+            setEvent(STOP);
         }
     }
 
@@ -172,17 +179,61 @@ public class TTSService
         String getText();
     }
 
-    public class ArticleTtsBinder extends Binder {
-        public void setArticle(String title, String text) {
-            mTitle = title;
-            mText = text;
+    public static class Ju {
+        private static final int SIZE = 64; //256;
+        private static Pattern biaodian;
+        public int begin;
+        public int end;
 
-            mJus = JuUtils.fenJu(text);
-
-            stop();
-            setEvent(STOP);
+        public Ju(int begin, int end) {
+            this.begin = begin;
+            this.end = end;
         }
 
+        private static List<TTSService.Ju> fenJu(String s) {
+            if (biaodian == null) {
+                biaodian = Pattern.compile(
+                        "^.*[\n，。！？；：,.!?]",
+                        Pattern.DOTALL);
+            }
+
+            List<TTSService.Ju> ret = new ArrayList<>();
+
+            int p = 0;
+
+            while (true) {
+                if (p + SIZE >= s.length()) {
+                    TTSService.Ju ju = new TTSService.Ju(p, s.length());
+                    ret.add(ju);
+
+                    break;
+                }
+
+                String sub = s.substring(p, p + SIZE);
+                Matcher m = biaodian.matcher(sub);
+
+                int end;
+                if (m.find()) {
+                    end = m.end();
+                } else {
+                    final char last = sub.charAt(sub.length() - 1);
+                    if (Character.isHighSurrogate(last)) {
+                        end = sub.length() - 1;
+                    } else {
+                        end = sub.length();
+                    }
+                }
+
+                TTSService.Ju ju = new TTSService.Ju(p, p + end);
+                ret.add(ju);
+                p += end;
+            }
+
+            return ret;
+        }
+    }
+
+    public class ArticleTtsBinder extends Binder {
         public boolean setArticle(IArticle article) {
             mArticle = article;
             if (mArticle == null) {
@@ -191,8 +242,12 @@ public class TTSService
 
             mTitle = mArticle.getTitle();
             mText = mArticle.getText();
+            if (mTitle == null || mText == null) {
+                mArticle = null;
+                return false;
+            }
 
-            mJus = JuUtils.fenJu(mText);
+            mJus = Ju.fenJu(mText);
 
             stop();
             setEvent(STOP);
@@ -227,24 +282,16 @@ public class TTSService
             setEvent(PLAYING);
         }
 
+        public Object getArticle() {
+            return mArticle;
+        }
+
         public String getTitle() {
             return mTitle;
         }
 
         public String getText() {
             return mText;
-        }
-
-        public Object getArticle() {
-            return mArticle;
-        }
-
-        public int getTextLengh() {
-            return mText.length();
-        }
-
-        public int getTextPosition() {
-            return mJus.get(mNowSpeechIndex).begin;
         }
 
         public Ju getNowJu() {
