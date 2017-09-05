@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.animalize.ting.Data.Item;
-import com.github.animalize.ting.Data.MyColors;
 import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
@@ -81,16 +80,10 @@ public abstract class RVAdapter
     public void onBindViewHolder(MyHolder holder, int position) {
         Item item = mList.get(position);
 
-        if (position % 2 == 0) {
-            holder.root.setBackgroundColor(MyColors.c1);
-        } else {
-            holder.root.setBackgroundColor(MyColors.c2);
-        }
-
         holder.setAid(item.getAid());
         holder.title.setText(item.getTitle());
         holder.cate.setText(item.getCate());
-        holder.chars.setText("" + item.getCjk_chars());
+        holder.chars.setText("" + item.getCjk_chars() + "字");
     }
 
     @Override

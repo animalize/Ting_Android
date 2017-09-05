@@ -136,41 +136,48 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             int state = mBinder.getState();
 
             String play;
-            boolean stop;
+            boolean enablePlay, enableStop;
 
             switch (state) {
                 case TTSService.PLAYING:
                     play = "暂停";
-                    stop = true;
+                    enablePlay = true;
+                    enableStop = true;
 
                     freshUIofItem();
                     break;
 
                 case TTSService.PAUSING:
                     play = "恢复";
-                    stop = true;
+                    enablePlay = true;
+                    enableStop = true;
                     break;
 
                 case TTSService.STOP:
                     play = "播放";
-                    stop = false;
+                    enablePlay = true;
+                    enableStop = false;
 
                     mProgress.setProgress(0);
                     mProgressText.setText("0% ");
                     break;
 
                 case TTSService.EMPTY:
-                    play = "空文";
-                    stop = false;
+                    play = "播放";
+                    enablePlay = false;
+                    enableStop = false;
                     break;
 
                 default:
                     play = "播放";
-                    stop = true;
+                    enablePlay = true;
+                    enableStop = true;
             }
 
+            mPlay.setEnabled(enablePlay);
             mPlay.setText(play);
-            mStop.setEnabled(stop);
+
+            mStop.setEnabled(enableStop);
         }
     }
 
@@ -190,7 +197,9 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            mBinder.setPosi(posi);
+            if (mBinder != null && mBinder.getArticle() != null) {
+                mBinder.setPosi(posi);
+            }
         }
     }
 }
