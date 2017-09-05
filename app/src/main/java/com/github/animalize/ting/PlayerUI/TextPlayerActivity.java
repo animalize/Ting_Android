@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.animalize.ting.Data.Item;
@@ -16,19 +15,19 @@ import com.github.animalize.ting.TTS.TTSService;
 
 public class TextPlayerActivity extends AppCompatActivity implements ServiceConnection {
 
-    private LocalBroadcastManager mLBM;
-
     private DataManager dataManager = DataManager.getInstance();
     private String mAid;
+    private boolean mAutoPlay = false;
 
     private PlayerTextWidget playerText;
     private PlayerPanelWidget playerPanel;
 
     private TTSService.ArticleTtsBinder mBinder;
 
-    public static void actionStart(Context context, String aid) {
+    public static void actionStart(Context context, String aid, boolean autoPlay) {
         Intent i = new Intent(context, TextPlayerActivity.class);
         i.putExtra("aid", aid);
+        i.putExtra("auto_play", autoPlay);
         context.startActivity(i);
     }
 
@@ -40,6 +39,7 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         // intent
         Intent intent = getIntent();
         mAid = intent.getStringExtra("aid");
+        mAutoPlay = intent.getBooleanExtra("auto_play", false);
 
         // 控件
         playerText = (PlayerTextWidget) findViewById(R.id.player_text_view);
@@ -76,13 +76,33 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
     public void onServiceConnected(ComponentName name, IBinder service) {
         mBinder = (TTSService.ArticleTtsBinder) service;
 
+        if (mAid == null) {
+            Item i = (Item) mBinder.getArticle();
+            if (i == null) {
+                return;
+            }
+
+            mAid = i.getAid();
+        }
+
+        if (mAid == null) {
+            return;
+        }
+
         Item item = dataManager.getItemByAid(mAid);
-        mBinder.setArticle(item);
+
+        if (mAutoPlay) {
+            mBinder.setArticle(item);
+        }
 
         playerPanel.setTTSBinder(mBinder);
 
         playerText.setTTSBinder(mBinder);
         playerText.setPlayerText(mBinder.getText());
+
+        if (mAutoPlay) {
+            mBinder.play();
+        }
     }
 
     @Override

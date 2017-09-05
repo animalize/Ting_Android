@@ -16,7 +16,9 @@ public abstract class RVAdapter
         extends RecyclerView.Adapter<MyHolder> {
     private List<Item> mList;
 
-    public abstract void onItemClick(String aid);
+    public abstract void onPalyItemClick(String aid);
+
+    public abstract void onDeleteItemClick(String aid);
 
     public void setArrayList(List<Item> list) {
         mList = list;
@@ -56,13 +58,19 @@ public abstract class RVAdapter
                 .inflate(R.layout.main_list_item, parent, false);
         final MyHolder holder = new MyHolder(v);
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
+        holder.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int posi = holder.getAdapterPosition();
-                Item item = mList.get(posi);
+                String aid = holder.getAid();
+                onPalyItemClick(aid);
+            }
+        });
 
-                onItemClick(item.getAid());
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String aid = holder.getAid();
+                onDeleteItemClick(aid);
             }
         });
 
@@ -79,11 +87,10 @@ public abstract class RVAdapter
             holder.root.setBackgroundColor(MyColors.c2);
         }
 
+        holder.setAid(item.getAid());
         holder.title.setText(item.getTitle());
         holder.cate.setText(item.getCate());
         holder.chars.setText("" + item.getCjk_chars());
-
-        holder.cached.setText(item.isCached() ? "已缓存" : "未缓存");
     }
 
     @Override

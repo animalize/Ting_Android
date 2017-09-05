@@ -47,10 +47,15 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mPlay.setOnClickListener(this);
         mStop = (Button) findViewById(R.id.stop);
         mStop.setOnClickListener(this);
+
     }
 
     public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
         mBinder = binder;
+
+        freshUIofItem();
+        mSpeechEventReciver.onReceive(null, null);
+        mSpeechStartReciver.onReceive(null, null);
     }
 
     @Override
@@ -82,7 +87,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
 
-        //mSpeechStartReciver.onReceive(null, null);
+        mSpeechStartReciver.onReceive(null, null);
     }
 
     public void onStop() {
@@ -90,14 +95,17 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mLBM.unregisterReceiver(mSpeechStartReciver);
     }
 
-    private void setInfo() {
-        fullLengh = mBinder.getText().length();
-        mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
+    private void freshUIofItem() {
+        Item item = (Item) mBinder.getArticle();
+        if (item == null) {
+            return;
+        }
 
         mTitleText.setText(mBinder.getTitle());
-
-        Item item = (Item) mBinder.getArticle();
         mCjkCharsText.setText("" + item.getCjk_chars() + "字  ");
+
+        fullLengh = mBinder.getText().length();
+        mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
     }
 
     private class SpeechStartReciver extends BroadcastReceiver {
@@ -107,15 +115,14 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 return;
             }
 
-            //if (context == null) {
-            setInfo();
-            //}
-
             TTSService.Ju ju = mBinder.getNowJu();
-            mProgress.setProgress(ju.begin);
 
-            int v = ju.begin * 100 / fullLengh;
-            mProgressText.setText("" + v + "% ");
+            if (ju != null) {
+                mProgress.setProgress(ju.begin);
+
+                int v = ju.begin * 100 / fullLengh;
+                mProgressText.setText("" + v + "% ");
+            }
         }
     }
 
@@ -136,7 +143,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     play = "暂停";
                     stop = true;
 
-                    setInfo();
+                    freshUIofItem();
                     break;
 
                 case TTSService.PAUSING:

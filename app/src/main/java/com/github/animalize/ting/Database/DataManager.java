@@ -151,8 +151,8 @@ public class DataManager {
 
         loadDataFromList(list);
 
-        // 清缓存
-        clearCache();
+        // 删无效缓存
+        delOldCache(aidList);
 
         // 写数据库
         MyDatabaseHelper.setList(list);
@@ -161,20 +161,16 @@ public class DataManager {
         Methods.deleteAids(aidList);
     }
 
-    public void clearCache() {
-        // 清空目录
+    public void delOldCache(List<String> delAidList) {
+        // 删除文件
         File dir = new File(dataDirPath);
         if (dir.isDirectory()) {
             String[] children = dir.list();
             for (String child : children) {
-                new File(dir, child).delete();
+                if (delAidList.contains(child)) {
+                    new File(dir, child).delete();
+                }
             }
-        }
-
-        // 更新 数据库
-        for (Item item : fullList) {
-            item.setCached(false);
-            MyDatabaseHelper.setCached(item.getAid(), false);
         }
     }
 

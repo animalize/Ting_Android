@@ -23,6 +23,7 @@ import com.github.animalize.ting.PlayerUI.TextPlayerActivity;
 import com.github.animalize.ting.TTS.TTSService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainListActivity
@@ -36,6 +37,8 @@ public class MainListActivity
     private PlayerPanelWidget playerPanel;
     private RecyclerView mainList;
     private RVAdapter listAdapter;
+
+    private Button refreshButton, delAllButton;
 
 //    private Spinner nameSpinner;
 //    private NameListAdapter nameAdapter;
@@ -79,15 +82,42 @@ public class MainListActivity
         // adapter
         listAdapter = new RVAdapter() {
             @Override
-            public void onItemClick(String aid) {
-                TextPlayerActivity.actionStart(MainListActivity.this, aid);
+            public void onPalyItemClick(String aid) {
+                if (mBinder == null) {
+                    return;
+                }
+
+                Item item = dataManager.getItemByAid(aid);
+                if (item == null) {
+                    return;
+                }
+
+                mBinder.setArticle(item);
+                mBinder.play();
+            }
+
+            @Override
+            public void onDeleteItemClick(final String aid) {
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(MainListActivity.this);
+                builder.setTitle("确认此文章？");
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new DeleteAidListAsyncTask().execute(Arrays.asList(aid));
+                    }
+                });
+                builder.setNegativeButton("取消", null);
+                builder.show();
             }
         };
         mainList.setAdapter(listAdapter);
 
-        Button bt = (Button) findViewById(R.id.refresh);
-        bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.delall);
+        refreshButton = (Button) findViewById(R.id.refresh);
+        refreshButton.setOnClickListener(this);
+        delAllButton = (Button) findViewById(R.id.del_all);
+        delAllButton.setOnClickListener(this);
+        Button bt = (Button) findViewById(R.id.open_text);
         bt.setOnClickListener(this);
 
         // 读数据库list
@@ -136,7 +166,7 @@ public class MainListActivity
                 new GetListAsyncTask().execute();
                 break;
 
-            case R.id.delall:
+            case R.id.del_all:
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(this);
                 builder.setTitle("确认删除所有文章？");
@@ -156,6 +186,10 @@ public class MainListActivity
                 builder.setNegativeButton("取消", null);
                 builder.show();
 
+                break;
+
+            case R.id.open_text:
+                TextPlayerActivity.actionStart(this, null, false);
                 break;
         }
     }
@@ -187,7 +221,15 @@ public class MainListActivity
 
     }
 
+    // 刷新列表
     private class GetListAsyncTask extends AsyncTask<Void, String, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            refreshButton.setEnabled(false);
+            delAllButton.setEnabled(false);
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
             // 下载列表
@@ -225,9 +267,22 @@ public class MainListActivity
                 listAdapter.refreshItemByAid(v);
             }
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            refreshButton.setEnabled(true);
+            delAllButton.setEnabled(true);
+        }
     }
 
     private class DeleteAidListAsyncTask extends AsyncTask<List<String>, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            refreshButton.setEnabled(false);
+            delAllButton.setEnabled(false);
+        }
 
         @Override
         protected Void doInBackground(List<String>... params) {
@@ -239,6 +294,9 @@ public class MainListActivity
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             listAdapter.setArrayList(dataManager.getFullList());
+
+            refreshButton.setEnabled(true);
+            delAllButton.setEnabled(true);
         }
     }
 }

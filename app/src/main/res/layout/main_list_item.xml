@@ -16,6 +16,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/button_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="播放" />
+
+        <Button
+            android:id="@+id/button_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="删除" />
+
         <TextView
             android:id="@+id/cate"
             android:layout_width="0dp"
@@ -25,13 +39,6 @@
 
         <TextView
             android:id="@+id/chars"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/cached"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

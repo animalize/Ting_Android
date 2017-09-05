@@ -22,7 +22,8 @@
         <Spinner
             android:id="@+id/cate_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/refresh"
@@ -31,10 +32,16 @@
             android:text="刷新列表" />
 
         <Button
-            android:id="@+id/delall"
+            android:id="@+id/del_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="全部删除" />
+
+        <Button
+            android:id="@+id/open_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查看文本" />
     </LinearLayout>
 
     <com.github.animalize.ting.PlayerUI.PlayerPanelWidget

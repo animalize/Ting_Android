@@ -25,6 +25,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     private Layout layout;
 
     private Spannable spannable;
+    private TTSService.Ju ju;
 
     private TTSService.ArticleTtsBinder mBinder;
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
@@ -76,6 +77,8 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mLBM.registerReceiver(
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
+
+        mSpeechStartReciver.onReceive(null, null);
     }
 
     public void onStop() {
@@ -84,18 +87,39 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
 
     public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
         mBinder = binder;
+
+        if (spannable == null) {
+            String s = mBinder.getText();
+            if (s != null) {
+                setPlayerText(s);
+            }
+        }
+
+        mSpeechStartReciver.onReceive(null, null);
     }
 
     @Override
     public void onGlobalLayout() {
         layout = mTextView.getLayout();
+
+        if (ju != null) {
+            setSelect(ju.begin, ju.end);
+            ju = null;
+        }
     }
 
     private class SpeechStartReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            TTSService.Ju ju = mBinder.getNowJu();
-            setSelect(ju.begin, ju.end);
+            if (mBinder == null) {
+                return;
+            }
+
+            ju = mBinder.getNowJu();
+            if (ju != null && layout != null) {
+                setSelect(ju.begin, ju.end);
+                ju = null;
+            }
         }
     }
 

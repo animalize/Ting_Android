@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 
@@ -121,6 +122,7 @@ public class TTSService
     @Override
     public void onSpeechFinish(String s) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
+            mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
         }
     }
@@ -128,6 +130,7 @@ public class TTSService
     @Override
     public void onError(String s, SpeechError speechError) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
+            mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
         }
     }
@@ -238,8 +241,11 @@ public class TTSService
 
     public class ArticleTtsBinder extends Binder {
         public boolean setArticle(IArticle article) {
+            mNowQueueIndex = mNowSpeechIndex = 0;
+
             mArticle = article;
             if (mArticle == null) {
+                mJus = null;
                 setEvent(EMPTY);
                 return false;
             }
@@ -248,6 +254,7 @@ public class TTSService
             mText = mArticle.getText();
             if (mTitle == null || mText == null) {
                 mArticle = null;
+                mJus = null;
                 setEvent(EMPTY);
                 return false;
             }
@@ -269,8 +276,7 @@ public class TTSService
 
         public void stop() {
             mSpeechSynthesizer.stop();
-            mNowQueueIndex = 0;
-            mNowSpeechIndex = 0;
+            mNowQueueIndex = mNowSpeechIndex = 0;
 
             setEvent(STOP);
         }
@@ -299,15 +305,23 @@ public class TTSService
             return mText;
         }
 
+        @Nullable
         public Ju getNowJu() {
-            return mJus.get(mNowSpeechIndex);
+            if (mArticle != null) {
+                try {
+                    return mJus.get(mNowSpeechIndex);
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+            return null;
         }
 
         public int getState() {
             return mNowState;
         }
 
-        public void setPosi(int posi) {
+        public boolean setPosi(int posi) {
             mSpeechSynthesizer.stop();
 
             int i;
@@ -319,9 +333,10 @@ public class TTSService
                     playAction();
 
                     setEvent(PLAYING);
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
     }
 }
