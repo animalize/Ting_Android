@@ -32,15 +32,18 @@ public class TTSService
 
     private static final int THRESHOLD = 2;
     private static final int WINDOW = 2;
+
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static String SPEECH_START_INTENT = "SpeechStart";
+
     private final IBinder mBinder = new ArticleTtsBinder();
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
-    private int mNowState = EMPTY;
 
     private IArticle mArticle;
     private String mTitle, mText;
+
+    private int mNowState = EMPTY;
 
     private List<Ju> mJus;
     private int mNowQueueIndex = 0;
@@ -149,8 +152,8 @@ public class TTSService
     private void playAction() {
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
-        int end = mNowQueueIndex + WINDOW < mJus.size()
-                ? mNowQueueIndex + WINDOW
+        int end = mNowQueueIndex + THRESHOLD < mJus.size()
+                ? mNowQueueIndex + THRESHOLD
                 : mJus.size();
 
         for (int i = mNowQueueIndex; i < end; i++) {
@@ -190,20 +193,20 @@ public class TTSService
             this.end = end;
         }
 
-        private static List<TTSService.Ju> fenJu(String s) {
+        private static List<Ju> fenJu(String s) {
             if (biaodian == null) {
                 biaodian = Pattern.compile(
                         "^.*[\n，。！？；：,.!?]",
                         Pattern.DOTALL);
             }
 
-            List<TTSService.Ju> ret = new ArrayList<>();
+            List<Ju> ret = new ArrayList<>();
 
             int p = 0;
 
             while (true) {
                 if (p + SIZE >= s.length()) {
-                    TTSService.Ju ju = new TTSService.Ju(p, s.length());
+                    Ju ju = new Ju(p, s.length());
                     ret.add(ju);
 
                     break;
@@ -224,7 +227,7 @@ public class TTSService
                     }
                 }
 
-                TTSService.Ju ju = new TTSService.Ju(p, p + end);
+                Ju ju = new Ju(p, p + end);
                 ret.add(ju);
                 p += end;
             }
@@ -237,6 +240,7 @@ public class TTSService
         public boolean setArticle(IArticle article) {
             mArticle = article;
             if (mArticle == null) {
+                setEvent(EMPTY);
                 return false;
             }
 
@@ -244,6 +248,7 @@ public class TTSService
             mText = mArticle.getText();
             if (mTitle == null || mText == null) {
                 mArticle = null;
+                setEvent(EMPTY);
                 return false;
             }
 
@@ -256,7 +261,7 @@ public class TTSService
         }
 
         public void play() {
-            if (mText != null) {
+            if (mArticle != null) {
                 playAction();
                 setEvent(PLAYING);
             }
