@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
@@ -74,9 +75,12 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         mBinder = (TTSService.ArticleTtsBinder) service;
-        mBinder.setArticle(mAid);
+
+        Item item = dataManager.getItemByAid(mAid);
+        mBinder.setArticle(item);
 
         playerPanel.setTTSBinder(mBinder);
+
         playerText.setTTSBinder(mBinder);
         playerText.setPlayerText(mBinder.getText());
     }

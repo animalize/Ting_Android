@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
 
@@ -81,7 +82,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
 
-        mSpeechStartReciver.onReceive(null, null);
+        //mSpeechStartReciver.onReceive(null, null);
     }
 
     public void onStop() {
@@ -91,14 +92,12 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
     private void setInfo() {
         fullLengh = mBinder.getTextLengh();
-        if (fullLengh > 0) {
-            fullLengh -= 1;
-        }
-        mProgress.setMax(fullLengh);
+        mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
 
         mTitleText.setText(mBinder.getTitle());
-        mCjkCharsText.setText("" + mBinder.getCjkChars() + "字  ");
 
+        Item item = (Item) mBinder.getArticle();
+        mCjkCharsText.setText("" + item.getCjk_chars() + "字  ");
     }
 
     private class SpeechStartReciver extends BroadcastReceiver {
@@ -108,7 +107,9 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 return;
             }
 
+            //if (context == null) {
             setInfo();
+            //}
 
             int nowPosi = mBinder.getTextPosition();
             mProgress.setProgress(nowPosi);

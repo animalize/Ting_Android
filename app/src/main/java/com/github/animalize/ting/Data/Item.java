@@ -3,7 +3,9 @@ package com.github.animalize.ting.Data;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.Database.MyDatabaseHelper;
+import com.github.animalize.ting.TTS.TTSService;
 
 import org.json.JSONObject;
 
@@ -19,7 +21,7 @@ import org.json.JSONObject;
  * crc32     无符号整数	crc32
  */
 
-public class Item {
+public class Item implements TTSService.IArticle {
     private String cate;
     private String aid;
     private String title;
@@ -112,6 +114,12 @@ public class Item {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String getText() {
+        DataManager dataManager = DataManager.getInstance();
+        return dataManager.readArticleByAid(aid);
     }
 
     public int getTime() {

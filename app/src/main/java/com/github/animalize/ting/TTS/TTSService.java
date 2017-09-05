@@ -14,8 +14,6 @@ import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
-import com.github.animalize.ting.Data.Item;
-import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.MainListActivity;
 import com.github.animalize.ting.R;
 
@@ -38,12 +36,10 @@ public class TTSService
     private LocalBroadcastManager mLBM;
     private SpeechSynthesizer mSpeechSynthesizer;
 
-    private DataManager dataManager = DataManager.getInstance();
-
     private int mNowState = EMPTY;
 
+    private IArticle mArticle;
     private String mTitle, mText;
-    private int mCjkChars;
 
     private List<Ju> mJus;
     private int mNowQueueIndex = 0;
@@ -170,28 +166,33 @@ public class TTSService
         return mBinder;
     }
 
+    public interface IArticle {
+        String getTitle();
+
+        String getText();
+    }
+
     public class ArticleTtsBinder extends Binder {
         public void setArticle(String title, String text) {
             mTitle = title;
             mText = text;
 
-            mJus = TTSUtils.fenJu(text);
+            mJus = JuUtils.fenJu(text);
 
             stop();
             setEvent(STOP);
         }
 
-        public boolean setArticle(String aid) {
-            Item item = dataManager.getItemByAid(aid);
-            if (item == null) {
+        public boolean setArticle(IArticle article) {
+            mArticle = article;
+            if (mArticle == null) {
                 return false;
             }
 
-            mTitle = item.getTitle();
-            mText = dataManager.readArticleByAid(aid);
-            mCjkChars = item.getCjk_chars();
+            mTitle = mArticle.getTitle();
+            mText = mArticle.getText();
 
-            mJus = TTSUtils.fenJu(mText);
+            mJus = JuUtils.fenJu(mText);
 
             stop();
             setEvent(STOP);
@@ -234,8 +235,8 @@ public class TTSService
             return mText;
         }
 
-        public int getCjkChars() {
-            return mCjkChars;
+        public Object getArticle() {
+            return mArticle;
         }
 
         public int getTextLengh() {

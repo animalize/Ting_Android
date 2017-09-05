@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class TTSUtils {
+public class JuUtils {
     private static final int SIZE = 64;//256;
 
     private static Pattern biaodian;
