@@ -108,6 +108,10 @@ public class Item implements TTSService.IArticle {
         return cate;
     }
 
+    public void setCate(String cate) {
+        this.cate = cate;
+    }
+
     public String getAid() {
         return aid;
     }

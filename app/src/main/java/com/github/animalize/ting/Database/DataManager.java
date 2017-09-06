@@ -4,6 +4,7 @@ package com.github.animalize.ting.Database;
 import android.support.annotation.Nullable;
 
 import com.github.animalize.ting.Data.Item;
+import com.github.animalize.ting.Data.TingConfig;
 import com.github.animalize.ting.Message.Methods;
 import com.github.animalize.ting.MyApplication;
 
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DataManager {
     private static final String DATA_DIR_NAME = "data";
@@ -59,18 +61,33 @@ public class DataManager {
 
     public synchronized boolean loadListFromServer() {
         // 下载
-        List<Item> list = Methods.downloadList();
-        if (list == null) {
+        List<Item> ret = Methods.downloadList();
+        if (ret == null) {
             return false;
         }
 
-        // 设置cached, posi
-        for (Item item : list) {
+        Set<String> filter = TingConfig.getInstance().getmFilters();
+        List<Item> list = new ArrayList<>();
+
+        for (Item item : ret) {
+            // 过滤分类
+            String cate = item.getCate();
+            if (cate.contains("_")) {
+                String parts[] = cate.split("_", 2);
+                if (!filter.contains(parts[0])) {
+                    continue;
+                }
+                item.setCate(parts[1]);
+            }
+
+            // 设置cached, posi
             Item old = aidMap.get(item.getAid());
             if (old != null) {
                 item.setCached(old.isCached());
                 item.setPosi(old.getPosi());
             }
+
+            list.add(item);
         }
 
         // 加载
@@ -86,6 +103,7 @@ public class DataManager {
     }
 
     // 加载数据
+
     private synchronized void loadDataFromList(List<Item> list) {
         fullList = list;
         cateMap = new HashMap<>();

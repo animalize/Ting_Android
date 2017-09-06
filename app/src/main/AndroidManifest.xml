@@ -31,7 +31,8 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".PlayerUI.TextPlayerActivity"></activity>
+        <activity android:name=".PlayerUI.TextPlayerActivity" />
+        <activity android:name=".OptionActivity"></activity>
     </application>
 
 </manifest>

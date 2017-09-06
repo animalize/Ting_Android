@@ -119,6 +119,8 @@ public class MainListActivity
         delAllButton.setOnClickListener(this);
         Button bt = (Button) findViewById(R.id.open_text);
         bt.setOnClickListener(this);
+        bt = (Button) findViewById(R.id.config);
+        bt.setOnClickListener(this);
 
         // 读数据库list
         List<Item> list = dataManager.getFullList();
@@ -190,6 +192,10 @@ public class MainListActivity
 
             case R.id.open_text:
                 TextPlayerActivity.actionStart(this, null, false);
+                break;
+
+            case R.id.config:
+                OptionActivity.actionStart(this);
                 break;
         }
     }
