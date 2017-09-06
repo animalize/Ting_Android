@@ -324,18 +324,26 @@ public class TTSService
         public boolean setPosi(int posi) {
             mSpeechSynthesizer.stop();
 
-            int i;
-            for (i = 0; i < mJus.size(); i++) {
-                Ju ju = mJus.get(i);
+            int low = 0;
+            int high = mJus.size() - 1;
 
-                if (ju.begin <= posi && posi < ju.end) {
-                    mNowQueueIndex = mNowSpeechIndex = i;
+            while (high >= low) {
+                int mid = (low + high) / 2;
+                final Ju temp = mJus.get(mid);
+
+                if (posi < temp.begin) {
+                    high = mid - 1;
+                } else if (posi >= temp.end) {
+                    low = mid + 1;
+                } else {
+                    mNowQueueIndex = mNowSpeechIndex = mid;
                     playAction();
 
                     setEvent(PLAYING);
                     return true;
                 }
             }
+
             return false;
         }
     }
