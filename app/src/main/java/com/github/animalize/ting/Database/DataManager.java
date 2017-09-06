@@ -68,6 +68,7 @@ public class DataManager {
         for (Item item : list) {
             Item old = aidMap.get(item.getAid());
             if (old != null) {
+                item.setCached(old.isCached());
                 item.setPosi(old.getPosi());
             }
         }
