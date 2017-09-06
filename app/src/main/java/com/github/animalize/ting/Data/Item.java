@@ -82,7 +82,7 @@ public class Item implements TTSService.IArticle {
         file_size = c.getInt(c.getColumnIndex("file_size"));
         crc32 = c.getInt(c.getColumnIndex("crc32"));
 
-        cached = c.getInt(c.getColumnIndex("cached")) == 1;
+        cached = c.getInt(c.getColumnIndex("cached")) != 0;
         posi = c.getInt(c.getColumnIndex("posi"));
     }
 
