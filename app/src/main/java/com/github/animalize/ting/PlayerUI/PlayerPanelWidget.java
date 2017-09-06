@@ -91,6 +91,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
 
+        mSpeechEventReciver.onReceive(null, null);
         mSpeechStartReciver.onReceive(null, null);
     }
 
