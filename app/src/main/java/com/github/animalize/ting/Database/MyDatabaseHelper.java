@@ -67,6 +67,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         mDb.execSQL("COMMIT");
     }
 
+    public static void setCached(String aid, boolean v) {
+        init();
+
+        String sql = "UPDATE list SET cached=? WHERE aid=?";
+        int cached = v ? 1 : 0;
+
+        mDb.execSQL(sql, new String[]{String.valueOf(cached), aid});
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         // 建表
@@ -80,6 +89,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "file_size INTEGER," +
                 "crc32 INTEGER," +
 
+                "cached INTEGER," +
                 "posi INTEGER" +
                 ");";
         db.execSQL(sql);

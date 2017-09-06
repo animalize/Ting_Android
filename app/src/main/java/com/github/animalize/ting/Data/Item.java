@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.github.animalize.ting.Database.DataManager;
+import com.github.animalize.ting.Database.MyDatabaseHelper;
 import com.github.animalize.ting.TTS.TTSService;
 
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ public class Item implements TTSService.IArticle {
     private int file_size;
     private long crc32;
 
+    private boolean cached = false;
     private int posi = 0;
 
     public Item(JSONObject object) {
@@ -80,6 +82,7 @@ public class Item implements TTSService.IArticle {
         file_size = c.getInt(c.getColumnIndex("file_size"));
         crc32 = c.getInt(c.getColumnIndex("crc32"));
 
+        cached = c.getInt(c.getColumnIndex("cached")) == 1;
         posi = c.getInt(c.getColumnIndex("posi"));
     }
 
@@ -95,6 +98,7 @@ public class Item implements TTSService.IArticle {
         cv.put("file_size", file_size);
         cv.put("crc32", crc32);
 
+        cv.put("cached", cached ? 1 : 0);
         cv.put("posi", posi);
 
         return cv;
@@ -135,8 +139,12 @@ public class Item implements TTSService.IArticle {
     }
 
     public boolean isCached() {
-        DataManager dataManager = DataManager.getInstance();
-        return dataManager.isCached(aid);
+        return cached;
+    }
+
+    public void setCached(boolean cached) {
+        this.cached = cached;
+        MyDatabaseHelper.setCached(aid, cached);
     }
 
     public int getPosi() {
