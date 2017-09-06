@@ -13,7 +13,8 @@
         android:layout_weight="1"
         android:background="#dddcea"
         android:fadeScrollbars="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:verticalScrollbarPosition="left" />
 
     <View
         android:layout_width="match_parent"

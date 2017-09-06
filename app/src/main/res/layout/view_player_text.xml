@@ -9,7 +9,8 @@
         android:layout_height="match_parent"
         android:fadeScrollbars="false"
         android:scrollbars="vertical"
-        android:textSize="20sp">
+        android:textSize="20sp"
+        android:verticalScrollbarPosition="left">
 
     </android.support.v7.widget.AppCompatTextView>
 
