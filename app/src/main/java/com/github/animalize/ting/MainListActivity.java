@@ -248,7 +248,6 @@ public class MainListActivity
                         aid,
                         item.getFile_size());
                 if (r) {
-                    item.setCached(true);
                     publishProgress(aid);
                 }
             }

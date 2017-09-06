@@ -68,7 +68,6 @@ public class DataManager {
         for (Item item : list) {
             Item old = aidMap.get(item.getAid());
             if (old != null) {
-                item.setCached(old.isCached());
                 item.setPosi(old.getPosi());
             }
         }
@@ -169,6 +168,15 @@ public class DataManager {
                 new File(dir, aid).delete();
             } catch (Exception e) {
             }
+        }
+    }
+
+    public synchronized boolean isCached(String aid) {
+        File path = new File(dataDirPath, aid);
+        try {
+            return path.isFile();
+        } catch (Exception e) {
+            return false;
         }
     }
 

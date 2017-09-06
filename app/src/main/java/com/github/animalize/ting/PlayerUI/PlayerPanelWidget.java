@@ -60,6 +60,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        if (mBinder == null) {
+            return;
+        }
+
         switch (v.getId()) {
             case R.id.play_pause:
                 int state = mBinder.getState();
