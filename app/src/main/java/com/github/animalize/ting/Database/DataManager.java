@@ -162,19 +162,17 @@ public class DataManager {
     }
 
     public void delOldCache(List<String> delAidList) {
-        // 删除文件
         File dir = new File(dataDirPath);
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (String child : children) {
-                if (delAidList.contains(child)) {
-                    new File(dir, child).delete();
-                }
+
+        for (String aid : delAidList) {
+            try {
+                new File(dir, aid).delete();
+            } catch (Exception e) {
             }
         }
     }
 
-    public synchronized boolean downloadAndSaveArticleByAid(String aid) {
+    public synchronized boolean downloadAndSaveArticleByAid(String aid, int fileSize) {
         File path = new File(dataDirPath, aid);
 
         // 已存在？
@@ -184,7 +182,8 @@ public class DataManager {
 
         // 下载
         byte[] b = Methods.downloadArticleByAid(aid);
-        if (b == null) {
+        if (b == null || b.length != fileSize) {
+            //Log.i("downloadAndSav: ", "" + b.length + " " + fileSize);
             return false;
         }
 

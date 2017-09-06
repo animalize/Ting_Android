@@ -244,7 +244,9 @@ public class MainListActivity
                 }
 
                 String aid = item.getAid();
-                boolean r = dataManager.downloadAndSaveArticleByAid(aid);
+                boolean r = dataManager.downloadAndSaveArticleByAid(
+                        aid,
+                        item.getFile_size());
                 if (r) {
                     item.setCached(true);
                     publishProgress(aid);

@@ -81,9 +81,15 @@ public abstract class RVAdapter
         Item item = mList.get(position);
 
         holder.setAid(item.getAid());
+
         holder.title.setText(item.getTitle());
         holder.cate.setText(item.getCate());
-        holder.chars.setText("" + item.getCjk_chars() + "字");
+
+        if (item.isCached()) {
+            holder.chars.setText("" + item.getCjk_chars() + "字");
+        } else {
+            holder.chars.setText("未缓存");
+        }
     }
 
     @Override
