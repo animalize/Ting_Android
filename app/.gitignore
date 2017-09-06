@@ -1,1 +1,4 @@
 /build
+/src/main/res/values/secrets.xml
+/src/main/assets/
+/src/main/libs/

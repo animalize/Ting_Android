@@ -5,6 +5,7 @@ import android.content.Context;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
+import com.github.animalize.ting.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,10 +16,6 @@ import java.io.InputStream;
  */
 
 public class TTSHelper {
-    private static final String APP_ID = "10060529";
-    private static final String API_KEY = "DMvWG4iIRwySVBOb4EIR0ajw";
-    private static final String SECRET_KEY = "279cc672ca6a68c4e331acfaa9b5ebbd";
-
     private static final String SAMPLE_DIR_NAME = "baiduTTS";
 
     private static final String SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female.dat";
@@ -50,8 +47,11 @@ public class TTSHelper {
 //                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
 //                ttsDataDir + "/" + SPEECH_MALE_MODEL_NAME);
 
-        speechSynthesizer.setAppId(APP_ID);
-        speechSynthesizer.setApiKey(API_KEY, SECRET_KEY);
+        speechSynthesizer.setAppId(context.getString(R.string.APP_ID));
+        speechSynthesizer.setApiKey(
+                context.getString(R.string.API_KEY),
+                context.getString(R.string.SECRET_KEY)
+        );
 
         //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
         speechSynthesizer.initTts(TtsMode.MIX);
@@ -120,7 +120,7 @@ public class TTSHelper {
                 String path = dest;
                 fos = new FileOutputStream(path);
                 byte[] buffer = new byte[1024];
-                int size = 0;
+                int size;
                 while ((size = is.read(buffer, 0, 1024)) >= 0) {
                     fos.write(buffer, 0, size);
                 }
