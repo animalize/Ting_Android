@@ -24,4 +24,9 @@ public class TingTTSService extends TTSService {
                 .build();
         startForeground(828, notification);
     }
+
+    @Override
+    public Setting getSetting() {
+        return TingSetting.getInstance();
+    }
 }

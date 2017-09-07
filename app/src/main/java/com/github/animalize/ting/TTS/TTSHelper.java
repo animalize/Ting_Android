@@ -11,9 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-/**
- * Created by anima on 17-8-30.
- */
 
 public class TTSHelper {
     private static final String SAMPLE_DIR_NAME = "baiduTTS";
@@ -30,7 +27,8 @@ public class TTSHelper {
     private static String ttsDataDir;
 
     public static SpeechSynthesizer initTTS(Context context,
-                                            SpeechSynthesizerListener speechSynthesizerListener) {
+                                            SpeechSynthesizerListener speechSynthesizerListener,
+                                            Setting setting) {
         SpeechSynthesizer speechSynthesizer = SpeechSynthesizer.getInstance();
         speechSynthesizer.setContext(context);
         speechSynthesizer.setSpeechSynthesizerListener(speechSynthesizerListener);
@@ -41,7 +39,7 @@ public class TTSHelper {
 
         speechSynthesizer.setParam(
                 SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
-                ttsDataDir + "/" + SPEECH_FEMALE_MODEL_NAME);
+                ttsDataDir + "/" + SPEECH_MALE_MODEL_NAME);
 
 //        speechSynthesizer.setParam(
 //                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
@@ -55,6 +53,9 @@ public class TTSHelper {
 
         //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
         speechSynthesizer.initTts(TtsMode.MIX);
+
+        // 设置Setting
+        setting.setSettingToSpeechSynthesizer(speechSynthesizer);
 
         return speechSynthesizer;
     }

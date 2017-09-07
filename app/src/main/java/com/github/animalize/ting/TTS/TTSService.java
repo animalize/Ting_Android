@@ -58,6 +58,8 @@ public abstract class TTSService
 
     public abstract void doStartForeground();
 
+    public abstract Setting getSetting();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -66,9 +68,10 @@ public abstract class TTSService
 
         doStartForeground();
 
-        // tts引擎
+        // 复制引擎文件
         TTSHelper.initialEnv(this);
-        mSpeechSynthesizer = TTSHelper.initTTS(this, this);
+        // 设置引擎
+        mSpeechSynthesizer = TTSHelper.initTTS(this, this, getSetting());
     }
 
     @Override
@@ -166,6 +169,7 @@ public abstract class TTSService
     }
 
     public interface IArticle {
+        // 以下两个函数，任何一个返回null则会清空TTSServices
         String getTitle();
 
         String getText();
