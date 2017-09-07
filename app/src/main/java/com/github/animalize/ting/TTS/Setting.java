@@ -263,5 +263,8 @@ public abstract class Setting {
             fn = getSpeechFemaleModelFile();
         }
         ss.setParam(SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE, fn);
+
+        // 离线模型
+        ss.loadModel(fn, getTextModelFile());
     }
 }
