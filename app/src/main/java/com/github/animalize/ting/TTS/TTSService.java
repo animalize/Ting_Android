@@ -347,5 +347,9 @@ public abstract class TTSService
 
             return false;
         }
+
+        public void setSetting() {
+            TTSService.this.setSetting();
+        }
     }
 }

@@ -10,9 +10,16 @@ import com.baidu.tts.client.TtsMode;
 public abstract class Setting {
     public static final int MIX_MODE_DEFAULT = 0;
     public static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
-    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 2;
-    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 3;
-
+    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
+    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 2;
+    private static final String[] SPEAKER_NAMES = {
+            "普通女声", "普通男声", "特别男声", "情感男声", "情感儿童声"};
+    private static String[] MIXMODE_NAMES = {
+            "A:wifi在线，非wifi离线",
+            "B:wifi,3G,4G在线，其它离线",
+            "同A，在网速慢时自动离线",
+            "同B，在网速慢时自动离线"
+    };
     // 音量，范围[0-9]
     private int mVolume = 5;
     // 语速，范围[0-9]
@@ -41,6 +48,14 @@ public abstract class Setting {
 
     public Setting() {
         loadSetting();
+    }
+
+    public static String[] getSpeakerNameList() {
+        return SPEAKER_NAMES;
+    }
+
+    public static String[] getMixModeNameList() {
+        return MIXMODE_NAMES;
     }
 
     public abstract void loadSetting();
@@ -189,10 +204,10 @@ public abstract class Setting {
 
         int temp = getmSpeaker();
         String fn;
-        if (temp == 0 || temp == 4) {
-            fn = getSpeechFemaleModelFile();
-        } else {
+        if (0 < temp && temp < 4) {
             fn = getSpeechMaleModelFile();
+        } else {
+            fn = getSpeechFemaleModelFile();
         }
         ss.setParam(SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE, fn);
     }

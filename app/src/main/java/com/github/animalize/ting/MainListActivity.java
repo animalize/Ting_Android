@@ -31,6 +31,8 @@ public class MainListActivity
         extends AppCompatActivity
         implements View.OnClickListener, ThreadHost, AdapterView.OnItemSelectedListener {
 
+    private final static int OPTION_REQ_CODE = 3333;
+
     private boolean isAlive = true;
 
     private DataManager dataManager = DataManager.getInstance();
@@ -196,8 +198,19 @@ public class MainListActivity
                 break;
 
             case R.id.config:
-                OptionActivity.actionStart(this);
+                OptionActivity.actionStart(this, OPTION_REQ_CODE);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,
+                                    int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == OPTION_REQ_CODE && resultCode == RESULT_OK) {
+            mBinder.setSetting();
         }
     }
 

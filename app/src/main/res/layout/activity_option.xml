@@ -7,8 +7,77 @@
     tools:context="com.github.animalize.ting.OptionActivity">
 
     <TextView
+        android:id="@+id/volume_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="音量" />
+
+    <SeekBar
+        android:id="@+id/volume_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="9" />
+
+    <TextView
+        android:id="@+id/speed_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="语速" />
+
+    <SeekBar
+        android:id="@+id/speed_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="9" />
+
+    <TextView
+        android:id="@+id/pitch_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="语调" />
+
+    <SeekBar
+        android:id="@+id/pitch_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="9" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="朗读者:" />
+
+        <Spinner
+            android:id="@+id/speaker_spinner"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="模式:" />
+
+        <Spinner
+            android:id="@+id/mixmode_spinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:text="不要随意修改这里：" />
 
     <EditText
