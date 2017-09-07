@@ -17,7 +17,7 @@ public abstract class Setting {
     public static final int THRESHOLD_MIN = 1;
     public static final int THRESHOLD_MAX = 10;
 
-    public static final int WINDOW_DEFAULT = 4;
+    public static final int WINDOW_DEFAULT = 6;
     public static final int WINDOW_MIN = 1;
     public static final int WINDOW_MAX = 10;
 
@@ -57,7 +57,7 @@ public abstract class Setting {
     * MIX_MODE_HIGH_SPEED_SYNTHESIZE
     * (mix模式下，在线返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于网络环境较差的情况)
  * */
-    private int mMixMode = MIX_MODE_HIGH_SPEED_SYNTHESIZE;
+    private int mMixMode = MIX_MODE_DEFAULT;
 
     private int mThreshold = THRESHOLD_DEFAULT;
     private int mWindow = WINDOW_DEFAULT;
