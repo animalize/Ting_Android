@@ -25,33 +25,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#dabfb9"
-        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/config"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:text="设置" />
 
         <Button
-            android:id="@+id/refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="刷新列表" />
-
-        <Button
             android:id="@+id/del_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
             android:text="全部删除" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="刷新列表" />
 
         <Button
             android:id="@+id/open_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:text="查看文本" />
     </LinearLayout>
 
