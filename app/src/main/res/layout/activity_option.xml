@@ -1,112 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical"
+    android:fadeScrollbars="false"
+    android:scrollbarStyle="outsideInset"
+    android:verticalScrollbarPosition="left"
     tools:context="com.github.animalize.ting.OptionActivity">
 
-    <TextView
-        android:id="@+id/volume_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="音量" />
-
-    <SeekBar
-        android:id="@+id/volume_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="9" />
-
-    <TextView
-        android:id="@+id/speed_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="语速" />
-
-    <SeekBar
-        android:id="@+id/speed_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="9" />
-
-    <TextView
-        android:id="@+id/pitch_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="语调" />
-
-    <SeekBar
-        android:id="@+id/pitch_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="9" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确定" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/volume_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="音量" />
+
+        <SeekBar
+            android:id="@+id/volume_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="9" />
+
+        <TextView
+            android:id="@+id/speed_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="语速" />
+
+        <SeekBar
+            android:id="@+id/speed_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="9" />
+
+        <TextView
+            android:id="@+id/pitch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="语调" />
+
+        <SeekBar
+            android:id="@+id/pitch_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="9" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="朗读者:" />
+
+            <Spinner
+                android:id="@+id/speaker_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="模式:" />
+
+            <Spinner
+                android:id="@+id/mixmode_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/threshold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="阈值：" />
+
+        <SeekBar
+            android:id="@+id/threshold_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="朗读者:" />
+            android:text="当队列长度小于阈值时，加载窗口长度的分句。" />
 
-        <Spinner
-            android:id="@+id/speaker_spinner"
+
+        <TextView
+            android:id="@+id/window_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="窗口长度：" />
+
+        <SeekBar
+            android:id="@+id/window_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="模式:" />
+            android:text="一次加载的分句数。" />
 
-        <Spinner
-            android:id="@+id/mixmode_spinner"
+
+        <TextView
+            android:id="@+id/fenju_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="分句字符数：" />
+
+        <SeekBar
+            android:id="@+id/fenju_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:text="不要随意修改这里：" />
-
-    <EditText
-        android:id="@+id/filters"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/ok"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="确定" />
+            android:text="每句的最大字符数，加载新文章时生效。" />
 
-        <Button
-            android:id="@+id/cancel"
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="取消" />
+            android:layout_marginTop="18dp"
+            android:text="不要随意修改这里：" />
+
+        <EditText
+            android:id="@+id/filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

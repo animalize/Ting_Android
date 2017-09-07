@@ -26,15 +26,13 @@ public abstract class TTSService
     public static final int PLAYING = 2;
     public static final int PAUSING = 3;
 
-    private static final int THRESHOLD = 2;
-    private static final int WINDOW = 3;
-
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
     private static Intent mStartIntent = new Intent(SPEECH_START_INTENT);
-
     private final IBinder mBinder = new ArticleTtsBinder();
+    private int mThreshold;
+    private int mWindow;
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
 
@@ -65,7 +63,13 @@ public abstract class TTSService
     public abstract Setting getSetting();
 
     private void setSetting() {
-        getSetting().setSettingToSpeechSynthesizer(mSpeechSynthesizer);
+        Setting s = getSetting();
+
+        mThreshold = s.getmThreshold();
+        mWindow = s.getmWindow();
+        Ju.setSize(s.getmFenJu());
+
+        s.setSettingToSpeechSynthesizer(mSpeechSynthesizer);
     }
 
     @Override
@@ -97,9 +101,9 @@ public abstract class TTSService
         mNowSpeechIndex = Integer.parseInt(s);
         mLBM.sendBroadcast(mStartIntent);
 
-        if (mNowQueueIndex - mNowSpeechIndex <= THRESHOLD) {
+        if (mNowQueueIndex - mNowSpeechIndex <= mThreshold) {
             // 剩余低于阈值
-            for (int i = 0; i < WINDOW; i++) {
+            for (int i = 0; i < mWindow; i++) {
                 if (mNowQueueIndex >= mJus.size()) {
                     // 已读完
                     break;
@@ -155,8 +159,8 @@ public abstract class TTSService
     private void playAction() {
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
-        int end = mNowQueueIndex + THRESHOLD < mJus.size()
-                ? mNowQueueIndex + THRESHOLD
+        int end = mNowQueueIndex + mThreshold < mJus.size()
+                ? mNowQueueIndex + mThreshold
                 : mJus.size();
 
         for (int i = mNowQueueIndex; i < end; i++) {
@@ -187,7 +191,7 @@ public abstract class TTSService
     }
 
     public static class Ju {
-        private static final int SIZE = 64; //256;
+        private static int SIZE = 80; //256;
         private static Pattern biaodian;
         public int begin;
         public int end;
@@ -195,6 +199,10 @@ public abstract class TTSService
         public Ju(int begin, int end) {
             this.begin = begin;
             this.end = end;
+        }
+
+        public static void setSize(int size) {
+            SIZE = size;
         }
 
         private static List<Ju> fenJu(String s) {

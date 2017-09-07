@@ -16,6 +16,10 @@ public class TingSetting extends Setting {
     private static final String TAG_SPEAKER = "speaker";
     private static final String TAG_MIXMODE = "mix_mode";
 
+    private static final String TAG_THRESHOLD = "threshold";
+    private static final String TAG_WINDOW = "window";
+    private static final String TAG_FENJU = "fenju";
+
     private static TingSetting singleTongle;
 
     private TingSetting() {
@@ -38,6 +42,7 @@ public class TingSetting extends Setting {
 
         int temp;
 
+        // 引擎
         temp = sp.getInt(TAG_VOLUME, getmVolume());
         setmVolume(temp);
 
@@ -52,6 +57,16 @@ public class TingSetting extends Setting {
 
         temp = sp.getInt(TAG_MIXMODE, getmMixMode());
         setmMixMode(temp);
+
+        // 服务
+        temp = sp.getInt(TAG_THRESHOLD, getmThreshold());
+        setmThreshold(temp);
+
+        temp = sp.getInt(TAG_WINDOW, getmWindow());
+        setmWindow(temp);
+
+        temp = sp.getInt(TAG_FENJU, getmFenJu());
+        setmFenJu(temp);
     }
 
     @Override
@@ -61,11 +76,17 @@ public class TingSetting extends Setting {
                 FILE_NAME,
                 Context.MODE_PRIVATE).edit();
 
+        // 引擎
         editor.putInt(TAG_VOLUME, getmVolume());
         editor.putInt(TAG_SPEED, getmSpeed());
         editor.putInt(TAG_PITCH, getmPitch());
         editor.putInt(TAG_SPEAKER, getmSpeaker());
         editor.putInt(TAG_MIXMODE, getmMixMode());
+
+        // 服务
+        editor.putInt(TAG_THRESHOLD, getmThreshold());
+        editor.putInt(TAG_WINDOW, getmWindow());
+        editor.putInt(TAG_FENJU, getmFenJu());
 
         editor.apply();
     }

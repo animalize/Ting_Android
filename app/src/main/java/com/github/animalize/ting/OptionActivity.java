@@ -30,8 +30,11 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
 
     private TextView volumeText, speedText, pitchText;
     private SeekBar volumeSeekbar, speedSeekbar, pitchSeekbar;
-
     private int mNowSpeaker, mNowMixMode;
+
+    private TextView thresholdText, windowText, fenjuText;
+    private SeekBar thresholdSeekbar, windowSeekbar, fenjuSeekbar;
+    private int mNowThreshold, mNowWindow, mNowFenju;
 
     public static void actionStart(Activity activity, int requestCode) {
         Intent i = new Intent(activity, OptionActivity.class);
@@ -89,6 +92,38 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         mNowMixMode = mTTSSetting.getmMixMode();
         mixModeSpinner.setSelection(mNowMixMode);
 
+        // 服务设置
+
+        // 阈值
+        thresholdSeekbar = (SeekBar) findViewById(R.id.threshold_seekbar);
+        thresholdSeekbar.setMax(TingSetting.THRESHOLD_MAX - Setting.THRESHOLD_MIN);
+        mNowThreshold = mTTSSetting.getmThreshold();
+        thresholdSeekbar.setProgress(mNowThreshold - TingSetting.THRESHOLD_MIN);
+        thresholdSeekbar.setOnSeekBarChangeListener(this);
+
+        thresholdText = (TextView) findViewById(R.id.threshold_text);
+        thresholdText.setText("阈值 " + mTTSSetting.getmThreshold() + "：");
+
+        // 窗口长度
+        windowSeekbar = (SeekBar) findViewById(R.id.window_seekbar);
+        windowSeekbar.setMax(TingSetting.WINDOW_MAX - Setting.WINDOW_MIN);
+        mNowWindow = mTTSSetting.getmWindow();
+        windowSeekbar.setProgress(mNowWindow - TingSetting.WINDOW_MIN);
+        windowSeekbar.setOnSeekBarChangeListener(this);
+
+        windowText = (TextView) findViewById(R.id.window_text);
+        windowText.setText("窗口长度 " + mTTSSetting.getmWindow() + "：");
+
+        // 分句字符数
+        fenjuSeekbar = (SeekBar) findViewById(R.id.fenju_seekbar);
+        fenjuSeekbar.setMax(TingSetting.FENJU_MAX - Setting.FENJU_MIN);
+        mNowFenju = mTTSSetting.getmFenJu();
+        fenjuSeekbar.setProgress(mNowFenju - TingSetting.FENJU_MIN);
+        fenjuSeekbar.setOnSeekBarChangeListener(this);
+
+        fenjuText = (TextView) findViewById(R.id.fenju_text);
+        fenjuText.setText("分句字符数 " + mTTSSetting.getmFenJu() + "：");
+
         // 过滤器
         Set<String> filters = mConfig.getmFilters();
         String s = "";
@@ -120,6 +155,10 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
                 mTTSSetting.setmSpeaker(mNowSpeaker);
                 mTTSSetting.setmMixMode(mNowMixMode);
 
+                mTTSSetting.setmThreshold(mNowThreshold);
+                mTTSSetting.setmWindow(mNowWindow);
+                mTTSSetting.setmFenJu(mNowFenju);
+
                 // 保存到磁盘
                 mTTSSetting.saveSetting();
 
@@ -147,6 +186,21 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.pitch_seekbar:
                 pitchText.setText("语调 " + progress + "：");
+                break;
+
+            case R.id.threshold_seekbar:
+                mNowThreshold = progress + TingSetting.THRESHOLD_MIN;
+                thresholdText.setText("阈值 " + mNowThreshold + "：");
+                break;
+
+            case R.id.window_seekbar:
+                mNowWindow = progress + TingSetting.WINDOW_MIN;
+                windowText.setText("窗口长度 " + mNowWindow + "：");
+                break;
+
+            case R.id.fenju_seekbar:
+                mNowFenju = progress + TingSetting.FENJU_MIN;
+                fenjuText.setText("分句字符数 " + mNowFenju + "：");
                 break;
         }
     }

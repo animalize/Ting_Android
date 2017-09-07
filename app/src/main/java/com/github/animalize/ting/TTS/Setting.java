@@ -12,6 +12,19 @@ public abstract class Setting {
     public static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
     public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 2;
     public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
+
+    public static final int THRESHOLD_DEFAULT = 2;
+    public static final int THRESHOLD_MIN = 1;
+    public static final int THRESHOLD_MAX = 10;
+
+    public static final int WINDOW_DEFAULT = 3;
+    public static final int WINDOW_MIN = 1;
+    public static final int WINDOW_MAX = 10;
+
+    public static final int FENJU_DEFAULT = 80;
+    public static final int FENJU_MIN = 32;
+    public static final int FENJU_MAX = 500;
+
     private static final String[] SPEAKER_NAMES = {
             "普通女声", "普通男声", "特别男声", "情感男声", "情感儿童声"};
     private static String[] MIXMODE_NAMES = {
@@ -46,6 +59,10 @@ public abstract class Setting {
  * */
     private int mMixMode = MIX_MODE_HIGH_SPEED_SYNTHESIZE;
 
+    private int mThreshold = THRESHOLD_DEFAULT;
+    private int mWindow = WINDOW_DEFAULT;
+    private int mFenJu = FENJU_DEFAULT;
+
     public Setting() {
         loadSetting();
     }
@@ -56,6 +73,42 @@ public abstract class Setting {
 
     public static String[] getMixModeNameList() {
         return MIXMODE_NAMES;
+    }
+
+    public int getmFenJu() {
+        return mFenJu;
+    }
+
+    public void setmFenJu(int mFenJu) {
+        if (FENJU_MIN <= mFenJu && mFenJu <= FENJU_MAX) {
+            this.mFenJu = mFenJu;
+        } else {
+            this.mFenJu = FENJU_DEFAULT;
+        }
+    }
+
+    public int getmThreshold() {
+        return mThreshold;
+    }
+
+    public void setmThreshold(int mThreshold) {
+        if (THRESHOLD_MIN <= mThreshold && mThreshold <= THRESHOLD_MAX) {
+            this.mThreshold = mThreshold;
+        } else {
+            this.mThreshold = THRESHOLD_DEFAULT;
+        }
+    }
+
+    public int getmWindow() {
+        return mWindow;
+    }
+
+    public void setmWindow(int mWindow) {
+        if (WINDOW_MIN <= mWindow && mWindow <= WINDOW_MAX) {
+            this.mWindow = mWindow;
+        } else {
+            this.mWindow = WINDOW_DEFAULT;
+        }
     }
 
     public abstract void loadSetting();
