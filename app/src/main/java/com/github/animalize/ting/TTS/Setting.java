@@ -17,7 +17,7 @@ public abstract class Setting {
     public static final int THRESHOLD_MIN = 1;
     public static final int THRESHOLD_MAX = 10;
 
-    public static final int WINDOW_DEFAULT = 3;
+    public static final int WINDOW_DEFAULT = 4;
     public static final int WINDOW_MIN = 1;
     public static final int WINDOW_MAX = 10;
 

@@ -7,6 +7,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
@@ -101,6 +102,8 @@ public abstract class TTSService
         mNowSpeechIndex = Integer.parseInt(s);
         mLBM.sendBroadcast(mStartIntent);
 
+        Log.i("zzzonSpeechStart: ", "" + mNowQueueIndex + " " + mNowSpeechIndex);
+
         if (mNowQueueIndex - mNowSpeechIndex <= mThreshold) {
             // 剩余低于阈值
             for (int i = 0; i < mWindow; i++) {
@@ -116,6 +119,7 @@ public abstract class TTSService
                 mNowQueueIndex += 1;
             }
         }
+        Log.i("zzzonSpeechStart: ", "" + mNowQueueIndex + " " + mNowSpeechIndex);
     }
 
     @Override
@@ -159,6 +163,7 @@ public abstract class TTSService
     private void playAction() {
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
+        Log.i("zzzplayAction: ", "" + mNowQueueIndex + " " + mNowSpeechIndex);
         int end = mNowQueueIndex + mThreshold < mJus.size()
                 ? mNowQueueIndex + mThreshold
                 : mJus.size();
@@ -176,6 +181,7 @@ public abstract class TTSService
 
         mNowQueueIndex = end;
         mSpeechSynthesizer.batchSpeak(bags);
+        Log.i("zzzplayAction: ", "" + mNowQueueIndex + " " + mNowSpeechIndex);
     }
 
     @Override

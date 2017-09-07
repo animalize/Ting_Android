@@ -199,6 +199,9 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.fenju_seekbar:
+                progress = progress / 4;
+                progress = progress * 4;
+
                 mNowFenju = progress + TingSetting.FENJU_MIN;
                 fenjuText.setText("分句字符数 " + mNowFenju + "：");
                 break;

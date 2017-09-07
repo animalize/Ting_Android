@@ -120,7 +120,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="当队列长度小于阈值时，加载窗口长度的分句。" />
+            android:text="当队列长度小于阈值时，加载窗口长度的分句。默认值2。" />
 
 
         <TextView
@@ -138,7 +138,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一次加载的分句数。" />
+            android:text="一次加载的分句数。默认值4。" />
 
 
         <TextView
@@ -156,7 +156,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="每句的最大字符数，加载新文章时生效。" />
+            android:text="每句的最大字符数，加载新文章时生效。默认值80。" />
 
 
         <TextView
