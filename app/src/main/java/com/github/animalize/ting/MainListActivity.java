@@ -279,12 +279,14 @@ public class MainListActivity
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
+            if (!isAlive()) {
+                return;
+            }
+
             String v = values[0];
 
             if ("".equals(v)) {
-                if (isAlive()) {
-                    listAdapter.setArrayList(dataManager.getFullList());
-                }
+                listAdapter.setArrayList(dataManager.getFullList());
             } else {
                 listAdapter.refreshItemByAid(v);
             }
@@ -293,6 +295,10 @@ public class MainListActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (!isAlive()) {
+                return;
+            }
+
             refreshButton.setEnabled(true);
             delAllButton.setEnabled(true);
         }
@@ -315,6 +321,10 @@ public class MainListActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (!isAlive()) {
+                return;
+            }
+
             listAdapter.setArrayList(dataManager.getFullList());
 
             refreshButton.setEnabled(true);

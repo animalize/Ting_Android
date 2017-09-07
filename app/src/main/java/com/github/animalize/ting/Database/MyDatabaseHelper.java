@@ -53,6 +53,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static void setList(List<String> delAidList, List<Item> addList) {
         init();
 
+        // 无效刷新
+        if (delAidList.size() == 0 && addList.size() == 0) {
+            return;
+        }
+
         String[] delAidArray = delAidList.toArray(new String[delAidList.size()]);
 
         mDb.execSQL("BEGIN");
