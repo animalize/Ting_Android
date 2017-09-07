@@ -12,7 +12,7 @@ import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
-import com.github.animalize.ting.TTS.TingTTSService;
+import com.github.animalize.ting.TingTTS.TingTTSService;
 
 public class TextPlayerActivity extends AppCompatActivity implements ServiceConnection {
 

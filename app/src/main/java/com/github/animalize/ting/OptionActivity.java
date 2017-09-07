@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.github.animalize.ting.Data.TingConfig;
 import com.github.animalize.ting.TTS.Setting;
-import com.github.animalize.ting.TTS.TingSetting;
+import com.github.animalize.ting.TingTTS.TingSetting;
 
 import java.util.Arrays;
 import java.util.HashSet;

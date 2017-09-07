@@ -21,7 +21,7 @@ import com.github.animalize.ting.ListView.RVAdapter;
 import com.github.animalize.ting.PlayerUI.PlayerPanelWidget;
 import com.github.animalize.ting.PlayerUI.TextPlayerActivity;
 import com.github.animalize.ting.TTS.TTSService;
-import com.github.animalize.ting.TTS.TingTTSService;
+import com.github.animalize.ting.TingTTS.TingTTSService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

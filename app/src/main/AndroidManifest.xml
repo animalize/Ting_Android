@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name=".TTS.TingTTSService"
+            android:name=".TingTTS.TingTTSService"
             android:enabled="true"
             android:exported="false" />
 
