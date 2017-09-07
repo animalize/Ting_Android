@@ -262,11 +262,7 @@ public abstract class Setting {
         }
         ss.setParam(SpeechSynthesizer.PARAM_MIX_MODE, mixMode);
 
-        // 模型文件
-        ss.setParam(
-                SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE,
-                getTextModelFile());
-
+        // 离线模型
         int temp = getmSpeaker();
         String fn;
         if (0 < temp && temp < 4) {
@@ -274,9 +270,7 @@ public abstract class Setting {
         } else {
             fn = getSpeechFemaleModelFile();
         }
-        ss.setParam(SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE, fn);
 
-        // 离线模型
         ss.loadModel(fn, getTextModelFile());
     }
 }
