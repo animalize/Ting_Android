@@ -68,6 +68,7 @@ public class DataManager {
         }
 
         Set<String> filter = TingConfig.getInstance().getmFilters();
+        List<Item> newFullList = new ArrayList<>();
         List<Item> addList = new ArrayList<>();
 
         Set<String> newListAidSet = new HashSet<>();
@@ -91,7 +92,10 @@ public class DataManager {
                 item.setPosi(old.getPosi());
             }
 
-            addList.add(item);
+            if (!aidMap.containsKey(item.getAid())) {
+                addList.add(item);
+            }
+            newFullList.add(item);
             newListAidSet.add(item.getAid());
         }
 
@@ -103,8 +107,8 @@ public class DataManager {
         }
 
         // 加载
-        Collections.reverse(ret);
-        loadDataFromList(ret);
+        Collections.reverse(newFullList);
+        loadDataFromList(newFullList);
 
         // 写数据库
         MyDatabaseHelper.setList(delAidList, addList);
