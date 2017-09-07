@@ -12,6 +12,7 @@ import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
+import com.github.animalize.ting.TTS.TingTTSService;
 
 public class TextPlayerActivity extends AppCompatActivity implements ServiceConnection {
 
@@ -45,7 +46,7 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         playerText = (PlayerTextWidget) findViewById(R.id.player_text_view);
         playerPanel = (PlayerPanelWidget) findViewById(R.id.player_panel_view);
 
-        intent = new Intent(this, TTSService.class);
+        intent = new Intent(this, TingTTSService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
     }
 

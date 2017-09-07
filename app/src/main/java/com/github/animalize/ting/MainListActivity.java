@@ -21,6 +21,7 @@ import com.github.animalize.ting.ListView.RVAdapter;
 import com.github.animalize.ting.PlayerUI.PlayerPanelWidget;
 import com.github.animalize.ting.PlayerUI.TextPlayerActivity;
 import com.github.animalize.ting.TTS.TTSService;
+import com.github.animalize.ting.TTS.TingTTSService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,7 +136,7 @@ public class MainListActivity
 //        nameSpinner.setAdapter(nameAdapter);
 
 
-        Intent intent = new Intent(this, TTSService.class);
+        Intent intent = new Intent(this, TingTTSService.class);
         bindService(intent, mServerConn, BIND_AUTO_CREATE);
     }
 

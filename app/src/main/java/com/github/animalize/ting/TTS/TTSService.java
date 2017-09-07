@@ -1,7 +1,5 @@
 package com.github.animalize.ting.TTS;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,21 +7,18 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.NotificationCompat;
 
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
-import com.github.animalize.ting.MainListActivity;
-import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TTSService
+public abstract class TTSService
         extends Service
         implements SpeechSynthesizerListener {
     public static final int EMPTY = 0;
@@ -61,24 +56,15 @@ public class TTSService
         return new IntentFilter(SPEECH_START_INTENT);
     }
 
+    public abstract void doStartForeground();
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mLBM = LocalBroadcastManager.getInstance(this);
 
-        // 前台服务
-        Intent notificationIntent = new Intent(this, MainListActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, notificationIntent, 0);
-
-        Notification notification = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notifiy_icon)
-                .setContentTitle("ting的前台服务")
-                .setContentText("")
-                .setContentIntent(pendingIntent)
-                .build();
-        startForeground(828, notification);
+        doStartForeground();
 
         // tts引擎
         TTSHelper.initialEnv(this);
