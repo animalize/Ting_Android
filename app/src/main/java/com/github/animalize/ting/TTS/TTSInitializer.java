@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 
-public class TTSHelper {
+public class TTSInitializer {
     private static final String SAMPLE_DIR_NAME = "baiduTTS";
 
     private static final String SPEECH_FEMALE_MODEL_NAME = "bd_etts_speech_female.dat";
@@ -27,23 +27,10 @@ public class TTSHelper {
     private static String ttsDataDir;
 
     public static SpeechSynthesizer initTTS(Context context,
-                                            SpeechSynthesizerListener speechSynthesizerListener,
-                                            Setting setting) {
+                                            SpeechSynthesizerListener speechSynthesizerListener) {
         SpeechSynthesizer speechSynthesizer = SpeechSynthesizer.getInstance();
         speechSynthesizer.setContext(context);
         speechSynthesizer.setSpeechSynthesizerListener(speechSynthesizerListener);
-
-        speechSynthesizer.setParam(
-                SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE,
-                ttsDataDir + "/" + TEXT_MODEL_NAME);
-
-        speechSynthesizer.setParam(
-                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
-                ttsDataDir + "/" + SPEECH_MALE_MODEL_NAME);
-
-//        speechSynthesizer.setParam(
-//                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
-//                ttsDataDir + "/" + SPEECH_MALE_MODEL_NAME);
 
         speechSynthesizer.setAppId(context.getString(R.string.APP_ID));
         speechSynthesizer.setApiKey(
@@ -53,9 +40,6 @@ public class TTSHelper {
 
         //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
         speechSynthesizer.initTts(TtsMode.MIX);
-
-        // 设置Setting
-        setting.setSettingToSpeechSynthesizer(speechSynthesizer);
 
         return speechSynthesizer;
     }
@@ -92,6 +76,27 @@ public class TTSHelper {
                 false,
                 "english/" + ENGLISH_TEXT_MODEL_NAME,
                 ttsDataDir + "/" + ENGLISH_TEXT_MODEL_NAME);
+    }
+
+    public static String getTextModelName() {
+        if (ttsDataDir == null) {
+            return null;
+        }
+        return ttsDataDir + "/" + TEXT_MODEL_NAME;
+    }
+
+    public static String getSpeechMaleModelName() {
+        if (ttsDataDir == null) {
+            return null;
+        }
+        return ttsDataDir + "/" + SPEECH_MALE_MODEL_NAME;
+    }
+
+    public static String getSpeechFemaleModelName() {
+        if (ttsDataDir == null) {
+            return null;
+        }
+        return ttsDataDir + "/" + SPEECH_FEMALE_MODEL_NAME;
     }
 
 

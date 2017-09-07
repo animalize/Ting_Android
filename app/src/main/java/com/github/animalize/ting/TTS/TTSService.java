@@ -30,7 +30,9 @@ public abstract class TTSService
     private static final int WINDOW = 2;
 
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
+    private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
+    private static Intent mStartIntent = new Intent(SPEECH_START_INTENT);
 
     private final IBinder mBinder = new ArticleTtsBinder();
     private SpeechSynthesizer mSpeechSynthesizer;
@@ -60,6 +62,10 @@ public abstract class TTSService
 
     public abstract Setting getSetting();
 
+    private void setSetting() {
+        getSetting().setSettingToSpeechSynthesizer(mSpeechSynthesizer);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -69,9 +75,10 @@ public abstract class TTSService
         doStartForeground();
 
         // 复制引擎文件
-        TTSHelper.initialEnv(this);
+        TTSInitializer.initialEnv(this);
         // 设置引擎
-        mSpeechSynthesizer = TTSHelper.initTTS(this, this, getSetting());
+        mSpeechSynthesizer = TTSInitializer.initTTS(this, this);
+        setSetting();
     }
 
     @Override
@@ -84,7 +91,7 @@ public abstract class TTSService
     public void onSpeechStart(String s) {
         // 进度
         mNowSpeechIndex = Integer.parseInt(s);
-        mLBM.sendBroadcast(new Intent(SPEECH_START_INTENT));
+        mLBM.sendBroadcast(mStartIntent);
 
         if (mNowQueueIndex - mNowSpeechIndex <= THRESHOLD) {
             // 剩余低于阈值
@@ -138,7 +145,7 @@ public abstract class TTSService
 
     private void setEvent(int state) {
         mNowState = state;
-        mLBM.sendBroadcast(new Intent(SPEECH_EVENT_INTENT));
+        mLBM.sendBroadcast(mEventIntent);
     }
 
     private void playAction() {

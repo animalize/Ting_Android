@@ -68,4 +68,19 @@ public class TingSetting extends Setting {
 
         editor.apply();
     }
+
+    @Override
+    public String getTextModelFile() {
+        return TTSInitializer.getTextModelName();
+    }
+
+    @Override
+    public String getSpeechModelFile() {
+        int temp = getmSpeaker();
+        if (temp == 0 || temp == 4) {
+            return TTSInitializer.getSpeechFemaleModelName();
+        } else {
+            return TTSInitializer.getSpeechMaleModelName();
+        }
+    }
 }

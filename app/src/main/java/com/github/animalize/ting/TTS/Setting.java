@@ -1,8 +1,6 @@
 package com.github.animalize.ting.TTS;
 
 
-import android.util.Log;
-
 import com.baidu.tts.client.SpeechSynthesizer;
 
 public abstract class Setting {
@@ -24,7 +22,7 @@ public abstract class Setting {
     * 3 (情感男声<度逍遥>)
     * 4 (情感儿童声<度丫丫>)
     * */
-    private int mSpeaker = 1;
+    private int mSpeaker = 0;
     /*
     * MIX_MODE_DEFAULT
     * (mix模式下，wifi使用在线合成，非wifi使用离线合成)
@@ -44,6 +42,10 @@ public abstract class Setting {
     public abstract void loadSetting();
 
     public abstract void saveSetting();
+
+    public abstract String getTextModelFile();
+
+    public abstract String getSpeechModelFile();
 
     public int getmVolume() {
         return mVolume;
@@ -124,11 +126,11 @@ public abstract class Setting {
                 SpeechSynthesizer.PARAM_PITCH,
                 "" + getmPitch());
 
-        Log.i("setSetizer: ", "xxx " + getmSpeaker());
         ss.setParam(
                 SpeechSynthesizer.PARAM_SPEAKER,
                 "" + getmSpeaker());
 
+        // Mix的模式
         String mixMode;
         switch (getmMixMode()) {
             case MIX_MODE_DEFAULT:
@@ -151,5 +153,14 @@ public abstract class Setting {
                 mixMode = SpeechSynthesizer.MIX_MODE_DEFAULT;
         }
         ss.setParam(SpeechSynthesizer.PARAM_MIX_MODE, mixMode);
+
+        // 模型文件
+        ss.setParam(
+                SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE,
+                getTextModelFile());
+
+        ss.setParam(
+                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
+                getSpeechModelFile());
     }
 }
