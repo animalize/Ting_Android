@@ -81,17 +81,20 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static void delItems(List<String> delAidList) {
         init();
 
+        if (delAidList.size() == 0) {
+            return;
+        }
+
         String[] delAidArray = delAidList.toArray(new String[delAidList.size()]);
 
-        mDb.execSQL("BEGIN");
 
         // 删没有的
-        if (delAidArray.length > 0) {
-            String sql = "DELETE FROM list " +
-                    "WHERE aid IN (" +
-                    makePlaceholders(delAidArray.length) + ") ";
-            mDb.execSQL(sql, delAidArray);
-        }
+        mDb.execSQL("BEGIN");
+
+        String sql = "DELETE FROM list " +
+                "WHERE aid IN (" +
+                makePlaceholders(delAidArray.length) + ") ";
+        mDb.execSQL(sql, delAidArray);
 
         mDb.execSQL("COMMIT");
     }
