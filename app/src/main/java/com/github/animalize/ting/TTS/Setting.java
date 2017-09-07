@@ -1,7 +1,11 @@
 package com.github.animalize.ting.TTS;
 
 
+import android.content.Context;
+
 import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.baidu.tts.client.TtsMode;
 
 public abstract class Setting {
     public static final int MIX_MODE_DEFAULT = 0;
@@ -45,7 +49,15 @@ public abstract class Setting {
 
     public abstract String getTextModelFile();
 
-    public abstract String getSpeechModelFile();
+    public abstract String getSpeechMaleModelFile();
+
+    public abstract String getSpeechFemaleModelFile();
+
+    public abstract String getApiID();
+
+    public abstract String getApiKey();
+
+    public abstract String getSecretKey();
 
     public int getmVolume() {
         return mVolume;
@@ -113,6 +125,22 @@ public abstract class Setting {
         }
     }
 
+    public SpeechSynthesizer initTTS(Context context,
+                                     SpeechSynthesizerListener speechSynthesizerListener) {
+
+        SpeechSynthesizer speechSynthesizer = SpeechSynthesizer.getInstance();
+        speechSynthesizer.setContext(context);
+        speechSynthesizer.setSpeechSynthesizerListener(speechSynthesizerListener);
+
+        speechSynthesizer.setAppId(getApiID());
+        speechSynthesizer.setApiKey(getApiKey(), getSecretKey());
+
+        //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
+        speechSynthesizer.initTts(TtsMode.MIX);
+
+        return speechSynthesizer;
+    }
+
     public void setSettingToSpeechSynthesizer(SpeechSynthesizer ss) {
         ss.setParam(
                 SpeechSynthesizer.PARAM_VOLUME,
@@ -159,8 +187,13 @@ public abstract class Setting {
                 SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE,
                 getTextModelFile());
 
-        ss.setParam(
-                SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE,
-                getSpeechModelFile());
+        int temp = getmSpeaker();
+        String fn;
+        if (temp == 0 || temp == 4) {
+            fn = getSpeechFemaleModelFile();
+        } else {
+            fn = getSpeechMaleModelFile();
+        }
+        ss.setParam(SpeechSynthesizer.PARAM_TTS_SPEECH_MODEL_FILE, fn);
     }
 }

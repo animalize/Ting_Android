@@ -2,11 +2,6 @@ package com.github.animalize.ting.TTS;
 
 import android.content.Context;
 
-import com.baidu.tts.client.SpeechSynthesizer;
-import com.baidu.tts.client.SpeechSynthesizerListener;
-import com.baidu.tts.client.TtsMode;
-import com.github.animalize.ting.R;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -26,30 +21,15 @@ public class TTSInitializer {
     private static Context appContext;
     private static String ttsDataDir;
 
-    public static SpeechSynthesizer initTTS(Context context,
-                                            SpeechSynthesizerListener speechSynthesizerListener) {
-        SpeechSynthesizer speechSynthesizer = SpeechSynthesizer.getInstance();
-        speechSynthesizer.setContext(context);
-        speechSynthesizer.setSpeechSynthesizerListener(speechSynthesizerListener);
-
-        speechSynthesizer.setAppId(context.getString(R.string.APP_ID));
-        speechSynthesizer.setApiKey(
-                context.getString(R.string.API_KEY),
-                context.getString(R.string.SECRET_KEY)
-        );
-
-        //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
-        speechSynthesizer.initTts(TtsMode.MIX);
-
-        return speechSynthesizer;
-    }
-
     public static void initialEnv(Context context) {
         appContext = context.getApplicationContext();
         File fileDir = appContext.getFilesDir();
-        ttsDataDir = (new File(fileDir, SAMPLE_DIR_NAME)).getAbsolutePath();
 
-        makeDir(ttsDataDir);
+        File dataDir = new File(fileDir, SAMPLE_DIR_NAME);
+        ttsDataDir = dataDir.getAbsolutePath();
+        if (!dataDir.isDirectory()) {
+            makeDir(ttsDataDir);
+        }
 
         copyFromAssetsToSdcard(
                 false,

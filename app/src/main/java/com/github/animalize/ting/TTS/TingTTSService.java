@@ -10,6 +10,11 @@ import com.github.animalize.ting.R;
 
 public class TingTTSService extends TTSService {
     @Override
+    public void initTTS() {
+        TTSInitializer.initialEnv(this);
+    }
+
+    @Override
     public void doStartForeground() {
         // 前台服务
         Intent notificationIntent = new Intent(this, MainListActivity.class);

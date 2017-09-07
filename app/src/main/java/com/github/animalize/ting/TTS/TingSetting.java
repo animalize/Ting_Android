@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.github.animalize.ting.MyApplication;
+import com.github.animalize.ting.R;
 
 
 public class TingSetting extends Setting {
@@ -75,12 +76,27 @@ public class TingSetting extends Setting {
     }
 
     @Override
-    public String getSpeechModelFile() {
-        int temp = getmSpeaker();
-        if (temp == 0 || temp == 4) {
-            return TTSInitializer.getSpeechFemaleModelName();
-        } else {
-            return TTSInitializer.getSpeechMaleModelName();
-        }
+    public String getSpeechMaleModelFile() {
+        return TTSInitializer.getSpeechMaleModelName();
+    }
+
+    @Override
+    public String getSpeechFemaleModelFile() {
+        return TTSInitializer.getSpeechFemaleModelName();
+    }
+
+    @Override
+    public String getApiID() {
+        return MyApplication.getContext().getString(R.string.APP_ID);
+    }
+
+    @Override
+    public String getApiKey() {
+        return MyApplication.getContext().getString(R.string.API_KEY);
+    }
+
+    @Override
+    public String getSecretKey() {
+        return MyApplication.getContext().getString(R.string.SECRET_KEY);
     }
 }

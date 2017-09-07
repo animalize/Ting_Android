@@ -27,7 +27,7 @@ public abstract class TTSService
     public static final int PAUSING = 3;
 
     private static final int THRESHOLD = 2;
-    private static final int WINDOW = 2;
+    private static final int WINDOW = 3;
 
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
@@ -58,6 +58,8 @@ public abstract class TTSService
         return new IntentFilter(SPEECH_START_INTENT);
     }
 
+    public abstract void initTTS();
+
     public abstract void doStartForeground();
 
     public abstract Setting getSetting();
@@ -75,9 +77,11 @@ public abstract class TTSService
         doStartForeground();
 
         // 复制引擎文件
-        TTSInitializer.initialEnv(this);
+        initTTS();
+
+        // 初始化引擎
+        mSpeechSynthesizer = getSetting().initTTS(this, this);
         // 设置引擎
-        mSpeechSynthesizer = TTSInitializer.initTTS(this, this);
         setSetting();
     }
 
