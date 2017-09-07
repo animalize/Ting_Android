@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +68,10 @@ public class DataManager {
         }
 
         Set<String> filter = TingConfig.getInstance().getmFilters();
-        List<Item> list = new ArrayList<>();
+        List<Item> addList = new ArrayList<>();
+
+        Set<String> newListAidSet = new HashSet<>();
+        List<String> delAidList = new ArrayList<>();
 
         for (Item item : ret) {
             // 过滤分类
@@ -87,14 +91,23 @@ public class DataManager {
                 item.setPosi(old.getPosi());
             }
 
-            list.add(item);
+            addList.add(item);
+            newListAidSet.add(item.getAid());
+        }
+
+        // 要删的
+        for (String aid : aidMap.keySet()) {
+            if (!newListAidSet.contains(aid)) {
+                delAidList.add(aid);
+            }
         }
 
         // 加载
-        loadDataFromList(list);
+        Collections.reverse(ret);
+        loadDataFromList(ret);
 
         // 写数据库
-        MyDatabaseHelper.setList(list);
+        MyDatabaseHelper.setList(delAidList, addList);
 
         // 删无效缓存
         deleteInvalidCache();
@@ -173,7 +186,7 @@ public class DataManager {
         delOldCache(aidList);
 
         // 写数据库
-        MyDatabaseHelper.setList(list);
+        MyDatabaseHelper.delItems(aidList);
 
         // 从服务器删除
         Methods.deleteAids(aidList);

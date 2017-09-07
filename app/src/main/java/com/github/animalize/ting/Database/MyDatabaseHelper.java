@@ -35,7 +35,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static List<Item> getList() {
         init();
 
-        String sql = "SELECT * FROM list ORDER BY aid ASC";
+        String sql = "SELECT * FROM list ORDER BY aid DESC";
         Cursor c = mDb.rawQuery(sql, null);
 
         List<Item> l = new ArrayList<>();
@@ -50,18 +50,42 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return l;
     }
 
-    public static void setList(List<Item> list) {
+    public static void setList(List<String> delAidList, List<Item> addList) {
         init();
+
+        String[] delAidArray = delAidList.toArray(new String[delAidList.size()]);
 
         mDb.execSQL("BEGIN");
 
-        // 删所有
-        String sql = "DELETE FROM list";
-        mDb.execSQL(sql);
+        // 删没有的
+        if (delAidArray.length > 0) {
+            String sql = "DELETE FROM list " +
+                    "WHERE aid IN (" +
+                    makePlaceholders(delAidArray.length) + ") ";
+            mDb.execSQL(sql, delAidArray);
+        }
 
         // 添新的
-        for (Item item : list) {
+        for (Item item : addList) {
             mDb.insert("list", null, item.getContentValues());
+        }
+
+        mDb.execSQL("COMMIT");
+    }
+
+    public static void delItems(List<String> delAidList) {
+        init();
+
+        String[] delAidArray = delAidList.toArray(new String[delAidList.size()]);
+
+        mDb.execSQL("BEGIN");
+
+        // 删没有的
+        if (delAidArray.length > 0) {
+            String sql = "DELETE FROM list " +
+                    "WHERE aid IN (" +
+                    makePlaceholders(delAidArray.length) + ") ";
+            mDb.execSQL(sql, delAidArray);
         }
 
         mDb.execSQL("COMMIT");
@@ -74,6 +98,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         int cached = v ? 1 : 0;
 
         mDb.execSQL(sql, new String[]{String.valueOf(cached), aid});
+    }
+
+    private static String makePlaceholders(int len) {
+        // 须确保 len > 0
+        StringBuilder sb = new StringBuilder(len * 2 - 1);
+        sb.append("?");
+        for (int i = 1; i < len; i++) {
+            sb.append(",?");
+        }
+        return sb.toString();
     }
 
     @Override
