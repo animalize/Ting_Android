@@ -10,13 +10,13 @@ import com.baidu.tts.client.TtsMode;
 public abstract class Setting {
     public static final int MIX_MODE_DEFAULT = 0;
     public static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
-    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
     public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 2;
+    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
     private static final String[] SPEAKER_NAMES = {
             "普通女声", "普通男声", "特别男声", "情感男声", "情感儿童声"};
     private static String[] MIXMODE_NAMES = {
-            "A:wifi在线，非wifi离线",
-            "B:wifi,3G,4G在线，其它离线",
+            "A：wifi在线，非wifi离线",
+            "B：wifi,3G,4G在线，其它离线",
             "同A，在网速慢时自动离线",
             "同B，在网速慢时自动离线"
     };
@@ -39,11 +39,11 @@ public abstract class Setting {
     * (mix模式下，wifi使用在线合成，非wifi使用离线合成)
     * MIX_MODE_HIGH_SPEED_NETWORK
     * (mix模式下，wifi,4G,3G使用在线合成，其他使用离线合成)
-    * MIX_MODE_HIGH_SPEED_SYNTHESIZE
-    * (mix模式下，在线返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于网络环境较差的情况)
     * MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
     * (mix模式下，仅wifi使用在线合成,返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于仅WIFI网络环境较差的情况)
-    * */
+    * MIX_MODE_HIGH_SPEED_SYNTHESIZE
+    * (mix模式下，在线返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于网络环境较差的情况)
+ * */
     private int mMixMode = MIX_MODE_HIGH_SPEED_SYNTHESIZE;
 
     public Setting() {
