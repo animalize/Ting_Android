@@ -56,7 +56,7 @@ public abstract class TTSService
         return new IntentFilter(SPEECH_START_INTENT);
     }
 
-    public abstract void initTTS();
+    public abstract int initTTS(int currentVer);
 
     public abstract void doStartForeground();
 
@@ -80,11 +80,17 @@ public abstract class TTSService
 
         doStartForeground();
 
+        Setting setting = getSetting();
+
         // 复制引擎文件
-        initTTS();
+        int nowFileVer = initTTS(setting.getmModelFileVer());
+        if (nowFileVer > setting.getmModelFileVer()) {
+            setting.setmModelFileVer(nowFileVer);
+            setting.saveSetting();
+        }
 
         // 初始化引擎
-        mSpeechSynthesizer = getSetting().initTTS(this, this);
+        mSpeechSynthesizer = setting.initTTS(this, this);
         // 设置引擎
         setSetting();
     }

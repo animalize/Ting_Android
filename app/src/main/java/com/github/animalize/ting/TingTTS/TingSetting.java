@@ -21,6 +21,8 @@ public class TingSetting extends Setting {
     private static final String TAG_WINDOW = "window";
     private static final String TAG_FENJU = "fenju";
 
+    private static final String TAG_MODELFILEVER = "model_file_ver";
+
     private static TingSetting singleTongle;
 
     private TingSetting() {
@@ -68,6 +70,10 @@ public class TingSetting extends Setting {
 
         temp = sp.getInt(TAG_FENJU, getmFenJu());
         setmFenJu(temp);
+
+        // 文件
+        temp = sp.getInt(TAG_MODELFILEVER, getmModelFileVer());
+        setmModelFileVer(temp);
     }
 
     @Override
@@ -88,6 +94,9 @@ public class TingSetting extends Setting {
         editor.putInt(TAG_THRESHOLD, getmThreshold());
         editor.putInt(TAG_WINDOW, getmWindow());
         editor.putInt(TAG_FENJU, getmFenJu());
+
+        // 模型文件
+        editor.putInt(TAG_MODELFILEVER, getmModelFileVer());
 
         editor.apply();
     }

@@ -12,8 +12,8 @@ import com.github.animalize.ting.TTS.TTSService;
 
 public class TingTTSService extends TTSService {
     @Override
-    public void initTTS() {
-        TTSInitializer.initialEnv(this);
+    public int initTTS(int currentVer) {
+        return TTSInitializer.initialEnv(this, currentVer);
     }
 
     @Override

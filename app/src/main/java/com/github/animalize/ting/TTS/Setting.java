@@ -59,9 +59,13 @@ public abstract class Setting {
  * */
     private int mMixMode = MIX_MODE_DEFAULT;
 
+    // 服务的参数
     private int mThreshold = THRESHOLD_DEFAULT;
     private int mWindow = WINDOW_DEFAULT;
     private int mFenJu = FENJU_DEFAULT;
+
+    // 模型文件
+    private int mModelFileVer = 0;
 
     public Setting() {
         loadSetting();
@@ -73,6 +77,14 @@ public abstract class Setting {
 
     public static String[] getMixModeNameList() {
         return MIXMODE_NAMES;
+    }
+
+    public int getmModelFileVer() {
+        return mModelFileVer;
+    }
+
+    public void setmModelFileVer(int mModelFileVer) {
+        this.mModelFileVer = mModelFileVer;
     }
 
     public int getmFenJu() {
