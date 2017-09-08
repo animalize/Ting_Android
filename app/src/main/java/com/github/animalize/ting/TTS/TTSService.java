@@ -322,14 +322,15 @@ public abstract class TTSService
 
         @Nullable
         public Ju getNowJu() {
-            if (mArticle != null) {
-                try {
-                    return mJus.get(mNowSpeechIndex);
-                } catch (Exception e) {
-                    return null;
-                }
+            if (mArticle == null || mNowState == STOP || mNowState == EMPTY) {
+                return null;
             }
-            return null;
+
+            try {
+                return mJus.get(mNowSpeechIndex);
+            } catch (Exception e) {
+                return null;
+            }
         }
 
         public int getState() {

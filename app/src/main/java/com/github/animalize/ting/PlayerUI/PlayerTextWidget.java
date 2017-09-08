@@ -75,7 +75,11 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mTextView.setText(spannable);
 
         // 滚动
-        if (mKeepScroll && layout != null) {
+        scrollText();
+    }
+
+    private void scrollText() {
+        if (mKeepScroll && layout != null && ju != null) {
             final int line = layout.getLineForOffset(ju.begin);
             int y = (line + 2) * mTextView.getLineHeight()
                     - mTextView.getHeight() / 2;
@@ -121,14 +125,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         switch (v.getId()) {
             case R.id.keep_scroll:
                 mKeepScroll = mKeepScrollCheckBox.isChecked();
-                // 滚动
-                if (mKeepScroll && layout != null && ju != null) {
-                    final int line = layout.getLineForOffset(ju.begin);
-                    int y = (line + 2) * mTextView.getLineHeight()
-                            - mTextView.getHeight() / 2;
-
-                    mTextView.scrollTo(0, y >= 0 ? y : 0);
-                }
+                scrollText();
                 break;
         }
     }
