@@ -35,7 +35,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static List<Item> getList() {
         init();
 
-        String sql = "SELECT * FROM list ORDER BY aid DESC";
+        String sql = "SELECT * FROM list ORDER BY time DESC, aid DESC";
         Cursor c = mDb.rawQuery(sql, null);
 
         List<Item> l = new ArrayList<>();
@@ -132,6 +132,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
 
         sql = "CREATE INDEX aid_idx ON list(aid);";
+        db.execSQL(sql);
+
+        sql = "CREATE INDEX time_idx ON list(time);";
         db.execSQL(sql);
     }
 
