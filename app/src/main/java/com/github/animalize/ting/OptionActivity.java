@@ -17,8 +17,12 @@ import com.github.animalize.ting.Data.TingConfig;
 import com.github.animalize.ting.TTS.Setting;
 import com.github.animalize.ting.TingTTS.TingSetting;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class OptionActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener {
@@ -35,6 +39,8 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     private TextView thresholdText, windowText, fenjuText;
     private SeekBar thresholdSeekbar, windowSeekbar, fenjuSeekbar;
     private int mNowThreshold, mNowWindow, mNowFenju;
+
+    private TextView verInfo;
 
     public static void actionStart(Activity activity, int requestCode) {
         Intent i = new Intent(activity, OptionActivity.class);
@@ -132,6 +138,13 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         }
         mFilters = (EditText) findViewById(R.id.filters);
         mFilters.setText(s);
+
+        // 版本
+        verInfo = (TextView) findViewById(R.id.ver_info);
+        String versionName = "程序版本：" + BuildConfig.VERSION_NAME + "\n";
+        Date buildDate = new Date(BuildConfig.TIMESTAMP);
+        DateFormat df = new SimpleDateFormat("编译于：yyyy-MM-dd E HH:mm", Locale.getDefault());
+        verInfo.setText(versionName + df.format(buildDate));
 
         // 按钮
         Button bt = (Button) findViewById(R.id.ok);

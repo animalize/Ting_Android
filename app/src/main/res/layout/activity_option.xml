@@ -81,10 +81,18 @@
                 android:layout_height="wrap_content"
                 android:max="9" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -98,10 +106,18 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -115,11 +131,19 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
+
             <TextView
                 android:id="@+id/threshold_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:text="阈值：" />
 
             <SeekBar
@@ -132,12 +156,19 @@
                 android:layout_height="wrap_content"
                 android:text="当队列长度小于阈值时，加载窗口长度的分句。默认值2。" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
 
             <TextView
                 android:id="@+id/window_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:text="窗口长度：" />
 
             <SeekBar
@@ -150,12 +181,19 @@
                 android:layout_height="wrap_content"
                 android:text="一次加载的分句数。默认值6。" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
 
             <TextView
                 android:id="@+id/fenju_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:text="分句字符数：" />
 
             <SeekBar
@@ -168,11 +206,32 @@
                 android:layout_height="wrap_content"
                 android:text="每句的最大字符数，加载新文章时生效。默认值80。" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
+
+            <TextView
+                android:id="@+id/ver_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:background="@android:color/holo_green_dark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
                 android:text="不要随意修改这里：" />
 
             <EditText
