@@ -24,7 +24,7 @@ import java.util.Set;
 public class OptionActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener {
 
     private TingConfig mConfig = TingConfig.getInstance();
-    private TingSetting mTTSSetting = TingSetting.getInstance();
+    private TingSetting mTTSSetting = TingSetting.getInstance(this);
 
     private EditText mFilters;
 
@@ -160,7 +160,7 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
                 mTTSSetting.setmFenJu(mNowFenju);
 
                 // 保存到磁盘
-                mTTSSetting.saveSetting();
+                mTTSSetting.saveSetting(this);
 
                 setResult(RESULT_OK, null);
                 finish();

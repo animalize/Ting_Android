@@ -34,6 +34,6 @@ public class TingTTSService extends TTSService {
 
     @Override
     public Setting getSetting() {
-        return TingSetting.getInstance();
+        return TingSetting.getInstance(this);
     }
 }

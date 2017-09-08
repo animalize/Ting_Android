@@ -2,29 +2,38 @@ package com.github.animalize.ting.TTS;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 
 public abstract class Setting {
+    // 参数部分
     public static final int MIX_MODE_DEFAULT = 0;
     public static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
     public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 2;
     public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
-
     public static final int THRESHOLD_DEFAULT = 2;
     public static final int THRESHOLD_MIN = 1;
     public static final int THRESHOLD_MAX = 10;
-
     public static final int WINDOW_DEFAULT = 6;
     public static final int WINDOW_MIN = 1;
     public static final int WINDOW_MAX = 10;
-
     public static final int FENJU_DEFAULT = 80;
     public static final int FENJU_MIN = 32;
     public static final int FENJU_MAX = 500;
-
+    // 保存部分
+    private static final String FILE_NAME = "tts_config";
+    private static final String TAG_VOLUME = "volume";
+    private static final String TAG_SPEED = "speed";
+    private static final String TAG_PITCH = "pitch";
+    private static final String TAG_SPEAKER = "speaker";
+    private static final String TAG_MIXMODE = "mix_mode";
+    private static final String TAG_THRESHOLD = "threshold";
+    private static final String TAG_WINDOW = "window";
+    private static final String TAG_FENJU = "fenju";
+    private static final String TAG_MODELFILEVER = "model_file_ver";
     private static final String[] SPEAKER_NAMES = {
             "普通女声", "普通男声", "特别男声", "情感男声", "情感儿童声"};
     private static String[] MIXMODE_NAMES = {
@@ -67,8 +76,8 @@ public abstract class Setting {
     // 模型文件
     private int mModelFileVer = 0;
 
-    public Setting() {
-        loadSetting();
+    public Setting(Context context) {
+        loadSetting(context);
     }
 
     public static String[] getSpeakerNameList() {
@@ -122,10 +131,6 @@ public abstract class Setting {
             this.mWindow = WINDOW_DEFAULT;
         }
     }
-
-    public abstract void loadSetting();
-
-    public abstract void saveSetting();
 
     public abstract String getTextModelFile();
 
@@ -208,17 +213,19 @@ public abstract class Setting {
     public SpeechSynthesizer initTTS(Context context,
                                      SpeechSynthesizerListener speechSynthesizerListener) {
 
-        SpeechSynthesizer speechSynthesizer = SpeechSynthesizer.getInstance();
-        speechSynthesizer.setContext(context);
-        speechSynthesizer.setSpeechSynthesizerListener(speechSynthesizerListener);
+        SpeechSynthesizer ss = SpeechSynthesizer.getInstance();
+        ss.setContext(context);
+        ss.setSpeechSynthesizerListener(speechSynthesizerListener);
 
-        speechSynthesizer.setAppId(getApiID());
-        speechSynthesizer.setApiKey(getApiKey(), getSecretKey());
+        // 设置离线授权所需要的AppId，关系到离线合成是否可用
+        ss.setAppId(getApiID());
+        // 设置在线授权时需要用到的apiKey和secretKey，关系到在线合成是否可用
+        ss.setApiKey(getApiKey(), getSecretKey());
 
         //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
-        speechSynthesizer.initTts(TtsMode.MIX);
+        ss.initTts(TtsMode.MIX);
 
-        return speechSynthesizer;
+        return ss;
     }
 
     public void setSettingToSpeechSynthesizer(SpeechSynthesizer ss) {
@@ -272,5 +279,66 @@ public abstract class Setting {
         }
 
         ss.loadModel(fn, getTextModelFile());
+    }
+
+    public void loadSetting(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(
+                FILE_NAME,
+                Context.MODE_PRIVATE);
+
+        int temp;
+
+        // 引擎
+        temp = sp.getInt(TAG_VOLUME, getmVolume());
+        setmVolume(temp);
+
+        temp = sp.getInt(TAG_SPEED, getmSpeed());
+        setmSpeed(temp);
+
+        temp = sp.getInt(TAG_PITCH, getmPitch());
+        setmPitch(temp);
+
+        temp = sp.getInt(TAG_SPEAKER, getmSpeaker());
+        setmSpeaker(temp);
+
+        temp = sp.getInt(TAG_MIXMODE, getmMixMode());
+        setmMixMode(temp);
+
+        // 服务
+        temp = sp.getInt(TAG_THRESHOLD, getmThreshold());
+        setmThreshold(temp);
+
+        temp = sp.getInt(TAG_WINDOW, getmWindow());
+        setmWindow(temp);
+
+        temp = sp.getInt(TAG_FENJU, getmFenJu());
+        setmFenJu(temp);
+
+        // 文件
+        temp = sp.getInt(TAG_MODELFILEVER, getmModelFileVer());
+        setmModelFileVer(temp);
+    }
+
+    public void saveSetting(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(
+                FILE_NAME,
+                Context.MODE_PRIVATE).edit();
+
+        // 引擎
+        editor.putInt(TAG_VOLUME, getmVolume());
+        editor.putInt(TAG_SPEED, getmSpeed());
+        editor.putInt(TAG_PITCH, getmPitch());
+        editor.putInt(TAG_SPEAKER, getmSpeaker());
+        editor.putInt(TAG_MIXMODE, getmMixMode());
+
+        // 服务
+        editor.putInt(TAG_THRESHOLD, getmThreshold());
+        editor.putInt(TAG_WINDOW, getmWindow());
+        editor.putInt(TAG_FENJU, getmFenJu());
+
+        // 模型文件
+        editor.putInt(TAG_MODELFILEVER, getmModelFileVer());
+
+        editor.apply();
     }
 }

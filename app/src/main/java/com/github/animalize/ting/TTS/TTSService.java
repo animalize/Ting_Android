@@ -86,7 +86,7 @@ public abstract class TTSService
         int nowFileVer = initTTS(setting.getmModelFileVer());
         if (nowFileVer > setting.getmModelFileVer()) {
             setting.setmModelFileVer(nowFileVer);
-            setting.saveSetting();
+            setting.saveSetting(this);
         }
 
         // 初始化引擎
