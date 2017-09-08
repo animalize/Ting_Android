@@ -214,7 +214,7 @@ public abstract class TTSService
         private static List<Ju> fenJu(String s) {
             if (biaodian == null) {
                 biaodian = Pattern.compile(
-                        "^.*[\n，。！？；：,.!?]",
+                        "^.*[\n，。！？：；”…,!?]",
                         Pattern.DOTALL);
             }
 

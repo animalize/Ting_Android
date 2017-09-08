@@ -54,7 +54,11 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         vto.addOnGlobalLayoutListener(this);
     }
 
-    private void setSelect(int begin, int end) {
+    private void setSelect() {
+        if (ju == null) {
+            return;
+        }
+
         // 移除
         Object spansToRemove[] = spannable.getSpans(
                 0, spannable.length(),
@@ -66,13 +70,13 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         // 新
         spannable.setSpan(
                 new ForegroundColorSpan(Color.BLUE),
-                begin, end,
+                ju.begin, ju.end,
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTextView.setText(spannable);
 
         // 滚动
         if (mKeepScroll && layout != null) {
-            final int line = layout.getLineForOffset(begin);
+            final int line = layout.getLineForOffset(ju.begin);
             int y = (line + 2) * mTextView.getLineHeight()
                     - mTextView.getHeight() / 2;
 
@@ -109,10 +113,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     public void onGlobalLayout() {
         layout = mTextView.getLayout();
 
-        if (ju != null) {
-            setSelect(ju.begin, ju.end);
-            ju = null;
-        }
+        setSelect();
     }
 
     @Override
@@ -120,6 +121,14 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         switch (v.getId()) {
             case R.id.keep_scroll:
                 mKeepScroll = mKeepScrollCheckBox.isChecked();
+                // 滚动
+                if (mKeepScroll && layout != null && ju != null) {
+                    final int line = layout.getLineForOffset(ju.begin);
+                    int y = (line + 2) * mTextView.getLineHeight()
+                            - mTextView.getHeight() / 2;
+
+                    mTextView.scrollTo(0, y >= 0 ? y : 0);
+                }
                 break;
         }
     }
@@ -132,10 +141,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
             }
 
             ju = mBinder.getNowJu();
-            if (ju != null && layout != null) {
-                setSelect(ju.begin, ju.end);
-                ju = null;
-            }
+            setSelect();
         }
     }
 
