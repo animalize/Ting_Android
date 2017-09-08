@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 
 public class TTSInitializer {
-    private static final int FILE_VER = 2;
+    private static final int FILE_VER = 3;
 
     private static final String SAMPLE_DIR_NAME = "baiduTTS";
 
