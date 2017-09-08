@@ -87,16 +87,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
         String[] delAidArray = delAidList.toArray(new String[delAidList.size()]);
 
-
-        // 删没有的
-        mDb.execSQL("BEGIN");
-
+        // 删
         String sql = "DELETE FROM list " +
                 "WHERE aid IN (" +
                 makePlaceholders(delAidArray.length) + ") ";
         mDb.execSQL(sql, delAidArray);
-
-        mDb.execSQL("COMMIT");
     }
 
     public static void setCached(String aid, boolean v) {
@@ -109,7 +104,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     }
 
     private static String makePlaceholders(int len) {
-        // 须确保 len > 0
+        // 调用者须确保 len > 0
         StringBuilder sb = new StringBuilder(len * 2 - 1);
         sb.append("?");
         for (int i = 1; i < len; i++) {
