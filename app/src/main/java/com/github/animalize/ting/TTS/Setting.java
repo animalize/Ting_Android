@@ -314,7 +314,7 @@ public abstract class Setting {
         temp = sp.getInt(TAG_FENJU, getmFenJu());
         setmFenJu(temp);
 
-        // 文件
+        // 模型文件版本
         temp = sp.getInt(TAG_MODELFILEVER, getmModelFileVer());
         setmModelFileVer(temp);
     }
@@ -336,7 +336,7 @@ public abstract class Setting {
         editor.putInt(TAG_WINDOW, getmWindow());
         editor.putInt(TAG_FENJU, getmFenJu());
 
-        // 模型文件
+        // 模型文件版本
         editor.putInt(TAG_MODELFILEVER, getmModelFileVer());
 
         editor.apply();

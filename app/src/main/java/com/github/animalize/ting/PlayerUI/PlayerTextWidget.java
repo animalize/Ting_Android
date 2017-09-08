@@ -12,7 +12,9 @@ import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -20,8 +22,10 @@ import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
 
 
-public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.OnGlobalLayoutListener {
+public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.OnGlobalLayoutListener, View.OnClickListener {
     private TextView mTextView;
+    private CheckBox mKeepScrollCheckBox;
+    private boolean mKeepScroll = true;
     private Layout layout;
 
     private Spannable spannable;
@@ -34,6 +38,9 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     public PlayerTextWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_text, this);
+
+        mKeepScrollCheckBox = (CheckBox) findViewById(R.id.keep_scroll);
+        mKeepScrollCheckBox.setOnClickListener(this);
 
         mTextView = (TextView) findViewById(R.id.text_view);
         mTextView.setMovementMethod(new ScrollingMovementMethod());
@@ -64,7 +71,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mTextView.setText(spannable);
 
         // 滚动
-        if (layout != null) {
+        if (mKeepScroll && layout != null) {
             final int line = layout.getLineForOffset(begin);
             int y = (line + 2) * mTextView.getLineHeight()
                     - mTextView.getHeight() / 2;
@@ -105,6 +112,15 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         if (ju != null) {
             setSelect(ju.begin, ju.end);
             ju = null;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.keep_scroll:
+                mKeepScroll = mKeepScrollCheckBox.isChecked();
+                break;
         }
     }
 

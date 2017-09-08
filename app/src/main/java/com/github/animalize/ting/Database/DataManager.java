@@ -207,15 +207,6 @@ public class DataManager {
         }
     }
 
-    public synchronized boolean isCached(String aid) {
-        File path = new File(dataDirPath, aid);
-        try {
-            return path.isFile();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public synchronized boolean downloadAndSaveArticleByAid(String aid, int fileSize) {
         File path = new File(dataDirPath, aid);
 
