@@ -3,7 +3,10 @@ package com.github.animalize.ting.TTS;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,6 +15,7 @@ import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +49,9 @@ public abstract class TTSService
     private int mNowQueueIndex = 0;
     private int mNowSpeechIndex = 0;
 
+    private SoundPool soundPool;
+    private int soundID;
+
     public TTSService() {
     }
 
@@ -76,6 +83,17 @@ public abstract class TTSService
     public void onCreate() {
         super.onCreate();
 
+        // SoundPool
+        // 播放 /res/raw/finishfile.wav
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(1)
+                    .build();
+        } else {
+            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        }
+        soundID = soundPool.load(this, R.raw.finishfile, 1);
+
         mLBM = LocalBroadcastManager.getInstance(this);
 
         doStartForeground();
@@ -98,6 +116,7 @@ public abstract class TTSService
     @Override
     public void onDestroy() {
         mSpeechSynthesizer.release();
+        soundPool.release();
         super.onDestroy();
     }
 
@@ -134,6 +153,7 @@ public abstract class TTSService
         if (mNowSpeechIndex >= mJus.size() - 1) {
             mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
+            soundPool.play(soundID, 1, 1, 1, 0, 1f);
         }
     }
 
@@ -142,6 +162,7 @@ public abstract class TTSService
         if (mNowSpeechIndex >= mJus.size() - 1) {
             mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
+            soundPool.play(soundID, 1, 1, 1, 0, 1f);
         }
     }
 
