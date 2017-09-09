@@ -107,7 +107,7 @@ public abstract class TTSService
         mNowSpeechIndex = Integer.parseInt(s);
         mLBM.sendBroadcast(mStartIntent);
 
-        if (mNowQueueIndex - mNowSpeechIndex < mThreshold) {
+        if (mNowQueueIndex - mNowSpeechIndex <= mThreshold) {
             // 剩余低于阈值
             for (int i = 0; i < mWindow; i++) {
                 if (mNowQueueIndex >= mJus.size()) {
