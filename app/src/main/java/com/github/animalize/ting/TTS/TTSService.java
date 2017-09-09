@@ -165,9 +165,8 @@ public abstract class TTSService
     private void playAction() {
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
-        int end = mNowQueueIndex + mThreshold + 1 < mJus.size()
-                ? mNowQueueIndex + mThreshold + 1
-                : mJus.size();
+        final int temp = mNowQueueIndex + mThreshold + 1;
+        int end = temp < mJus.size() ? temp : mJus.size();
 
         for (int i = mNowQueueIndex; i < end; i++) {
             final Ju ju = mJus.get(i);
