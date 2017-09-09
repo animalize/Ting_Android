@@ -107,7 +107,7 @@ public abstract class TTSService
         mNowSpeechIndex = Integer.parseInt(s);
         mLBM.sendBroadcast(mStartIntent);
 
-        if (mNowQueueIndex - mNowSpeechIndex <= mThreshold) {
+        if (mNowQueueIndex - mNowSpeechIndex < mThreshold) {
             // 剩余低于阈值
             for (int i = 0; i < mWindow; i++) {
                 if (mNowQueueIndex >= mJus.size()) {
@@ -165,8 +165,8 @@ public abstract class TTSService
     private void playAction() {
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
-        int end = mNowQueueIndex + mThreshold < mJus.size()
-                ? mNowQueueIndex + mThreshold
+        int end = mNowQueueIndex + mThreshold + 1 < mJus.size()
+                ? mNowQueueIndex + mThreshold + 1
                 : mJus.size();
 
         for (int i = mNowQueueIndex; i < end; i++) {

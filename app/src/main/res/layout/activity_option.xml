@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -41,187 +42,251 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/volume_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="音量" />
-
-            <SeekBar
-                android:id="@+id/volume_seekbar"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="9" />
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <TextView
-                android:id="@+id/speed_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="语速" />
-
-            <SeekBar
-                android:id="@+id/speed_seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="9" />
-
-            <TextView
-                android:id="@+id/pitch_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="语调" />
-
-            <SeekBar
-                android:id="@+id/pitch_seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="9" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="朗读者:" />
-
-                <Spinner
-                    android:id="@+id/speaker_spinner"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="模式:" />
+                    android:orientation="vertical">
 
-                <Spinner
-                    android:id="@+id/mixmode_spinner"
+                    <TextView
+                        android:id="@+id/volume_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="音量" />
+
+                    <SeekBar
+                        android:id="@+id/volume_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="9" />
+
+                    <TextView
+                        android:id="@+id/speed_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="语速" />
+
+                    <SeekBar
+                        android:id="@+id/speed_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="9" />
+
+                    <TextView
+                        android:id="@+id/pitch_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="语调" />
+
+                    <SeekBar
+                        android:id="@+id/pitch_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="9" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <View
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="朗读者：" />
+
+                        <Spinner
+                            android:id="@+id/speaker_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="模式：" />
+
+                        <Spinner
+                            android:id="@+id/mixmode_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/holo_green_dark" />
-
-            <TextView
-                android:id="@+id/threshold_text"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="阈值：" />
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <SeekBar
-                android:id="@+id/threshold_seekbar"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/threshold_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="阈值：" />
+
+                    <SeekBar
+                        android:id="@+id/threshold_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="当队列长度小于阈值时，加载窗口长度的分句。默认值2。" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="当队列长度小于阈值时，加载窗口长度的分句。默认值2。" />
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <View
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/window_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="窗口长度：" />
+
+                    <SeekBar
+                        android:id="@+id/window_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="一次加载的分句数。默认值6。" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/holo_green_dark" />
-
-            <TextView
-                android:id="@+id/window_text"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="窗口长度：" />
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <SeekBar
-                android:id="@+id/window_seekbar"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fenju_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分句字符数：" />
+
+                    <SeekBar
+                        android:id="@+id/fenju_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="每句的最大字符数，加载新文章时生效。默认值80。" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="一次加载的分句数。默认值6。" />
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <View
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/ver_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/holo_green_dark" />
-
-            <TextView
-                android:id="@+id/fenju_text"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="分句字符数：" />
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="#F2F2F2"
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true">
 
-            <SeekBar
-                android:id="@+id/fenju_seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="每句的最大字符数，加载新文章时生效。默认值80。" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="不要随意修改这里：" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/holo_green_dark" />
-
-            <TextView
-                android:id="@+id/ver_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/holo_green_dark" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="不要随意修改这里：" />
-
-            <EditText
-                android:id="@+id/filters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/filters"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
     </ScrollView>

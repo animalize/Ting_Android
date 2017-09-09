@@ -25,7 +25,7 @@ public class TingTTSService extends TTSService {
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notifiy_icon)
-                .setContentTitle("ting的前台服务")
+                .setContentTitle("Ting的前台服务")
                 .setContentText("")
                 .setContentIntent(pendingIntent)
                 .build();

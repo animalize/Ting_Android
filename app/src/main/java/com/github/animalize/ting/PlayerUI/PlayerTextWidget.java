@@ -55,16 +55,16 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     }
 
     private void setSelect() {
-        if (ju == null) {
-            return;
-        }
-
         // 移除
         Object spansToRemove[] = spannable.getSpans(
                 0, spannable.length(),
                 Object.class);
         for (Object span : spansToRemove) {
             spannable.removeSpan(span);
+        }
+
+        if (ju == null) {
+            return;
         }
 
         // 新
