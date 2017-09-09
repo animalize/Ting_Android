@@ -15,7 +15,6 @@ import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
-import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +62,9 @@ public abstract class TTSService
         return new IntentFilter(SPEECH_START_INTENT);
     }
 
+    // 返回-1表示不播放
+    public abstract int getFinishSoundID();
+
     public abstract int initTTS(int currentVer);
 
     public abstract void doStartForeground();
@@ -85,14 +87,17 @@ public abstract class TTSService
 
         // SoundPool
         // 播放 /res/raw/finishfile.wav
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            soundPool = new SoundPool.Builder()
-                    .setMaxStreams(1)
-                    .build();
-        } else {
-            soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        int resSoundID = getFinishSoundID();
+        if (resSoundID != -1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                soundPool = new SoundPool.Builder()
+                        .setMaxStreams(1)
+                        .build();
+            } else {
+                soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+            }
+            soundID = soundPool.load(this, resSoundID, 1);
         }
-        soundID = soundPool.load(this, R.raw.finishfile, 1);
 
         mLBM = LocalBroadcastManager.getInstance(this);
 
@@ -116,7 +121,11 @@ public abstract class TTSService
     @Override
     public void onDestroy() {
         mSpeechSynthesizer.release();
-        soundPool.release();
+
+        if (soundPool != null) {
+            soundPool.release();
+        }
+
         super.onDestroy();
     }
 
@@ -153,7 +162,10 @@ public abstract class TTSService
         if (mNowSpeechIndex >= mJus.size() - 1) {
             mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
-            soundPool.play(soundID, 1, 1, 1, 0, 1f);
+
+            if (soundPool != null) {
+                soundPool.play(soundID, 1, 1, 1, 0, 1f);
+            }
         }
     }
 
@@ -162,7 +174,10 @@ public abstract class TTSService
         if (mNowSpeechIndex >= mJus.size() - 1) {
             mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
-            soundPool.play(soundID, 1, 1, 1, 0, 1f);
+
+            if (soundPool != null) {
+                soundPool.play(soundID, 1, 1, 1, 0, 1f);
+            }
         }
     }
 

@@ -12,6 +12,11 @@ import com.github.animalize.ting.TTS.TTSService;
 
 public class TingTTSService extends TTSService {
     @Override
+    public int getFinishSoundID() {
+        return R.raw.finish;
+    }
+
+    @Override
     public int initTTS(int currentVer) {
         return TTSInitializer.initialEnv(this, currentVer);
     }
