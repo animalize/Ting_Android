@@ -62,8 +62,10 @@ public abstract class TTSService
         return new IntentFilter(SPEECH_START_INTENT);
     }
 
-    // 返回-1表示不播放
-    public abstract int getFinishSoundID();
+    public int getFinishSoundID() {
+        // 返回-1表示不播放
+        return -1;
+    }
 
     public abstract int initTTS(int currentVer);
 
@@ -107,7 +109,7 @@ public abstract class TTSService
 
         // 复制引擎文件
         int nowFileVer = initTTS(setting.getmModelFileVer());
-        if (nowFileVer > setting.getmModelFileVer()) {
+        if (nowFileVer != setting.getmModelFileVer()) {
             setting.setmModelFileVer(nowFileVer);
             setting.saveSetting(this);
         }

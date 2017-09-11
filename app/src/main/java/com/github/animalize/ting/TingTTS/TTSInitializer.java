@@ -19,7 +19,7 @@ public class TTSInitializer {
     private static Context appContext;
     private static String ttsDataDir;
 
-    public static int initialEnv(Context context, int currentVer) {
+    public static int initialEnv(Context context, final int currentVer) {
         appContext = context.getApplicationContext();
         File fileDir = appContext.getFilesDir();
 
@@ -39,9 +39,10 @@ public class TTSInitializer {
             copyFromAssetsToSdcard(
                     TEXT_MODEL_NAME,
                     getTextModelName());
+            return FILE_VER;
+        } else {
+            return currentVer;
         }
-
-        return FILE_VER;
     }
 
     public static String getTextModelName() {
