@@ -28,7 +28,7 @@ import java.util.Set;
 public class OptionActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener {
 
     private TingConfig mConfig = TingConfig.getInstance();
-    private TingSetting mTTSSetting = TingSetting.getInstance(this);
+    private TingSetting mTTSSetting;
 
     private EditText mFilters;
 
@@ -51,6 +51,8 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_option);
+
+        mTTSSetting = TingSetting.getInstance(this);
 
         // 普通参数
         volumeSeekbar = (SeekBar) findViewById(R.id.volume_seekbar);

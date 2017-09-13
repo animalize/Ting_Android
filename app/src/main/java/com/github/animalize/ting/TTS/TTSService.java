@@ -80,15 +80,22 @@ public abstract class TTSService
         mWindow = s.getmWindow();
         Ju.setSize(s.getmFenJu());
 
-        s.setSettingToSpeechSynthesizer(mSpeechSynthesizer);
+        if (mSpeechSynthesizer != null) {
+            s.setSettingToSpeechSynthesizer(mSpeechSynthesizer);
+        }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        mLBM = LocalBroadcastManager.getInstance(this);
+
+        doStartForeground();
+    }
+
+    private void lazyInit() {
         // SoundPool
-        // 播放 /res/raw/finishfile.wav
         int resSoundID = getFinishSoundID();
         if (resSoundID != -1) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -100,10 +107,6 @@ public abstract class TTSService
             }
             soundID = soundPool.load(this, resSoundID, 1);
         }
-
-        mLBM = LocalBroadcastManager.getInstance(this);
-
-        doStartForeground();
 
         Setting setting = getSetting();
 
@@ -122,7 +125,9 @@ public abstract class TTSService
 
     @Override
     public void onDestroy() {
-        mSpeechSynthesizer.release();
+        if (mSpeechSynthesizer != null) {
+            mSpeechSynthesizer.release();
+        }
 
         if (soundPool != null) {
             soundPool.release();
@@ -320,6 +325,10 @@ public abstract class TTSService
         }
 
         public void play() {
+            if (mSpeechSynthesizer == null) {
+                lazyInit();
+            }
+
             if (mArticle != null) {
                 playAction();
                 setEvent(PLAYING);
@@ -327,21 +336,30 @@ public abstract class TTSService
         }
 
         public void stop() {
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
+
             mSpeechSynthesizer.stop();
             mNowQueueIndex = mNowSpeechIndex = 0;
-
             setEvent(STOP);
         }
 
         public void pause() {
-            mSpeechSynthesizer.pause();
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
 
+            mSpeechSynthesizer.pause();
             setEvent(PAUSING);
         }
 
         public void resume() {
-            mSpeechSynthesizer.resume();
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
 
+            mSpeechSynthesizer.resume();
             setEvent(PLAYING);
         }
 
@@ -359,15 +377,12 @@ public abstract class TTSService
 
         @Nullable
         public Ju getNowJu() {
-            if (mArticle == null || mNowState == STOP || mNowState == EMPTY) {
+            if (mArticle == null || mNowState == STOP || mNowState == EMPTY ||
+                    mJus == null || mNowQueueIndex >= mJus.size()) {
                 return null;
             }
 
-            try {
-                return mJus.get(mNowSpeechIndex);
-            } catch (Exception e) {
-                return null;
-            }
+            return mJus.get(mNowSpeechIndex);
         }
 
         public int getState() {
@@ -375,6 +390,10 @@ public abstract class TTSService
         }
 
         public boolean setPosi(int posi) {
+            if (mSpeechSynthesizer == null) {
+                return false;
+            }
+
             mSpeechSynthesizer.stop();
 
             int low = 0;
