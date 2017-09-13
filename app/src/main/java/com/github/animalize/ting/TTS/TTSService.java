@@ -127,6 +127,7 @@ public abstract class TTSService
     public void onDestroy() {
         if (mSpeechSynthesizer != null) {
             mSpeechSynthesizer.release();
+            mSpeechSynthesizer = null;
         }
 
         if (soundPool != null) {
