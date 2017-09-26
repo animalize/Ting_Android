@@ -88,7 +88,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         }
     }
 
-    public void onStart() {
+    public void onResume() {
         mLBM.registerReceiver(
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
@@ -96,7 +96,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mSpeechStartReciver.onReceive(null, null);
     }
 
-    public void onStop() {
+    public void onPause() {
         mLBM.unregisterReceiver(mSpeechStartReciver);
     }
 

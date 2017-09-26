@@ -151,17 +151,15 @@ public class MainListActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        playerPanel.onStart();
+    protected void onResume() {
+        playerPanel.onResume();
+        super.onResume();
     }
 
     @Override
-    protected void onStop() {
-        playerPanel.onStop();
-
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
+        playerPanel.onPause();
     }
 
     @Override

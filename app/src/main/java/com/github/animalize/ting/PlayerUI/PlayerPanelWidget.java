@@ -83,7 +83,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         }
     }
 
-    public void onStart() {
+    public void onResume() {
         mLBM.registerReceiver(
                 mSpeechEventReciver,
                 TTSService.getSpeechEventIntentFilter());
@@ -95,7 +95,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mSpeechStartReciver.onReceive(null, null);
     }
 
-    public void onStop() {
+    public void onPause() {
         mLBM.unregisterReceiver(mSpeechEventReciver);
         mLBM.unregisterReceiver(mSpeechStartReciver);
     }
