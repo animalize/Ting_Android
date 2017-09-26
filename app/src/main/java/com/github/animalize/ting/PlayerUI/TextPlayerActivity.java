@@ -59,16 +59,18 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
 
     @Override
     protected void onResume() {
+        super.onResume();
+
         playerPanel.onResume();
         playerText.onResume();
-        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
         playerPanel.onPause();
         playerText.onPause();
+
+        super.onPause();
     }
 
     @Override
