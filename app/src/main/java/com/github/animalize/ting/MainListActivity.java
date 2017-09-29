@@ -103,7 +103,7 @@ public class MainListActivity
             public void onDeleteItemClick(final String aid) {
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(MainListActivity.this);
-                builder.setTitle("确认此文章？");
+                builder.setTitle("确认删除此文章？");
                 builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

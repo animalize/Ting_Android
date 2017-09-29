@@ -379,7 +379,7 @@ public abstract class TTSService
         @Nullable
         public Ju getNowJu() {
             if (mArticle == null || mNowState == STOP || mNowState == EMPTY ||
-                    mJus == null || mNowQueueIndex >= mJus.size()) {
+                    mJus == null || mNowSpeechIndex >= mJus.size()) {
                 return null;
             }
 
