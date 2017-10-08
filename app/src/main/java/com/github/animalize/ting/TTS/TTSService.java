@@ -174,7 +174,6 @@ public abstract class TTSService
     @Override
     public void onSpeechFinish(String s) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
 
             if (soundPool != null) {
@@ -186,7 +185,6 @@ public abstract class TTSService
     @Override
     public void onError(String s, SpeechError speechError) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
 
             if (soundPool != null) {
@@ -212,7 +210,11 @@ public abstract class TTSService
         mLBM.sendBroadcast(mEventIntent);
     }
 
-    private void playAction() {
+    private void playAction(boolean resetIndex) {
+        if (resetIndex) {
+            mNowQueueIndex = mNowSpeechIndex = 0;
+        }
+
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
         final int temp = mNowQueueIndex + mThreshold + 1;
@@ -337,7 +339,7 @@ public abstract class TTSService
             }
 
             if (mArticle != null) {
-                playAction();
+                playAction(true);
                 setEvent(PLAYING);
             }
         }
@@ -348,7 +350,6 @@ public abstract class TTSService
             }
 
             mSpeechSynthesizer.stop();
-            mNowQueueIndex = mNowSpeechIndex = 0;
             setEvent(STOP);
         }
 
@@ -384,7 +385,7 @@ public abstract class TTSService
 
         @Nullable
         public Ju getNowJu() {
-            if (mArticle == null || mNowState == STOP || mNowState == EMPTY ||
+            if (mArticle == null || mNowState == EMPTY ||
                     mJus == null || mNowSpeechIndex >= mJus.size()) {
                 return null;
             }
@@ -416,7 +417,7 @@ public abstract class TTSService
                     low = mid + 1;
                 } else {
                     mNowQueueIndex = mNowSpeechIndex = mid;
-                    playAction();
+                    playAction(false);
 
                     setEvent(PLAYING);
                     return true;

@@ -10,7 +10,7 @@
         android:fadeScrollbars="false"
         android:scrollbars="vertical"
         android:textSize="20sp"
-        android:verticalScrollbarPosition="left"></TextView>
+        android:verticalScrollbarPosition="left" />
 
     <CheckBox
         android:id="@+id/keep_scroll"
