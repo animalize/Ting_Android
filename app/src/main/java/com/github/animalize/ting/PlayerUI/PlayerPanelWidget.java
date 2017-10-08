@@ -116,7 +116,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private class SpeechStartReciver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent == null || mBinder == null) {
+            if (mBinder == null) {
                 return;
             }
 
