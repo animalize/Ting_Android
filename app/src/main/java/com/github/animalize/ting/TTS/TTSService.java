@@ -145,18 +145,24 @@ public abstract class TTSService
 
         if (mNowQueueIndex - mNowSpeechIndex <= mThreshold) {
             // 剩余低于阈值
+            List<SpeechSynthesizeBag> bags = new ArrayList<>();
+
             for (int i = 0; i < mWindow; i++) {
                 if (mNowQueueIndex >= mJus.size()) {
                     // 已读完
                     break;
                 }
 
+                SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
                 final Ju ju = mJus.get(mNowQueueIndex);
-                final String str = mText.substring(ju.begin, ju.end);
-                mSpeechSynthesizer.speak(str, String.valueOf(mNowQueueIndex));
+                bag.setText(mText.substring(ju.begin, ju.end));
+                bag.setUtteranceId(String.valueOf(mNowQueueIndex));
 
+                bags.add(bag);
                 mNowQueueIndex += 1;
             }
+
+            mSpeechSynthesizer.batchSpeak(bags);
         }
     }
 
@@ -257,7 +263,7 @@ public abstract class TTSService
         private static List<Ju> fenJu(String s) {
             if (biaodian == null) {
                 biaodian = Pattern.compile(
-                        "^.*[\n，。！？：；、”…,!?]",
+                        "^.*[\\n，。！？：；、”…,!?]",
                         Pattern.DOTALL);
             }
 
