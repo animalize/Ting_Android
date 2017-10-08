@@ -72,7 +72,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     mBinder.pause();
                 } else if (state == TTSService.PAUSING) {
                     mBinder.resume();
-                } else if (state == TTSService.STOP) {
+                } else if (state == TTSService.STOP || state == TTSService.FINISHED) {
                     mBinder.play();
                 }
                 break;
@@ -120,8 +120,13 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 return;
             }
 
-            TTSService.Ju ju = mBinder.getNowJu();
+            if (mBinder.getState() == TTSService.FINISHED) {
+                mProgress.setProgress(mProgress.getMax());
+                mProgressText.setText("100% ");
+                return;
+            }
 
+            TTSService.Ju ju = mBinder.getNowJu();
             if (ju != null) {
                 mProgress.setProgress(ju.begin);
 
@@ -165,6 +170,15 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
                     mProgress.setProgress(0);
                     mProgressText.setText("0% ");
+                    break;
+
+                case TTSService.FINISHED:
+                    play = "播放";
+                    enablePlay = true;
+                    enableStop = false;
+
+                    mProgress.setProgress(mProgress.getMax());
+                    mProgressText.setText("100% ");
                     break;
 
                 case TTSService.EMPTY:

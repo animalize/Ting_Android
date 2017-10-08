@@ -26,8 +26,9 @@ public abstract class TTSService
         implements SpeechSynthesizerListener {
     public static final int EMPTY = 0;
     public static final int STOP = 1;
-    public static final int PLAYING = 2;
-    public static final int PAUSING = 3;
+    public static final int FINISHED = 2;
+    public static final int PLAYING = 3;
+    public static final int PAUSING = 4;
 
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
@@ -174,7 +175,7 @@ public abstract class TTSService
     @Override
     public void onSpeechFinish(String s) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            setEvent(STOP);
+            setEvent(FINISHED);
 
             if (soundPool != null) {
                 soundPool.play(soundID, 1, 1, 1, 0, 1f);
@@ -185,7 +186,7 @@ public abstract class TTSService
     @Override
     public void onError(String s, SpeechError speechError) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            setEvent(STOP);
+            setEvent(FINISHED);
 
             if (soundPool != null) {
                 soundPool.play(soundID, 1, 1, 1, 0, 1f);
