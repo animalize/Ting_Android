@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -148,6 +149,38 @@ public class MainListActivity
         unbindService(mServerConn);
 
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    if (mBinder == null) {
+                        finish();
+                        return true;
+                    }
+
+                    int state = mBinder.getState();
+                    if (state == TTSService.PLAYING || state == TTSService.PAUSING) {
+                        AlertDialog.Builder d = new AlertDialog.Builder(this);
+                        d.setTitle("确认退出");
+                        d.setMessage("此时退出将中止播放。\n（可以按Home键切换到后台运行）");
+                        d.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                        d.setNegativeButton("取消", null);
+                        d.show();
+                    } else {
+                        finish();
+                    }
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
