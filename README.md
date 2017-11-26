@@ -18,7 +18,7 @@
 `bd_etts_speech_male.dat`  
 `bd_etts_speech_female.dat`
 
-5.  创建`\app\jni`目录，把SDK的二进制程序目录放入其中：  
+5.  创建`/app/jni`目录，把SDK的二进制程序目录放入其中：  
 `armeabi-v7a`  
 `arm64-v8a`  
 通常放这两个就可以了
