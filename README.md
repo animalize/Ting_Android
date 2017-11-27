@@ -23,4 +23,4 @@
 `arm64-v8a`  
 （通常放这两个就可以了）
 
-6.  把`\app\src\main\java\com\github\animalize\ting\Message\Methods.java'文件里的`HOST`变量改成服务器的地址。
+6.  把`\app\src\main\java\com\github\animalize\ting\Message\Methods.java`文件里的`HOST`变量改成服务器的地址。
