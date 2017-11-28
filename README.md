@@ -24,3 +24,10 @@
 （通常放这两个就可以了）
 
 6.  把`\app\src\main\java\com\github\animalize\ting\Message\Methods.java`文件里的`HOST`变量改成服务器的地址。
+
+### 服务器端、PC端
+下载[此项目](https://github.com/animalize/ting_py)
+
+服务器端：把server目录放到24小时运行的服务器上运行。（需要Python 3.x和安装tornado模块）
+
+PC端：给电脑安装Python 3.6并安装pyperclip模块。把`/pc/vars.py`文件里的`host`变量改成服务器地址。
