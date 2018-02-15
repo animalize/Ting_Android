@@ -30,4 +30,4 @@
 
 服务器端：把server目录放到24小时运行的服务器上运行。（需要Python 3.x和安装tornado模块）
 
-PC端：给电脑安装Python 3.6并安装pyperclip模块。把`/pc/vars.py`文件里的`host`变量改成服务器地址。
+PC端：给电脑安装Python 3.6并安装pyperclip、requests模块。把`/pc/vars.py`文件里的`host`变量改成服务器地址。
