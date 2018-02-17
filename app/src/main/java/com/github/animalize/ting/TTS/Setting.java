@@ -134,9 +134,7 @@ public abstract class Setting {
 
     public abstract String getTextModelFile();
 
-    public abstract String getSpeechMaleModelFile();
-
-    public abstract String getSpeechFemaleModelFile();
+    public abstract String getTextModelName(int idx);
 
     public abstract String getApiID();
 
@@ -270,15 +268,8 @@ public abstract class Setting {
         ss.setParam(SpeechSynthesizer.PARAM_MIX_MODE, mixMode);
 
         // 离线模型
-        int temp = getmSpeaker();
-        String fn;
-        if (0 < temp && temp < 4) {
-            fn = getSpeechMaleModelFile();
-        } else {
-            fn = getSpeechFemaleModelFile();
-        }
-
-        ss.loadModel(fn, getTextModelFile());
+        final int temp = getmSpeaker();
+        ss.loadModel(getTextModelName(temp), getTextModelFile());
     }
 
     public void loadSetting(Context context) {

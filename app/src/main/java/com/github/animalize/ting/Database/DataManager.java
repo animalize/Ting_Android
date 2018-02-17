@@ -7,6 +7,7 @@ import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Data.TingConfig;
 import com.github.animalize.ting.Message.Methods;
 import com.github.animalize.ting.MyApplication;
+import com.github.animalize.ting.TTS.SegmentsHelper;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,8 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class DataManager {
+    public static final String GB18030 = "GB18030";
     private static final String DATA_DIR_NAME = "data";
-
     private static DataManager singleton;
 
     private String dataDirPath;
@@ -207,29 +209,42 @@ public class DataManager {
         }
     }
 
-    public synchronized boolean downloadAndSaveArticleByAid(String aid, int fileSize) {
+    /*
+    返回分段信息，单位是char
+    如: "9993 19985 29983 39983 49970 54153"
+     */
+    @Nullable
+    public synchronized String downloadAndSaveArticleByAid(String aid, int fileSize) {
         File path = new File(dataDirPath, aid);
 
         // 已存在？
         if (path.isFile()) {
-            return true;
+            return null;
         }
 
         // 下载
         byte[] b = Methods.downloadArticleByAid(aid);
         if (b == null || b.length != fileSize) {
             //Log.i("downloadAndSav: ", "" + b.length + " " + fileSize);
-            return false;
+            return null;
         }
 
-        // 存盘
+        String text;
+        try {
+            text = new String(b, GB18030);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        // txt文件存盘
         OutputStream out = null;
         try {
             out = new FileOutputStream(path);
             out.write(b);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         } finally {
             if (out != null) {
                 try {
@@ -240,7 +255,7 @@ public class DataManager {
             }
         }
 
-        return true;
+        return SegmentsHelper.getSegments(text);
     }
 
     @Nullable
@@ -254,7 +269,7 @@ public class DataManager {
             dis.readFully(fileData);
             dis.close();
 
-            String s = new String(fileData, "GB18030");
+            String s = new String(fileData, GB18030);
 
             return s;
         } catch (Exception e) {

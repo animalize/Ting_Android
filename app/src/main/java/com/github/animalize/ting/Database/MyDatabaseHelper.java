@@ -14,7 +14,7 @@ import java.util.List;
 public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "data.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static MyDatabaseHelper mHelper;
     private static SQLiteDatabase mDb;
@@ -94,13 +94,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         mDb.execSQL(sql, delAidArray);
     }
 
-    public static void setCached(String aid, boolean v) {
+    public static void setSegmentsCached(String aid, String segments, boolean v) {
         init();
 
-        String sql = "UPDATE list SET cached=? WHERE aid=?";
+        String sql = "UPDATE list SET segments=?,cached=? WHERE aid=?";
         int cached = v ? 1 : 0;
 
-        mDb.execSQL(sql, new String[]{String.valueOf(cached), aid});
+        mDb.execSQL(sql, new String[]{segments, String.valueOf(cached), aid});
     }
 
     private static String makePlaceholders(int len) {
@@ -111,6 +111,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             sb.append(",?");
         }
         return sb.toString();
+    }
+
+
+    public static void flushPosi(String aid, int posi) {
+        init();
+
+        String sql = "UPDATE list SET posi=? WHERE aid=?";
+        mDb.execSQL(sql, new String[]{String.valueOf(posi), aid});
     }
 
     @Override
@@ -126,6 +134,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "file_size INTEGER," +
                 "crc32 INTEGER," +
 
+                "segments TEXT," +
+
                 "cached INTEGER," +
                 "posi INTEGER" +
                 ");";
@@ -140,6 +150,5 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 }

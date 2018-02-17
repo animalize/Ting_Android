@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -77,9 +78,9 @@ public class MainListActivity
 
         setContentView(R.layout.activity_main_list);
 
-        playerPanel = (PlayerPanelWidget) findViewById(R.id.player_panel_view);
+        playerPanel = findViewById(R.id.player_panel_view);
 
-        mainList = (RecyclerView) findViewById(R.id.main_list);
+        mainList = findViewById(R.id.main_list);
         // 布局管理
         LinearLayoutManager lm = new LinearLayoutManager(this);
         mainList.setLayoutManager(lm);
@@ -117,13 +118,13 @@ public class MainListActivity
         };
         mainList.setAdapter(listAdapter);
 
-        refreshButton = (Button) findViewById(R.id.refresh);
+        refreshButton = findViewById(R.id.refresh);
         refreshButton.setOnClickListener(this);
-        delAllButton = (Button) findViewById(R.id.del_all);
+        delAllButton = findViewById(R.id.del_all);
         delAllButton.setOnClickListener(this);
-        Button bt = (Button) findViewById(R.id.open_text);
+        Button bt = findViewById(R.id.open_text);
         bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.config);
+        bt = findViewById(R.id.config);
         bt.setOnClickListener(this);
 
         // 读数据库list
@@ -295,11 +296,16 @@ public class MainListActivity
                 }
 
                 String aid = item.getAid();
-                boolean r = dataManager.downloadAndSaveArticleByAid(
+                String segments = dataManager.downloadAndSaveArticleByAid(
                         aid,
                         item.getFile_size());
-                if (r) {
+                if (segments != null) {
+                    Log.i("doInBackground: ", segments);
+
+                    item.setSegments(segments);
                     item.setCached(true);
+                    item.setDBSegmentsCached();
+
                     publishProgress(aid);
                 }
             }

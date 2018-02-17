@@ -246,6 +246,8 @@ public abstract class TTSService
         String getTitle();
 
         String getText();
+
+        int getPosi();
     }
 
     public static class Ju {
@@ -307,6 +309,7 @@ public abstract class TTSService
     }
 
     public class ArticleTtsBinder extends Binder {
+
         public boolean setArticle(IArticle article) {
             mNowQueueIndex = mNowSpeechIndex = 0;
 

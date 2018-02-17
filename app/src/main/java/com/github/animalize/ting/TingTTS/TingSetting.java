@@ -28,13 +28,8 @@ public class TingSetting extends Setting {
     }
 
     @Override
-    public String getSpeechMaleModelFile() {
-        return TTSInitializer.getSpeechMaleModelName();
-    }
-
-    @Override
-    public String getSpeechFemaleModelFile() {
-        return TTSInitializer.getSpeechFemaleModelName();
+    public String getTextModelName(int idx) {
+        return TTSInitializer.getSpeechModelName(idx);
     }
 
     @Override

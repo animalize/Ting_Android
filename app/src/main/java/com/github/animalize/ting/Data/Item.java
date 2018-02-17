@@ -19,6 +19,8 @@ import org.json.JSONObject;
  * cjk_chars 整数	    汉字数
  * file_size 整数	    文件字节数
  * crc32     无符号整数	crc32
+ * <p>
+ * segments  字符串      分段信息
  */
 
 public class Item implements TTSService.IArticle {
@@ -30,6 +32,8 @@ public class Item implements TTSService.IArticle {
     private int cjk_chars;
     private int file_size;
     private long crc32;
+
+    private String segments = null;
 
     private boolean cached = false;
     private int posi = 0;
@@ -70,6 +74,11 @@ public class Item implements TTSService.IArticle {
             this.crc32 = object.getLong("crc32");
         } catch (Exception e) {
         }
+
+        try {
+            this.segments = object.getString("segments");
+        } catch (Exception e) {
+        }
     }
 
     public Item(Cursor c) {
@@ -84,6 +93,8 @@ public class Item implements TTSService.IArticle {
 
         cached = c.getInt(c.getColumnIndex("cached")) != 0;
         posi = c.getInt(c.getColumnIndex("posi"));
+
+        segments = c.getString(c.getColumnIndex("segments"));
     }
 
     public ContentValues getContentValues() {
@@ -98,10 +109,16 @@ public class Item implements TTSService.IArticle {
         cv.put("file_size", file_size);
         cv.put("crc32", crc32);
 
+        cv.put("segments", segments);
+
         cv.put("cached", cached ? 1 : 0);
         cv.put("posi", posi);
 
         return cv;
+    }
+
+    public void setDBSegmentsCached() {
+        MyDatabaseHelper.setSegmentsCached(aid, segments, cached);
     }
 
     public String getCate() {
@@ -148,7 +165,6 @@ public class Item implements TTSService.IArticle {
 
     public void setCached(boolean cached) {
         this.cached = cached;
-        MyDatabaseHelper.setCached(aid, cached);
     }
 
     public int getPosi() {
@@ -157,5 +173,17 @@ public class Item implements TTSService.IArticle {
 
     public void setPosi(int posi) {
         this.posi = posi;
+    }
+
+    public void flushPosi() {
+        MyDatabaseHelper.flushPosi(aid, posi);
+    }
+
+    public String getSegments() {
+        return segments;
+    }
+
+    public void setSegments(String segments) {
+        this.segments = segments;
     }
 }
