@@ -74,7 +74,7 @@ public class TTSInitializer {
                 fn = MODELS[0];
                 break;
             default:
-                fn = MODELS[2];
+                fn = MODELS[1];
         }
         return ttsDataDir + "/" + fn;
     }

@@ -34,21 +34,19 @@ public abstract class TTSService
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
     private static Intent mStartIntent = new Intent(SPEECH_START_INTENT);
+    private static int PAGE_SIZE = 20000;
+    private static Pattern page_regex;
     private final IBinder mBinder = new ArticleTtsBinder();
     private int mThreshold;
     private int mWindow;
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
-
     private IArticle mArticle;
     private String mTitle, mText;
-
     private int mNowState = EMPTY;
-
     private List<Ju> mJus;
     private int mNowQueueIndex = 0;
     private int mNowSpeechIndex = 0;
-
     private SoundPool soundPool;
     private int soundID;
 
@@ -61,6 +59,45 @@ public abstract class TTSService
 
     public static IntentFilter getSpeechStartIntentFilter() {
         return new IntentFilter(SPEECH_START_INTENT);
+    }
+
+    /*
+        返回分段信息，单位是char
+        如: "9993 19985 29983 39983 49970 54153"
+    */
+    public static String getSegments(String text) {
+        if (page_regex == null) {
+            page_regex = Pattern.compile(
+                    "^.*[\\n，。！？：；、”…,!?]",
+                    Pattern.DOTALL);
+        }
+        int p = 0;
+        StringBuilder ret = new StringBuilder();
+
+        while (true) {
+            if (p + PAGE_SIZE >= text.length()) {
+                ret.append(text.length());
+                break;
+            }
+
+            String sub = text.substring(p, p + PAGE_SIZE);
+            Matcher m = page_regex.matcher(sub);
+
+            int end;
+            if (m.find()) {
+                end = m.end();
+            } else {
+                final char last = sub.charAt(sub.length() - 1);
+                if (Character.isHighSurrogate(last)) {
+                    end = sub.length() - 1;
+                } else {
+                    end = sub.length();
+                }
+            }
+            ret.append("" + (p + end) + " ");
+            p += end;
+        }
+        return ret.toString();
     }
 
     public int getFinishSoundID() {
@@ -247,7 +284,7 @@ public abstract class TTSService
 
         String getText();
 
-        int getPosi();
+        String getCurrentText();
     }
 
     public static class Ju {

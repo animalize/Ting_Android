@@ -7,7 +7,7 @@ import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Data.TingConfig;
 import com.github.animalize.ting.Message.Methods;
 import com.github.animalize.ting.MyApplication;
-import com.github.animalize.ting.TTS.SegmentsHelper;
+import com.github.animalize.ting.TTS.TTSService;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -91,7 +91,7 @@ public class DataManager {
             Item old = aidMap.get(item.getAid());
             if (old != null) {
                 item.setCached(old.isCached());
-                item.setPosi(old.getPosi());
+                item.setPosi(old.getPosi(), false);
             }
 
             if (!aidMap.containsKey(item.getAid())) {
@@ -255,7 +255,7 @@ public class DataManager {
             }
         }
 
-        return SegmentsHelper.getSegments(text);
+        return TTSService.getSegments(text);
     }
 
     @Nullable

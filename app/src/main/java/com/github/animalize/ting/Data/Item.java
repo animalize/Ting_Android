@@ -27,16 +27,19 @@ public class Item implements TTSService.IArticle {
     private String cate;
     private String aid;
     private String title;
+    private String text;
 
     private int time;
     private int cjk_chars;
     private int file_size;
     private long crc32;
 
-    private String segments = null;
+    private String segments;
 
     private boolean cached = false;
     private int posi = 0;
+
+    private int segments_array[];
 
     public Item(JSONObject object) {
         try {
@@ -76,7 +79,7 @@ public class Item implements TTSService.IArticle {
         }
 
         try {
-            this.segments = object.getString("segments");
+            segments = object.getString("segments");
         } catch (Exception e) {
         }
     }
@@ -139,8 +142,16 @@ public class Item implements TTSService.IArticle {
 
     @Override
     public String getText() {
-        DataManager dataManager = DataManager.getInstance();
-        return dataManager.readArticleByAid(aid);
+        if (text == null) {
+            DataManager dataManager = DataManager.getInstance();
+            text = dataManager.readArticleByAid(aid);
+        }
+        return text;
+    }
+
+    @Override
+    public String getCurrentText() {
+        return null;
     }
 
     public int getTime() {
@@ -171,12 +182,12 @@ public class Item implements TTSService.IArticle {
         return posi;
     }
 
-    public void setPosi(int posi) {
+    public void setPosi(int posi, boolean flush) {
         this.posi = posi;
-    }
 
-    public void flushPosi() {
-        MyDatabaseHelper.flushPosi(aid, posi);
+        if (flush) {
+            MyDatabaseHelper.flushPosi(aid, posi);
+        }
     }
 
     public String getSegments() {
@@ -185,5 +196,18 @@ public class Item implements TTSService.IArticle {
 
     public void setSegments(String segments) {
         this.segments = segments;
+    }
+
+    public int[] getPageArrary() {
+        if (segments_array == null) {
+            String[] temp = segments.split(" ");
+            segments_array = new int[temp.length];
+
+            for (int i = 0; i < temp.length; i++) {
+                segments_array[i] = Integer.parseInt(temp[i]);
+            }
+        }
+
+        return segments_array;
     }
 }
