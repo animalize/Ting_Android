@@ -42,9 +42,6 @@ public abstract class TTSService
 
     private final IBinder mBinder = new ArticleTtsBinder();
 
-    private int mThreshold;
-    private int mWindow;
-
     private PageManager mPageManager = new PageManager();
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
@@ -52,8 +49,11 @@ public abstract class TTSService
     private IArticle mArticle;
     private String mTitle, mText, mPageText;
 
-    private int mNowState = EMPTY;
+    private int mThreshold;
+    private int mWindow;
+
     private List<Ju> mJus;
+    private int mNowState = EMPTY;
     private int mNowQueueIndex = 0;
     private int mNowSpeechIndex = 0;
 
