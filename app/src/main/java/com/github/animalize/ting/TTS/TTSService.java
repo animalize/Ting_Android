@@ -34,20 +34,29 @@ public abstract class TTSService
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
     private static Intent mStartIntent = new Intent(SPEECH_START_INTENT);
+    private static String PAGE_CHANGE_INTENT = "PageChange";
+    private static Intent mPageChangeIntent = new Intent(PAGE_CHANGE_INTENT);
+
     private static int PAGE_SIZE = 5000;
     private static Pattern page_regex;
+
     private final IBinder mBinder = new ArticleTtsBinder();
+
     private int mThreshold;
     private int mWindow;
+
     private PageManager mPageManager = new PageManager();
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
+
     private IArticle mArticle;
-    private String mTitle, mText1, mPageText;
+    private String mTitle, mText, mPageText;
+
     private int mNowState = EMPTY;
     private List<Ju> mJus;
     private int mNowQueueIndex = 0;
     private int mNowSpeechIndex = 0;
+
     private SoundPool soundPool;
     private int soundID;
 
@@ -223,13 +232,7 @@ public abstract class TTSService
 
     @Override
     public void onError(String s, SpeechError speechError) {
-        if (mNowSpeechIndex >= mJus.size() - 1) {
-            setEvent(FINISHED);
-
-            if (soundPool != null) {
-                soundPool.play(soundID, 1, 1, 1, 0, 1f);
-            }
-        }
+        onSpeechFinish(s);
     }
 
     @Override
@@ -383,7 +386,7 @@ public abstract class TTSService
             totalPage = pageArray.length;
 
             // current text
-            mPageText = mText1.substring(
+            mPageText = mText.substring(
                     currentPage == 0 ? 0 : pageArray[currentPage - 1],
                     pageArray[currentPage]
             );
@@ -403,8 +406,8 @@ public abstract class TTSService
             }
 
             mTitle = mArticle.getTitle();
-            mText1 = mArticle.getText();
-            if (mTitle == null || mText1 == null) {
+            mText = mArticle.getText();
+            if (mTitle == null || mText == null) {
                 mArticle = null;
                 mJus = null;
                 setEvent(EMPTY);
