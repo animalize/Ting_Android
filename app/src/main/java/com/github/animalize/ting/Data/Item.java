@@ -27,7 +27,6 @@ public class Item implements TTSService.IArticle {
     private String cate;
     private String aid;
     private String title;
-    private String text;
 
     private int time;
     private int cjk_chars;
@@ -120,6 +119,45 @@ public class Item implements TTSService.IArticle {
         return cv;
     }
 
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String getText() {
+        DataManager dataManager = DataManager.getInstance();
+        return dataManager.readArticleByAid(aid);
+    }
+
+    @Override
+    public int[] getPageArrary() {
+        if (segments_array == null) {
+            String[] temp = segments.split(" ");
+            segments_array = new int[temp.length];
+
+            for (int i = 0; i < temp.length; i++) {
+                segments_array[i] = Integer.parseInt(temp[i]);
+            }
+        }
+
+        return segments_array;
+    }
+
+    @Override
+    public int getPosi() {
+        return posi;
+    }
+
+    @Override
+    public void setPosi(int posi, boolean flush) {
+        this.posi = posi;
+
+        if (flush) {
+            MyDatabaseHelper.flushPosi(aid, posi);
+        }
+    }
+
     public void setDBSegmentsCached() {
         MyDatabaseHelper.setSegmentsCached(aid, segments, cached);
     }
@@ -134,24 +172,6 @@ public class Item implements TTSService.IArticle {
 
     public String getAid() {
         return aid;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String getText() {
-        if (text == null) {
-            DataManager dataManager = DataManager.getInstance();
-            text = dataManager.readArticleByAid(aid);
-        }
-        return text;
-    }
-
-    @Override
-    public String getCurrentText() {
-        return null;
     }
 
     public int getTime() {
@@ -178,36 +198,11 @@ public class Item implements TTSService.IArticle {
         this.cached = cached;
     }
 
-    public int getPosi() {
-        return posi;
-    }
-
-    public void setPosi(int posi, boolean flush) {
-        this.posi = posi;
-
-        if (flush) {
-            MyDatabaseHelper.flushPosi(aid, posi);
-        }
-    }
-
     public String getSegments() {
         return segments;
     }
 
     public void setSegments(String segments) {
         this.segments = segments;
-    }
-
-    public int[] getPageArrary() {
-        if (segments_array == null) {
-            String[] temp = segments.split(" ");
-            segments_array = new int[temp.length];
-
-            for (int i = 0; i < temp.length; i++) {
-                segments_array[i] = Integer.parseInt(temp[i]);
-            }
-        }
-
-        return segments_array;
     }
 }

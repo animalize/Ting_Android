@@ -39,10 +39,10 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_text, this);
 
-        mKeepScrollCheckBox = (CheckBox) findViewById(R.id.keep_scroll);
+        mKeepScrollCheckBox = findViewById(R.id.keep_scroll);
         mKeepScrollCheckBox.setOnClickListener(this);
 
-        mTextView = (TextView) findViewById(R.id.text_view);
+        mTextView = findViewById(R.id.text_view);
         mTextView.setMovementMethod(new ScrollingMovementMethod());
     }
 
@@ -104,7 +104,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mBinder = binder;
 
         if (spannable == null) {
-            String s = mBinder.getText();
+            String s = mBinder.getPageText();
             if (s != null) {
                 setPlayerText(s);
             }

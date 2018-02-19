@@ -35,17 +35,17 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_panel, this);
 
-        mTitleText = (TextView) findViewById(R.id.title);
+        mTitleText = findViewById(R.id.title);
 
-        mProgress = (SeekBar) findViewById(R.id.progress);
+        mProgress = findViewById(R.id.progress);
         mProgress.setOnSeekBarChangeListener(new SeekBarListener());
 
-        mProgressText = (TextView) findViewById(R.id.progress_text);
-        mCjkCharsText = (TextView) findViewById(R.id.cjk_chars_text);
+        mProgressText = findViewById(R.id.progress_text);
+        mCjkCharsText = findViewById(R.id.cjk_chars_text);
 
-        mPlay = (Button) findViewById(R.id.play_pause);
+        mPlay = findViewById(R.id.play_pause);
         mPlay.setOnClickListener(this);
-        mStop = (Button) findViewById(R.id.stop);
+        mStop = findViewById(R.id.stop);
         mStop.setOnClickListener(this);
 
     }
@@ -109,7 +109,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mTitleText.setText(mBinder.getTitle());
         mCjkCharsText.setText("" + item.getCjk_chars() + "字  ");
 
-        fullLengh = mBinder.getText().length();
+        fullLengh = mBinder.getPageText().length();
         mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
     }
 

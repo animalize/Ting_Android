@@ -34,15 +34,16 @@ public abstract class TTSService
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
     private static Intent mStartIntent = new Intent(SPEECH_START_INTENT);
-    private static int PAGE_SIZE = 20000;
+    private static int PAGE_SIZE = 5000;
     private static Pattern page_regex;
     private final IBinder mBinder = new ArticleTtsBinder();
     private int mThreshold;
     private int mWindow;
+    private PageManager mPageManager = new PageManager();
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
     private IArticle mArticle;
-    private String mTitle, mText;
+    private String mTitle, mText1, mPageText;
     private int mNowState = EMPTY;
     private List<Ju> mJus;
     private int mNowQueueIndex = 0;
@@ -94,8 +95,8 @@ public abstract class TTSService
                     end = sub.length();
                 }
             }
-            ret.append("" + (p + end) + " ");
             p += end;
+            ret.append("" + p + " ");
         }
         return ret.toString();
     }
@@ -193,7 +194,7 @@ public abstract class TTSService
 
                 SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
                 final Ju ju = mJus.get(mNowQueueIndex);
-                bag.setText(mText.substring(ju.begin, ju.end));
+                bag.setText(mPageText.substring(ju.begin, ju.end));
                 bag.setUtteranceId(String.valueOf(mNowQueueIndex));
 
                 bags.add(bag);
@@ -260,7 +261,7 @@ public abstract class TTSService
 
         for (int i = mNowQueueIndex; i < end; i++) {
             final Ju ju = mJus.get(i);
-            final String s = mText.substring(ju.begin, ju.end);
+            final String s = mPageText.substring(ju.begin, ju.end);
 
             SpeechSynthesizeBag bag = new SpeechSynthesizeBag();
             bag.setText(s);
@@ -284,7 +285,11 @@ public abstract class TTSService
 
         String getText();
 
-        String getCurrentText();
+        int getPosi();
+
+        void setPosi(int posi, boolean flush);
+
+        int[] getPageArrary();
     }
 
     public static class Ju {
@@ -345,6 +350,46 @@ public abstract class TTSService
         }
     }
 
+    public class PageManager {
+        private int[] pageArray;
+        private int currentPage, totalPage;
+
+        public void initArticle() {
+            pageArray = mArticle.getPageArrary();
+
+            final int posi = mArticle.getPosi();
+
+            // currentPage
+            int l = 0, m, r = pageArray.length;
+
+            while (r - l > 1) {
+                m = (l + r) / 2;
+
+                final int temp = pageArray[m];
+                if (posi < temp) {
+                    r = m;
+                } else {
+                    l = m;
+                }
+            }
+
+            if (posi < l) {
+                currentPage = l;
+            } else {
+                currentPage = r;
+            }
+
+            // totalPage
+            totalPage = pageArray.length;
+
+            // current text
+            mPageText = mText1.substring(
+                    currentPage == 0 ? 0 : pageArray[currentPage - 1],
+                    pageArray[currentPage]
+            );
+        }
+    }
+
     public class ArticleTtsBinder extends Binder {
 
         public boolean setArticle(IArticle article) {
@@ -358,15 +403,16 @@ public abstract class TTSService
             }
 
             mTitle = mArticle.getTitle();
-            mText = mArticle.getText();
-            if (mTitle == null || mText == null) {
+            mText1 = mArticle.getText();
+            if (mTitle == null || mText1 == null) {
                 mArticle = null;
                 mJus = null;
                 setEvent(EMPTY);
                 return false;
             }
 
-            mJus = Ju.fenJu(mText);
+            mPageManager.initArticle();
+            mJus = Ju.fenJu(mPageText);
 
             stop();
             setEvent(STOP);
@@ -420,8 +466,8 @@ public abstract class TTSService
             return mTitle;
         }
 
-        public String getText() {
-            return mText;
+        public String getPageText() {
+            return mPageText;
         }
 
         @Nullable

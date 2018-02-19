@@ -43,8 +43,8 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         mAutoPlay = intent.getBooleanExtra("auto_play", false);
 
         // 控件
-        playerText = (PlayerTextWidget) findViewById(R.id.player_text_view);
-        playerPanel = (PlayerPanelWidget) findViewById(R.id.player_panel_view);
+        playerText = findViewById(R.id.player_text_view);
+        playerPanel = findViewById(R.id.player_panel_view);
 
         intent = new Intent(this, TingTTSService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
@@ -99,7 +99,7 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         playerPanel.setTTSBinder(mBinder);
 
         playerText.setTTSBinder(mBinder);
-        playerText.setPlayerText(mBinder.getText());
+        playerText.setPlayerText(mBinder.getPageText());
 
         if (mAutoPlay) {
             mBinder.play();
