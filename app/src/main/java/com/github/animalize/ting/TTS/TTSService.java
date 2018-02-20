@@ -76,16 +76,22 @@ public abstract class TTSService
         return new IntentFilter(PAGE_CHANGE_INTENT);
     }
 
-    /*
-        返回分段信息，单位是char
-        如: "9993 19985 29983 39983 49970 54153"
-    */
-    public static String getSegments(String text) {
+    public static Pattern getFenjuRegex() {
         if (page_regex == null) {
             page_regex = Pattern.compile(
                     "^.*[\\n，。！？：；、”…,!?]",
                     Pattern.DOTALL);
         }
+        return page_regex;
+    }
+
+    /*
+        返回分段信息，单位是char
+        如: "9993 19985 29983 39983 49970 54153"
+    */
+    public static String getSegments(String text) {
+        Pattern regex = getFenjuRegex();
+
         int p = 0;
         StringBuilder ret = new StringBuilder();
 
@@ -96,7 +102,7 @@ public abstract class TTSService
             }
 
             String sub = text.substring(p, p + PAGE_SIZE);
-            Matcher m = page_regex.matcher(sub);
+            Matcher m = regex.matcher(sub);
 
             int end;
             if (m.find()) {
@@ -306,7 +312,6 @@ public abstract class TTSService
 
     public static class Ju {
         private static int SIZE = 80; //256;
-        private static Pattern biaodian;
         public int begin;
         public int end;
 
@@ -320,11 +325,7 @@ public abstract class TTSService
         }
 
         private static List<Ju> fenJu(String s) {
-            if (biaodian == null) {
-                biaodian = Pattern.compile(
-                        "^.*[\\n，。！？：；、”…,!?]",
-                        Pattern.DOTALL);
-            }
+            Pattern regex = getFenjuRegex();
 
             List<Ju> ret = new ArrayList<>();
 
@@ -339,7 +340,7 @@ public abstract class TTSService
                 }
 
                 String sub = s.substring(p, p + SIZE);
-                Matcher m = biaodian.matcher(sub);
+                Matcher m = regex.matcher(sub);
 
                 int end;
                 if (m.find()) {
@@ -399,6 +400,9 @@ public abstract class TTSService
                     currentPage == 0 ? 0 : pageArray[currentPage - 1],
                     pageArray[currentPage]
             );
+
+            // fen ju
+            mJus = Ju.fenJu(mPageText);
         }
 
         public boolean toNextPage() {
@@ -444,7 +448,6 @@ public abstract class TTSService
             }
 
             mPageManager.initArticle();
-            mJus = Ju.fenJu(mPageText);
 
             stop();
             setEvent(STOP);
