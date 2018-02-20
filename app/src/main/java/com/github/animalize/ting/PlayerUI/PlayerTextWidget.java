@@ -34,6 +34,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     private TTSService.ArticleTtsBinder mBinder;
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
+    private PageChangeReciver mPageChangeReciver = new PageChangeReciver();
 
     public PlayerTextWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -90,14 +91,19 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
 
     public void onResume() {
         mLBM.registerReceiver(
+                mPageChangeReciver,
+                TTSService.getPageChangeIntentFilter());
+        mSpeechStartReciver.onReceive(null, null);
+
+        mLBM.registerReceiver(
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
-
         mSpeechStartReciver.onReceive(null, null);
     }
 
     public void onPause() {
         mLBM.unregisterReceiver(mSpeechStartReciver);
+        mLBM.unregisterReceiver(mPageChangeReciver);
     }
 
     public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
@@ -142,4 +148,17 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         }
     }
 
+    private class PageChangeReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mBinder == null) {
+                return;
+            }
+
+            String s = mBinder.getPageText();
+            if (s != null) {
+                setPlayerText(s);
+            }
+        }
+    }
 }

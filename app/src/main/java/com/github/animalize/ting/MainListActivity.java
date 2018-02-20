@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -299,9 +298,8 @@ public class MainListActivity
                 String segments = dataManager.downloadAndSaveArticleByAid(
                         aid,
                         item.getFile_size());
-                if (segments != null) {
-                    Log.i("doInBackground: ", segments);
 
+                if (segments != null) {
                     item.setSegments(segments);
                     item.setCached(true);
                     item.setDBSegmentsCached();

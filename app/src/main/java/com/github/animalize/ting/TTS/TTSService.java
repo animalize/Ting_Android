@@ -37,7 +37,7 @@ public abstract class TTSService
     private static String PAGE_CHANGE_INTENT = "PageChange";
     private static Intent mPageChangeIntent = new Intent(PAGE_CHANGE_INTENT);
 
-    private static int PAGE_SIZE = 5000;
+    private static int PAGE_SIZE = 100;
     private static Pattern page_regex;
 
     private final IBinder mBinder = new ArticleTtsBinder();
@@ -46,6 +46,8 @@ public abstract class TTSService
     private SpeechSynthesizer mSpeechSynthesizer;
     private LocalBroadcastManager mLBM;
 
+    private int mNowState = EMPTY;
+
     private IArticle mArticle;
     private String mTitle, mText, mPageText;
 
@@ -53,7 +55,6 @@ public abstract class TTSService
     private int mWindow;
 
     private List<Ju> mJus;
-    private int mNowState = EMPTY;
     private int mNowQueueIndex = 0;
     private int mNowSpeechIndex = 0;
 
@@ -69,6 +70,10 @@ public abstract class TTSService
 
     public static IntentFilter getSpeechStartIntentFilter() {
         return new IntentFilter(SPEECH_START_INTENT);
+    }
+
+    public static IntentFilter getPageChangeIntentFilter() {
+        return new IntentFilter(PAGE_CHANGE_INTENT);
     }
 
     /*
@@ -222,10 +227,14 @@ public abstract class TTSService
     @Override
     public void onSpeechFinish(String s) {
         if (mNowSpeechIndex >= mJus.size() - 1) {
-            setEvent(FINISHED);
-
-            if (soundPool != null) {
-                soundPool.play(soundID, 1, 1, 1, 0, 1f);
+            if (mPageManager.toNextPage()) {
+                playAction(true);
+                mLBM.sendBroadcast(mPageChangeIntent);
+            } else {
+                setEvent(FINISHED);
+                if (soundPool != null) {
+                    soundPool.play(soundID, 1, 1, 1, 0, 1f);
+                }
             }
         }
     }
@@ -390,6 +399,26 @@ public abstract class TTSService
                     currentPage == 0 ? 0 : pageArray[currentPage - 1],
                     pageArray[currentPage]
             );
+        }
+
+        public boolean toNextPage() {
+            if (currentPage < totalPage - 1) {
+                // current page
+                currentPage += 1;
+
+                // current text
+                mPageText = mText.substring(
+                        pageArray[currentPage - 1],
+                        pageArray[currentPage]
+                );
+
+                // fen ju
+                mJus = Ju.fenJu(mPageText);
+
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
