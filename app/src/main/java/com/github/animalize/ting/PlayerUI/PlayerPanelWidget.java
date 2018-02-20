@@ -22,7 +22,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private TTSService.ArticleTtsBinder mBinder;
 
     private SeekBar mProgress;
-    private TextView mTitleText, mProgressText, mCjkCharsText;
+    private Button mPageButton;
+    private TextView mTitleText, mProgressText;
     private int fullLengh;
 
     private Button mPlay, mStop;
@@ -30,18 +31,21 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
+    private PageChangeReciver mPageChangeReciver = new PageChangeReciver();
 
     public PlayerPanelWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_panel, this);
 
+        mProgressText = findViewById(R.id.progress_text);
+
+        mPageButton = findViewById(R.id.page_button);
+        mPageButton.setOnClickListener(this);
+
         mTitleText = findViewById(R.id.title);
 
         mProgress = findViewById(R.id.progress);
         mProgress.setOnSeekBarChangeListener(new SeekBarListener());
-
-        mProgressText = findViewById(R.id.progress_text);
-        mCjkCharsText = findViewById(R.id.cjk_chars_text);
 
         mPlay = findViewById(R.id.play_pause);
         mPlay.setOnClickListener(this);
@@ -54,6 +58,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mBinder = binder;
 
         freshUIofItem();
+        mPageChangeReciver.onReceive(null, null);
         mSpeechEventReciver.onReceive(null, null);
         mSpeechStartReciver.onReceive(null, null);
     }
@@ -80,10 +85,16 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             case R.id.stop:
                 mBinder.stop();
                 break;
+
+            case R.id.page_button:
+                break;
         }
     }
 
-    public void onResume() {
+    public void onStart() {
+        mLBM.registerReceiver(
+                mPageChangeReciver,
+                TTSService.getPageChangeIntentFilter());
         mLBM.registerReceiver(
                 mSpeechEventReciver,
                 TTSService.getSpeechEventIntentFilter());
@@ -91,13 +102,15 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mSpeechStartReciver,
                 TTSService.getSpeechStartIntentFilter());
 
+        mPageChangeReciver.onReceive(null, null);
         mSpeechEventReciver.onReceive(null, null);
         mSpeechStartReciver.onReceive(null, null);
     }
 
-    public void onPause() {
+    public void onStop() {
         mLBM.unregisterReceiver(mSpeechEventReciver);
         mLBM.unregisterReceiver(mSpeechStartReciver);
+        mLBM.unregisterReceiver(mPageChangeReciver);
     }
 
     private void freshUIofItem() {
@@ -107,7 +120,6 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         }
 
         mTitleText.setText(mBinder.getTitle());
-        mCjkCharsText.setText("" + item.getCjk_chars() + "字  ");
 
         fullLengh = mBinder.getPageText().length();
         mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
@@ -219,6 +231,18 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             if (mBinder != null && mBinder.getArticle() != null) {
                 mBinder.setPosi(posi);
             }
+        }
+    }
+
+    private class PageChangeReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mBinder == null) {
+                return;
+            }
+
+            String s = mBinder.getPageButtonText();
+            mPageButton.setText(s);
         }
     }
 }

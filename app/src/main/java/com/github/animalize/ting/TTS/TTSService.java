@@ -37,7 +37,7 @@ public abstract class TTSService
     private static String PAGE_CHANGE_INTENT = "PageChange";
     private static Intent mPageChangeIntent = new Intent(PAGE_CHANGE_INTENT);
 
-    private static int PAGE_SIZE = 100;
+    private static int PAGE_SIZE = 20000;
     private static Pattern page_regex;
 
     private final IBinder mBinder = new ArticleTtsBinder();
@@ -235,7 +235,6 @@ public abstract class TTSService
         if (mNowSpeechIndex >= mJus.size() - 1) {
             if (mPageManager.toNextPage()) {
                 playAction(true);
-                mLBM.sendBroadcast(mPageChangeIntent);
             } else {
                 setEvent(FINISHED);
                 if (soundPool != null) {
@@ -386,7 +385,7 @@ public abstract class TTSService
                 }
             }
 
-            if (posi < l) {
+            if (posi < pageArray[l]) {
                 currentPage = l;
             } else {
                 currentPage = r;
@@ -403,6 +402,9 @@ public abstract class TTSService
 
             // fen ju
             mJus = Ju.fenJu(mPageText);
+
+            // broadcast
+            mLBM.sendBroadcast(mPageChangeIntent);
         }
 
         public boolean toNextPage() {
@@ -419,10 +421,21 @@ public abstract class TTSService
                 // fen ju
                 mJus = Ju.fenJu(mPageText);
 
+                // broadcast
+                mLBM.sendBroadcast(mPageChangeIntent);
+
                 return true;
             } else {
                 return false;
             }
+        }
+
+        public int getTotalPage() {
+            return totalPage;
+        }
+
+        public int getCurrentPage() {
+            return currentPage;
         }
     }
 
@@ -517,6 +530,12 @@ public abstract class TTSService
 
         public int getState() {
             return mNowState;
+        }
+
+        public String getPageButtonText() {
+            String s = "" + mPageManager.getCurrentPage() +
+                    "/" + mPageManager.getTotalPage();
+            return s;
         }
 
         public boolean setPosi(int posi) {

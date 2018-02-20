@@ -184,15 +184,15 @@ public class MainListActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        playerPanel.onResume();
+    protected void onStart() {
+        super.onStart();
+        playerPanel.onStart();
     }
 
     @Override
-    protected void onPause() {
-        playerPanel.onPause();
-        super.onPause();
+    protected void onStop() {
+        playerPanel.onStop();
+        super.onStop();
     }
 
     @Override

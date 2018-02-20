@@ -89,7 +89,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         }
     }
 
-    public void onResume() {
+    public void onStart() {
         mLBM.registerReceiver(
                 mPageChangeReciver,
                 TTSService.getPageChangeIntentFilter());
@@ -101,7 +101,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mSpeechStartReciver.onReceive(null, null);
     }
 
-    public void onPause() {
+    public void onStop() {
         mLBM.unregisterReceiver(mSpeechStartReciver);
         mLBM.unregisterReceiver(mPageChangeReciver);
     }
