@@ -229,7 +229,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             if (mBinder != null && mBinder.getArticle() != null) {
-                mBinder.setPosi(posi);
+                mBinder.setPagePosi(posi);
             }
         }
     }

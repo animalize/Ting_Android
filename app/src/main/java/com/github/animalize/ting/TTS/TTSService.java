@@ -37,7 +37,7 @@ public abstract class TTSService
     private static String PAGE_CHANGE_INTENT = "PageChange";
     private static Intent mPageChangeIntent = new Intent(PAGE_CHANGE_INTENT);
 
-    private static int PAGE_SIZE = 20000;
+    private static int PAGE_SIZE = 10000;
     private static Pattern page_regex;
 
     private final IBinder mBinder = new ArticleTtsBinder();
@@ -304,7 +304,7 @@ public abstract class TTSService
 
         int getPosi();
 
-        void setPosi(int posi, boolean flush);
+        void setFullPosi(int posi, boolean flush);
 
         int[] getPageArrary();
     }
@@ -430,6 +430,13 @@ public abstract class TTSService
             }
         }
 
+        // 当前的总位置
+        public int getNowFullPosi() {
+            int base = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
+            int offset = mJus.get(mNowSpeechIndex).begin;
+            return base + offset;
+        }
+
         public int getTotalPage() {
             return totalPage;
         }
@@ -486,6 +493,8 @@ public abstract class TTSService
 
             mSpeechSynthesizer.stop();
             setEvent(STOP);
+
+            saveFullPosi();
         }
 
         public void pause() {
@@ -504,6 +513,13 @@ public abstract class TTSService
 
             mSpeechSynthesizer.resume();
             setEvent(PLAYING);
+        }
+
+        // 保存当前位置
+        public void saveFullPosi() {
+            if (mArticle != null) {
+                mArticle.setFullPosi(mPageManager.getNowFullPosi(), true);
+            }
         }
 
         public Object getArticle() {
@@ -533,12 +549,16 @@ public abstract class TTSService
         }
 
         public String getPageButtonText() {
-            String s = "" + mPageManager.getCurrentPage() +
+            if (mPageManager.getTotalPage() == 0) {
+                return "-";
+            }
+
+            String s = "" + (mPageManager.getCurrentPage() + 1) +
                     "/" + mPageManager.getTotalPage();
             return s;
         }
 
-        public boolean setPosi(int posi) {
+        public boolean setPagePosi(int posi) {
             if (mSpeechSynthesizer == null) {
                 return false;
             }

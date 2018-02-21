@@ -150,7 +150,7 @@ public class Item implements TTSService.IArticle {
     }
 
     @Override
-    public void setPosi(int posi, boolean flush) {
+    public void setFullPosi(int posi, boolean flush) {
         this.posi = posi;
 
         if (flush) {
