@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
@@ -201,6 +200,10 @@ public abstract class TTSService
     public void onSpeechStart(String s) {
         // 进度
         mNowSpeechIndex = Integer.parseInt(s);
+
+        // now char
+        mArticle.setNowChar(mPageManager.getNowFullPosi(), false);
+
         mLBM.sendBroadcast(mStartIntent);
 
         if (mNowQueueIndex - mNowSpeechIndex <= mThreshold) {
@@ -370,6 +373,7 @@ public abstract class TTSService
     public class PageManager {
         private int[] pageArray;
         private int currentPage, totalPage;
+        private int currentBase;
 
         public void initArticle() {
             pageArray = mArticle.getPageArrary();
@@ -400,23 +404,17 @@ public abstract class TTSService
             totalPage = pageArray.length;
 
             // current text
-            int base = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
-            mPageText = mText.substring(base, pageArray[currentPage]);
+            currentBase = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
+            mPageText = mText.substring(currentBase, pageArray[currentPage]);
 
             // 分句
             mJus = Ju.fenJu(mPageText);
 
             // 页内跳转
-            int offset = posi - base;
+            int offset = posi - currentBase;
 
             // broadcast
             mLBM.sendBroadcast(mPageChangeIntent);
-
-            Log.i("initArticle: ",
-                    "" + currentPage +
-                            " " + offset +
-                            " " + mPageText.length()
-            );
 
             if (mBinder != null) {
                 if (mSpeechSynthesizer == null) {
@@ -432,11 +430,9 @@ public abstract class TTSService
                 // current page
                 currentPage += 1;
 
+                currentBase = pageArray[currentPage - 1];
                 // current text
-                mPageText = mText.substring(
-                        pageArray[currentPage - 1],
-                        pageArray[currentPage]
-                );
+                mPageText = mText.substring(currentBase, pageArray[currentPage]);
 
                 // fen ju
                 mJus = Ju.fenJu(mPageText);
@@ -452,9 +448,7 @@ public abstract class TTSService
 
         // 当前的总位置
         public int getNowFullPosi() {
-            int base = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
-            int offset = mJus.get(mNowSpeechIndex).begin;
-            return base + offset;
+            return currentBase + mJus.get(mNowSpeechIndex).begin;
         }
 
         public int getTotalPage() {
