@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
@@ -40,7 +41,7 @@ public abstract class TTSService
     private static int PAGE_SIZE = 10000;
     private static Pattern page_regex;
 
-    private final IBinder mBinder = new ArticleTtsBinder();
+    private final ArticleTtsBinder mBinder = new ArticleTtsBinder();
 
     private PageManager mPageManager = new PageManager();
     private SpeechSynthesizer mSpeechSynthesizer;
@@ -302,11 +303,15 @@ public abstract class TTSService
 
         String getText();
 
+        String getAid();
+
         int getNowChar();
 
         void setNowChar(int posi, boolean flush);
 
         int[] getPageArrary();
+
+        String getFullProgressText();
     }
 
     public static class Ju {
@@ -395,16 +400,31 @@ public abstract class TTSService
             totalPage = pageArray.length;
 
             // current text
-            mPageText = mText.substring(
-                    currentPage == 0 ? 0 : pageArray[currentPage - 1],
-                    pageArray[currentPage]
-            );
+            int base = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
+            mPageText = mText.substring(base, pageArray[currentPage]);
 
-            // fen ju
+            // 分句
             mJus = Ju.fenJu(mPageText);
+
+            // 页内跳转
+            int offset = posi - base;
 
             // broadcast
             mLBM.sendBroadcast(mPageChangeIntent);
+
+            Log.i("initArticle: ",
+                    "" + currentPage +
+                            " " + offset +
+                            " " + mPageText.length()
+            );
+
+            if (mBinder != null) {
+                if (mSpeechSynthesizer == null) {
+                    lazyInit();
+                }
+
+                mBinder.setPagePosi(offset);
+            }
         }
 
         public boolean toNextPage() {
@@ -448,9 +468,17 @@ public abstract class TTSService
 
     public class ArticleTtsBinder extends Binder {
 
-        public boolean setArticle(IArticle article) {
-            mNowQueueIndex = mNowSpeechIndex = 0;
+        public boolean playArticle(IArticle article) {
+            if (mArticle != null) {
+                if (!mArticle.getAid().equals(article.getAid())) {
+                    stop();
+                } else {
+                    play();
+                    return true;
+                }
+            }
 
+            mNowQueueIndex = mNowSpeechIndex = 0;
             mArticle = article;
             if (mArticle == null) {
                 mJus = null;
@@ -469,19 +497,12 @@ public abstract class TTSService
 
             mPageManager.initArticle();
 
-            stop();
-            setEvent(STOP);
-
             return true;
         }
 
         public void play() {
-            if (mSpeechSynthesizer == null) {
-                lazyInit();
-            }
-
             if (mArticle != null) {
-                playAction(true);
+                playAction(false);
                 setEvent(PLAYING);
             }
         }
@@ -522,6 +543,14 @@ public abstract class TTSService
             }
         }
 
+        public String getFullProgressText() {
+            if (mArticle == null) {
+                return "-";
+            }
+
+            return mArticle.getFullProgressText();
+        }
+
         public Object getArticle() {
             return mArticle;
         }
@@ -550,7 +579,7 @@ public abstract class TTSService
 
         public String getPageButtonText() {
             if (mPageManager.getTotalPage() == 0) {
-                return "-";
+                return "页";
             }
 
             String s = "" + (mPageManager.getCurrentPage() + 1) +

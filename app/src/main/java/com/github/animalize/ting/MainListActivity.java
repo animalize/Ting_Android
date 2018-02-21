@@ -96,8 +96,7 @@ public class MainListActivity
                     return;
                 }
 
-                mBinder.setArticle(item);
-                mBinder.play();
+                mBinder.playArticle(item);
             }
 
             @Override
@@ -129,15 +128,6 @@ public class MainListActivity
         // 读数据库list
         List<Item> list = dataManager.getFullList();
         listAdapter.setArrayList(list);
-
-
-//        nameSpinner = (Spinner) findViewById(R.id.cate_spinner);
-//        nameSpinner.setOnItemSelectedListener(this);
-//
-//        nameAdapter = new NameListAdapter(this);
-//        nameAdapter.setList(dataManager.getCateNameList());
-//        nameSpinner.setAdapter(nameAdapter);
-
 
         Intent intent = new Intent(this, TingTTSService.class);
         bindService(intent, mServerConn, BIND_AUTO_CREATE);

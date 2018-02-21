@@ -23,7 +23,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
     private SeekBar mProgress;
     private Button mPageButton;
-    private TextView mTitleText, mProgressText;
+    private TextView mTitleText, mProgressText, mFullprogressText;
     private int fullLengh;
 
     private Button mPlay, mStop;
@@ -37,6 +37,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_panel, this);
 
+        mFullprogressText = findViewById(R.id.fullprogress_text);
         mProgressText = findViewById(R.id.progress_text);
 
         mPageButton = findViewById(R.id.page_button);
@@ -137,6 +138,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mProgressText.setText("100% ");
                 return;
             }
+
+            mFullprogressText.setText(mBinder.getFullProgressText());
 
             TTSService.Ju ju = mBinder.getNowJu();
             if (ju != null) {

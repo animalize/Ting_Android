@@ -168,10 +168,6 @@ public class Item implements TTSService.IArticle {
         MyDatabaseHelper.setSegmentsCached(aid, segments, cached);
     }
 
-    public int getFullChar() {
-        return full_char;
-    }
-
     public void setFullChar(int full_char, boolean flush) {
         this.full_char = full_char;
 
@@ -180,7 +176,12 @@ public class Item implements TTSService.IArticle {
         }
     }
 
-    public String getProgressText() {
+    public int getFullChar() {
+        return full_char;
+    }
+
+    @Override
+    public String getFullProgressText() {
         if (full_char == -1) {
             return "-";
         }
@@ -197,6 +198,7 @@ public class Item implements TTSService.IArticle {
         this.cate = cate;
     }
 
+    @Override
     public String getAid() {
         return aid;
     }
@@ -213,20 +215,12 @@ public class Item implements TTSService.IArticle {
         return file_size;
     }
 
-    public long getCrc32() {
-        return crc32;
-    }
-
     public boolean isCached() {
         return cached;
     }
 
     public void setCached(boolean cached) {
         this.cached = cached;
-    }
-
-    public String getSegments() {
-        return segments;
     }
 
     public void setSegments(String segments) {

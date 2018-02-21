@@ -25,6 +25,12 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/fullprogress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black" />
+
         <Button
             android:id="@+id/page_button"
             android:layout_width="wrap_content"
@@ -32,12 +38,6 @@
             android:minHeight="0dp"
             android:minWidth="30dp"
             android:text="页" />
-
-        <TextView
-            android:id="@+id/progress_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/play_pause"
@@ -52,6 +52,12 @@
             android:layout_height="wrap_content"
             android:minHeight="0dp"
             android:text="停止" />
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black" />
 
     </LinearLayout>
 

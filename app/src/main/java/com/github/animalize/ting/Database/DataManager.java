@@ -91,6 +91,7 @@ public class DataManager {
             Item old = aidMap.get(item.getAid());
             if (old != null) {
                 item.setCached(old.isCached());
+                item.setFullChar(old.getFullChar(), false);
                 item.setNowChar(old.getNowChar(), false);
             }
 

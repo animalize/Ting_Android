@@ -93,7 +93,7 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         Item item = dataManager.getItemByAid(mAid);
 
         if (mAutoPlay) {
-            mBinder.setArticle(item);
+            mBinder.playArticle(item);
         }
 
         playerPanel.setTTSBinder(mBinder);
