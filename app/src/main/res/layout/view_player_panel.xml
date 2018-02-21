@@ -43,12 +43,14 @@
             android:id="@+id/play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="0dp"
             android:text="播放" />
 
         <Button
             android:id="@+id/stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="0dp"
             android:text="停止" />
 
     </LinearLayout>

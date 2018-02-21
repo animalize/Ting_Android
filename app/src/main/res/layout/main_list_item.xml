@@ -34,7 +34,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"
-                android:text="播放" />
+                android:minWidth="0dp"
+                android:text="播" />
+
+            <TextView
+                android:id="@+id/cate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/button_delete"
@@ -42,10 +51,10 @@
                 android:layout_height="wrap_content"
                 android:minHeight="0dp"
                 android:minWidth="0dp"
-                android:text="删除" />
+                android:text="删" />
 
             <TextView
-                android:id="@+id/cate"
+                android:id="@+id/progress"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

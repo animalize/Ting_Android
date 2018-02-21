@@ -302,9 +302,9 @@ public abstract class TTSService
 
         String getText();
 
-        int getPosi();
+        int getNowChar();
 
-        void setFullPosi(int posi, boolean flush);
+        void setNowChar(int posi, boolean flush);
 
         int[] getPageArrary();
     }
@@ -369,7 +369,7 @@ public abstract class TTSService
         public void initArticle() {
             pageArray = mArticle.getPageArrary();
 
-            final int posi = mArticle.getPosi();
+            final int posi = mArticle.getNowChar();
 
             // currentPage
             int l = 0, m, r = pageArray.length;
@@ -518,7 +518,7 @@ public abstract class TTSService
         // 保存当前位置
         public void saveFullPosi() {
             if (mArticle != null) {
-                mArticle.setFullPosi(mPageManager.getNowFullPosi(), true);
+                mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
             }
         }
 

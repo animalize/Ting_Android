@@ -28,15 +28,15 @@ public class Item implements TTSService.IArticle {
     private String aid;
     private String title;
 
+    private int now_char = 0;
+    private int full_char = -1;
+    private String segments;
+
     private int time;
     private int cjk_chars;
     private int file_size;
     private long crc32;
-
-    private String segments;
-
     private boolean cached = false;
-    private int posi = 0;
 
     private int segments_array[];
 
@@ -88,15 +88,15 @@ public class Item implements TTSService.IArticle {
         aid = c.getString(c.getColumnIndex("aid"));
         title = c.getString(c.getColumnIndex("title"));
 
+        now_char = c.getInt(c.getColumnIndex("now_char"));
+        full_char = c.getInt(c.getColumnIndex("full_char"));
+        segments = c.getString(c.getColumnIndex("segments"));
+
         time = c.getInt(c.getColumnIndex("time"));
         cjk_chars = c.getInt(c.getColumnIndex("cjk_chars"));
         file_size = c.getInt(c.getColumnIndex("file_size"));
         crc32 = c.getInt(c.getColumnIndex("crc32"));
-
         cached = c.getInt(c.getColumnIndex("cached")) != 0;
-        posi = c.getInt(c.getColumnIndex("posi"));
-
-        segments = c.getString(c.getColumnIndex("segments"));
     }
 
     public ContentValues getContentValues() {
@@ -106,15 +106,15 @@ public class Item implements TTSService.IArticle {
         cv.put("aid", aid);
         cv.put("title", title);
 
+        cv.put("now_char", now_char);
+        cv.put("full_char", full_char);
+        cv.put("segments", segments);
+
         cv.put("time", time);
         cv.put("cjk_chars", cjk_chars);
         cv.put("file_size", file_size);
         cv.put("crc32", crc32);
-
-        cv.put("segments", segments);
-
         cv.put("cached", cached ? 1 : 0);
-        cv.put("posi", posi);
 
         return cv;
     }
@@ -127,7 +127,13 @@ public class Item implements TTSService.IArticle {
     @Override
     public String getText() {
         DataManager dataManager = DataManager.getInstance();
-        return dataManager.readArticleByAid(aid);
+        String text = dataManager.readArticleByAid(aid);
+
+        if (full_char == -1) {
+            setFullChar(text.length(), true);
+        }
+
+        return text;
     }
 
     @Override
@@ -145,13 +151,13 @@ public class Item implements TTSService.IArticle {
     }
 
     @Override
-    public int getPosi() {
-        return posi;
+    public int getNowChar() {
+        return now_char;
     }
 
     @Override
-    public void setFullPosi(int posi, boolean flush) {
-        this.posi = posi;
+    public void setNowChar(int posi, boolean flush) {
+        this.now_char = posi;
 
         if (flush) {
             MyDatabaseHelper.flushPosi(aid, posi);
@@ -160,6 +166,27 @@ public class Item implements TTSService.IArticle {
 
     public void setDBSegmentsCached() {
         MyDatabaseHelper.setSegmentsCached(aid, segments, cached);
+    }
+
+    public int getFullChar() {
+        return full_char;
+    }
+
+    public void setFullChar(int full_char, boolean flush) {
+        this.full_char = full_char;
+
+        if (flush) {
+            MyDatabaseHelper.flushFullPosi(aid, full_char);
+        }
+    }
+
+    public String getProgressText() {
+        if (full_char == -1) {
+            return "-";
+        }
+
+        int v = now_char * 100 / full_char;
+        return "" + v + "% ";
     }
 
     public String getCate() {

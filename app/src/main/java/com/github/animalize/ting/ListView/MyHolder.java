@@ -14,6 +14,7 @@ class MyHolder extends RecyclerView.ViewHolder {
     public Button delete;
 
     public TextView cate;
+    public TextView progress;
     public TextView chars;
 
     private String aid;
@@ -21,13 +22,14 @@ class MyHolder extends RecyclerView.ViewHolder {
     public MyHolder(View itemView) {
         super(itemView);
 
-        title = (TextView) itemView.findViewById(R.id.title);
+        title = itemView.findViewById(R.id.title);
 
-        play = (Button) itemView.findViewById(R.id.button_play);
-        delete = (Button) itemView.findViewById(R.id.button_delete);
+        play = itemView.findViewById(R.id.button_play);
+        delete = itemView.findViewById(R.id.button_delete);
 
-        cate = (TextView) itemView.findViewById(R.id.cate);
-        chars = (TextView) itemView.findViewById(R.id.chars);
+        cate = itemView.findViewById(R.id.cate);
+        progress = itemView.findViewById(R.id.progress);
+        chars = itemView.findViewById(R.id.chars);
     }
 
     public String getAid() {

@@ -117,8 +117,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static void flushPosi(String aid, int posi) {
         init();
 
-        String sql = "UPDATE list SET posi=? WHERE aid=?";
+        String sql = "UPDATE list SET now_char=? WHERE aid=?";
         mDb.execSQL(sql, new String[]{String.valueOf(posi), aid});
+    }
+
+    public static void flushFullPosi(String aid, int full_char) {
+        init();
+
+        String sql = "UPDATE list SET full_char=? WHERE aid=?";
+        mDb.execSQL(sql, new String[]{String.valueOf(full_char), aid});
     }
 
     @Override
@@ -129,15 +136,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "aid TEXT," +
                 "title TEXT," +
 
+                "now_char INTEGER," +
+                "full_char INTEGER," +
+
+                "segments TEXT," +
+
                 "time INTEGER," +
                 "cjk_chars INTEGER," +
                 "file_size INTEGER," +
                 "crc32 INTEGER," +
-
-                "segments TEXT," +
-
-                "cached INTEGER," +
-                "posi INTEGER" +
+                "cached INTEGER" +
                 ");";
         db.execSQL(sql);
 
@@ -151,4 +159,5 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
+
 }
