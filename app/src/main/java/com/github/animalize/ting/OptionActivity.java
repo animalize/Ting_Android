@@ -30,7 +30,7 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     private TingConfig mConfig = TingConfig.getInstance();
     private TingSetting mTTSSetting;
 
-    private EditText mFilters;
+    private EditText mFilters, mHost;
 
     private TextView volumeText, speedText, pitchText;
     private SeekBar volumeSeekbar, speedSeekbar, pitchSeekbar;
@@ -55,27 +55,27 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         mTTSSetting = TingSetting.getInstance(this);
 
         // 普通参数
-        volumeSeekbar = (SeekBar) findViewById(R.id.volume_seekbar);
+        volumeSeekbar = findViewById(R.id.volume_seekbar);
         volumeSeekbar.setProgress(mTTSSetting.getmVolume());
         volumeSeekbar.setOnSeekBarChangeListener(this);
 
-        speedSeekbar = (SeekBar) findViewById(R.id.speed_seekbar);
+        speedSeekbar = findViewById(R.id.speed_seekbar);
         speedSeekbar.setProgress(mTTSSetting.getmSpeed());
         speedSeekbar.setOnSeekBarChangeListener(this);
 
-        pitchSeekbar = (SeekBar) findViewById(R.id.pitch_seekbar);
+        pitchSeekbar = findViewById(R.id.pitch_seekbar);
         pitchSeekbar.setProgress(mTTSSetting.getmPitch());
         pitchSeekbar.setOnSeekBarChangeListener(this);
 
-        volumeText = (TextView) findViewById(R.id.volume_text);
+        volumeText = findViewById(R.id.volume_text);
         volumeText.setText("音量 " + mTTSSetting.getmVolume() + "：");
-        speedText = (TextView) findViewById(R.id.speed_text);
+        speedText = findViewById(R.id.speed_text);
         speedText.setText("语速 " + mTTSSetting.getmSpeed() + "：");
-        pitchText = (TextView) findViewById(R.id.pitch_text);
+        pitchText = findViewById(R.id.pitch_text);
         pitchText.setText("语调 " + mTTSSetting.getmPitch() + "：");
 
         // 朗读者
-        Spinner speakerSpinner = (Spinner) findViewById(R.id.speaker_spinner);
+        Spinner speakerSpinner = findViewById(R.id.speaker_spinner);
         speakerSpinner.setOnItemSelectedListener(this);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
@@ -88,7 +88,7 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         speakerSpinner.setSelection(mNowSpeaker);
 
         // 模式
-        Spinner mixModeSpinner = (Spinner) findViewById(R.id.mixmode_spinner);
+        Spinner mixModeSpinner = findViewById(R.id.mixmode_spinner);
         mixModeSpinner.setOnItemSelectedListener(this);
 
         arrayAdapter = new ArrayAdapter<>(
@@ -103,33 +103,33 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         // 服务设置
 
         // 阈值
-        thresholdSeekbar = (SeekBar) findViewById(R.id.threshold_seekbar);
+        thresholdSeekbar = findViewById(R.id.threshold_seekbar);
         thresholdSeekbar.setMax(TingSetting.THRESHOLD_MAX - Setting.THRESHOLD_MIN);
         mNowThreshold = mTTSSetting.getmThreshold();
         thresholdSeekbar.setProgress(mNowThreshold - TingSetting.THRESHOLD_MIN);
         thresholdSeekbar.setOnSeekBarChangeListener(this);
 
-        thresholdText = (TextView) findViewById(R.id.threshold_text);
+        thresholdText = findViewById(R.id.threshold_text);
         thresholdText.setText("阈值 " + mTTSSetting.getmThreshold() + "：");
 
         // 窗口长度
-        windowSeekbar = (SeekBar) findViewById(R.id.window_seekbar);
+        windowSeekbar = findViewById(R.id.window_seekbar);
         windowSeekbar.setMax(TingSetting.WINDOW_MAX - Setting.WINDOW_MIN);
         mNowWindow = mTTSSetting.getmWindow();
         windowSeekbar.setProgress(mNowWindow - TingSetting.WINDOW_MIN);
         windowSeekbar.setOnSeekBarChangeListener(this);
 
-        windowText = (TextView) findViewById(R.id.window_text);
+        windowText = findViewById(R.id.window_text);
         windowText.setText("窗口长度 " + mTTSSetting.getmWindow() + "：");
 
         // 分句字符数
-        fenjuSeekbar = (SeekBar) findViewById(R.id.fenju_seekbar);
+        fenjuSeekbar = findViewById(R.id.fenju_seekbar);
         fenjuSeekbar.setMax(TingSetting.FENJU_MAX - Setting.FENJU_MIN);
         mNowFenju = mTTSSetting.getmFenJu();
         fenjuSeekbar.setProgress(mNowFenju - TingSetting.FENJU_MIN);
         fenjuSeekbar.setOnSeekBarChangeListener(this);
 
-        fenjuText = (TextView) findViewById(R.id.fenju_text);
+        fenjuText = findViewById(R.id.fenju_text);
         fenjuText.setText("分句字符数 " + mTTSSetting.getmFenJu() + "：");
 
         // 过滤器
@@ -138,20 +138,24 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         for (String temp : filters) {
             s += temp + " ";
         }
-        mFilters = (EditText) findViewById(R.id.filters);
+        mFilters = findViewById(R.id.filters);
         mFilters.setText(s);
 
+        // 服务器地址
+        mHost = findViewById(R.id.host_addr);
+        mHost.setText(mConfig.getHost());
+
         // 版本
-        verInfo = (TextView) findViewById(R.id.ver_info);
+        verInfo = findViewById(R.id.ver_info);
         String versionName = "程序版本：" + BuildConfig.VERSION_NAME + "\n";
         Date buildDate = new Date(BuildConfig.TIMESTAMP);
         DateFormat df = new SimpleDateFormat("编译于：yyyy-MM-dd E HH:mm", Locale.getDefault());
         verInfo.setText(versionName + df.format(buildDate));
 
         // 按钮
-        Button bt = (Button) findViewById(R.id.ok);
+        Button bt = findViewById(R.id.ok);
         bt.setOnClickListener(this);
-        bt = (Button) findViewById(R.id.cancel);
+        bt = findViewById(R.id.cancel);
         bt.setOnClickListener(this);
     }
 
@@ -163,6 +167,8 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
                 String[] parts = s.split("\\s+");
                 Set<String> set = new HashSet<>(Arrays.asList(parts));
                 mConfig.setmFilters(set);
+
+                mConfig.setHost(mHost.getText().toString());
 
                 mTTSSetting.setmVolume(volumeSeekbar.getProgress());
                 mTTSSetting.setmSpeed(speedSeekbar.getProgress());

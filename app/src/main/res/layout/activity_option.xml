@@ -292,10 +292,9 @@
                         android:text="服务器网址：" />
 
                     <EditText
-                        android:id="@+id/server_addr"
+                        android:id="@+id/host_addr"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="http://192.168.21.60:17828" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
