@@ -107,33 +107,24 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 getContext(),
                 android.R.layout.simple_list_item_1);
+
         for (int i = 0; i < mBinder.getTotalPage(); i++) {
             if (i != mBinder.getCurrentPage()) {
                 arrayAdapter.add("第" + (i + 1) + "页");
             } else {
                 arrayAdapter.add("第" + (i + 1) + "页 (当前)");
             }
-
         }
-
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
 
         builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (which == mBinder.getCurrentPage()) {
-                    return;
+                if (which != mBinder.getCurrentPage()) {
+                    mBinder.jumpToPage(which);
                 }
-
-                mBinder.jumpToPage(which);
-                dialog.dismiss();
             }
         });
+
         builderSingle.show();
     }
 
