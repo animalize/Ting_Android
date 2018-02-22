@@ -164,7 +164,7 @@ public class Item implements TTSService.IArticle {
         }
     }
 
-    public void setDBSegmentsCached() {
+    public void saveDBSegmentsCached() {
         MyDatabaseHelper.setSegmentsCached(aid, segments, cached);
     }
 
@@ -221,6 +221,10 @@ public class Item implements TTSService.IArticle {
 
     public void setCached(boolean cached) {
         this.cached = cached;
+    }
+
+    public String getSegments() {
+        return segments;
     }
 
     public void setSegments(String segments) {

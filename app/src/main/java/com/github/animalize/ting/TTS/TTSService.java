@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizeBag;
@@ -277,10 +278,10 @@ public abstract class TTSService
 
         List<SpeechSynthesizeBag> bags = new ArrayList<>();
 
-        final int temp = mNowQueueIndex + mThreshold + 1;
+        final int temp = mNowSpeechIndex + mThreshold + 1;
         int end = temp < mJus.size() ? temp : mJus.size();
 
-        for (int i = mNowQueueIndex; i < end; i++) {
+        for (int i = mNowSpeechIndex; i < end; i++) {
             final Ju ju = mJus.get(i);
             final String s = mPageText.substring(ju.begin, ju.end);
 
@@ -547,6 +548,7 @@ public abstract class TTSService
         // 保存当前位置
         public void saveFullPosi() {
             if (mArticle != null) {
+                Log.i("xxxxxxsave: ", "" + mPageManager.getNowFullPosi());
                 mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
             }
         }
@@ -614,6 +616,7 @@ public abstract class TTSService
                 } else if (posi >= temp.end) {
                     low = mid + 1;
                 } else {
+                    Log.i("xxxxxxto: ", "" + mJus.get(mid).begin);
                     mNowQueueIndex = mNowSpeechIndex = mid;
                     playAction(false);
 

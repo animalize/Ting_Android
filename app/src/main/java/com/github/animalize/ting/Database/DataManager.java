@@ -90,6 +90,7 @@ public class DataManager {
             // 设置cached, posi
             Item old = aidMap.get(item.getAid());
             if (old != null) {
+                item.setSegments(old.getSegments());
                 item.setCached(old.isCached());
                 item.setFullChar(old.getFullChar(), false);
                 item.setNowChar(old.getNowChar(), false);

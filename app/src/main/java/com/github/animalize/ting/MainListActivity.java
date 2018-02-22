@@ -296,7 +296,7 @@ public class MainListActivity
                 if (segments != null) {
                     item.setSegments(segments);
                     item.setCached(true);
-                    item.setDBSegmentsCached();
+                    item.saveDBSegmentsCached();
 
                     publishProgress(aid);
                 }
