@@ -22,7 +22,20 @@ public class TTSInitializer {
     private static Context appContext;
     private static String ttsDataDir;
 
-    public static int initialEnv(Context context, final int currentVer) {
+    static void deleteFiles(File f) {
+        for (String child : f.list()) {
+            File temp = new File(f.getAbsolutePath() + "/" + child);
+
+            if (temp.isDirectory()) {
+                deleteFiles(temp);
+                temp.delete();
+            } else {
+                temp.delete();
+            }
+        }
+    }
+
+    static int initialEnv(Context context, final int currentVer) {
         appContext = context.getApplicationContext();
         File fileDir = appContext.getFilesDir();
 
@@ -33,21 +46,22 @@ public class TTSInitializer {
         ttsDataDir = dataDir.getAbsolutePath();
 
         if (currentVer < FILE_VER) {
-            copyAssetsFile(MODELS[0]);
-            copyAssetsFile(MODELS[1]);
-            copyAssetsFile(MODELS[2]);
-            copyAssetsFile(MODELS[3]);
+            // 清空目录
+            deleteFiles(dataDir);
 
-            copyFromAssetsToSdcard(
-                    TEXT_MODEL_NAME,
-                    getTextModelName());
+            // 复制文件
+            for (String fn : MODELS) {
+                copyAssetsFile(fn);
+            }
+            copyAssetsFile(TEXT_MODEL_NAME);
+
             return FILE_VER;
         } else {
             return currentVer;
         }
     }
 
-    public static String getSpeechModelName(int idx) {
+    static String getSpeechModelName(int idx) {
         if (ttsDataDir == null) {
             return null;
         }
@@ -79,7 +93,7 @@ public class TTSInitializer {
         return ttsDataDir + "/" + fn;
     }
 
-    public static String getTextModelName() {
+    static String getTextModelName() {
         if (ttsDataDir == null) {
             return null;
         }
@@ -106,8 +120,7 @@ public class TTSInitializer {
         FileOutputStream fos = null;
         try {
             is = appContext.getResources().getAssets().open(source);
-            String path = dest;
-            fos = new FileOutputStream(path);
+            fos = new FileOutputStream(dest);
             byte[] buffer = new byte[1024];
             int size;
             while ((size = is.read(buffer, 0, 1024)) >= 0) {
@@ -131,6 +144,5 @@ public class TTSInitializer {
                 e.printStackTrace();
             }
         }
-
     }
 }

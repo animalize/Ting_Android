@@ -285,6 +285,17 @@
                         android:id="@+id/filters"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="服务器网址：" />
+
+                    <EditText
+                        android:id="@+id/server_addr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="http://192.168.21.60:17828" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 

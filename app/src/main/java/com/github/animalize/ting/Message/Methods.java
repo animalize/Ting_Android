@@ -3,6 +3,7 @@ package com.github.animalize.ting.Message;
 import android.support.annotation.Nullable;
 
 import com.github.animalize.ting.Data.Item;
+import com.github.animalize.ting.Data.TingConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,13 +21,13 @@ import okhttp3.Response;
  */
 
 public class Methods {
-    private static final String HOST = "http://192.168.21.60:17828";
     private static final String ENCODING = "GB18030";
 
     // 得到文章列表
     @Nullable
     public static List<Item> downloadList() {
-        String url = HOST + "/get_list";
+        String url = TingConfig.getInstance().getHost() +
+                "/get_list";
 
         byte[] b = downloadUrl(url);
         if (b == null) {
@@ -56,14 +57,16 @@ public class Methods {
      */
     @Nullable
     public static byte[] downloadArticleByAid(String aid) {
-        String url = HOST + "/get_article" + "?aid=" + aid;
+        String url = TingConfig.getInstance().getHost() +
+                "/get_article" + "?aid=" + aid;
 
         byte[] b = downloadUrl(url);
         return b;
     }
 
     public static void deleteAids(List<String> aids) {
-        String url = HOST + "/del_article";
+        String url = TingConfig.getInstance().getHost() +
+                "/del_article";
 
         JSONArray jsonarray = new JSONArray(aids);
         String j = jsonarray.toString();
