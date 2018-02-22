@@ -2,12 +2,15 @@ package com.github.animalize.ting.PlayerUI;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -88,8 +91,50 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 break;
 
             case R.id.page_button:
+                showPageDialog();
                 break;
         }
+    }
+
+    private void showPageDialog() {
+        if (mBinder == null) {
+            return;
+        }
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+        builderSingle.setTitle("跳转分页");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                getContext(),
+                android.R.layout.simple_list_item_1);
+        for (int i = 0; i < mBinder.getTotalPage(); i++) {
+            if (i != mBinder.getCurrentPage()) {
+                arrayAdapter.add("第" + (i + 1) + "页");
+            } else {
+                arrayAdapter.add("第" + (i + 1) + "页 (当前)");
+            }
+
+        }
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == mBinder.getCurrentPage()) {
+                    return;
+                }
+
+                mBinder.jumpToPage(which);
+                dialog.dismiss();
+            }
+        });
+        builderSingle.show();
     }
 
     public void onStart() {

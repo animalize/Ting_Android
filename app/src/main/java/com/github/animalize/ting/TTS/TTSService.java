@@ -458,6 +458,20 @@ public abstract class TTSService
         public int getCurrentPage() {
             return currentPage;
         }
+
+        public void jumpToPage(int page) {
+            currentPage = page;
+
+            // current text
+            currentBase = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
+            mPageText = mText.substring(currentBase, pageArray[currentPage]);
+
+            // 分句
+            mJus = Ju.fenJu(mPageText);
+
+            // broadcast
+            mLBM.sendBroadcast(mPageChangeIntent);
+        }
     }
 
     public class ArticleTtsBinder extends Binder {
@@ -609,6 +623,33 @@ public abstract class TTSService
             }
 
             return false;
+        }
+
+        public int getCurrentPage() {
+            return mPageManager.getCurrentPage();
+        }
+
+        public int getTotalPage() {
+            return mPageManager.getTotalPage();
+        }
+
+        public void jumpToPage(int page) {
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
+
+            // 停止
+            if (mNowState == PLAYING || mNowState == PAUSING) {
+                mSpeechSynthesizer.stop();
+                setEvent(STOP);
+            }
+
+            // 跳转
+            mPageManager.jumpToPage(page);
+
+            // 播放
+            playAction(true);
+            setEvent(PLAYING);
         }
 
         public void setSetting() {

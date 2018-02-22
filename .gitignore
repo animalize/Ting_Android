@@ -6,6 +6,7 @@
 .DS_Store
 /build
 /captures
+/app/jni/
 /app/src/libs/
 /app/src/assets/
 .externalNativeBuild
