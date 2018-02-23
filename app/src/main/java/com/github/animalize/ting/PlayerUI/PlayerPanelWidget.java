@@ -1,22 +1,28 @@
 package com.github.animalize.ting.PlayerUI;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.animalize.ting.Data.Item;
+import com.github.animalize.ting.Data.MyColors;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
 
@@ -101,31 +107,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             return;
         }
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-        builderSingle.setTitle("跳转分页");
-
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getContext(),
-                android.R.layout.simple_list_item_1);
-
-        for (int i = 0; i < mBinder.getTotalPage(); i++) {
-            if (i != mBinder.getCurrentPage()) {
-                arrayAdapter.add("第" + (i + 1) + "页");
-            } else {
-                arrayAdapter.add("第" + (i + 1) + "页 (当前)");
-            }
-        }
-
-        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which != mBinder.getCurrentPage()) {
-                    mBinder.jumpToPage(which);
-                }
-            }
-        });
-
-        builderSingle.show();
+        PageJumpDialog d = new PageJumpDialog(getContext());
+        d.show();
     }
 
     public void onStart() {
@@ -282,6 +265,129 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
             String s = mBinder.getPageButtonText();
             mPageButton.setText(s);
+        }
+    }
+
+    public class PageJumpDialog extends Dialog implements OnClickListener {
+        private PageChangeReciver1 mPageChangeReciver = new PageChangeReciver1();
+        private RecyclerView mPageList;
+        private PageAdapter mPageAdapter;
+
+        public PageJumpDialog(@NonNull Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.dialog_pagejump);
+
+            Button bt = findViewById(R.id.cancel_button);
+            bt.setOnClickListener(this);
+
+            mPageList = findViewById(R.id.pages_list);
+
+            // 布局管理
+            GridLayoutManager lm = new GridLayoutManager(getContext(), 3);
+            mPageList.setLayoutManager(lm);
+            // adapter
+            mPageAdapter = new PageAdapter();
+            mPageList.setAdapter(mPageAdapter);
+
+            // 跳转
+            mPageList.scrollToPosition(mBinder.getCurrentPage());
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.cancel_button:
+                    dismiss();
+                    break;
+            }
+        }
+
+        @Override
+        protected void onStart() {
+            super.onStart();
+            mLBM.registerReceiver(
+                    mPageChangeReciver,
+                    TTSService.getPageChangeIntentFilter());
+        }
+
+        @Override
+        protected void onStop() {
+            mLBM.unregisterReceiver(mPageChangeReciver);
+            super.onStop();
+        }
+
+        private class PageChangeReciver1 extends BroadcastReceiver {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mPageAdapter.notifyDataSetChanged();
+                mPageList.scrollToPosition(mBinder.getCurrentPage());
+            }
+        }
+    }
+
+    class PageHolder extends RecyclerView.ViewHolder {
+        public TextView item;
+        private int pageNum;
+
+        public PageHolder(View itemView) {
+            super(itemView);
+
+            item = itemView.findViewById(R.id.page_text);
+        }
+
+        public int getPageNum() {
+            return pageNum;
+        }
+
+        public void setPageNum(int pageNum) {
+            this.pageNum = pageNum;
+        }
+    }
+
+    public class PageAdapter
+            extends RecyclerView.Adapter<PageHolder> {
+
+        @Override
+        public PageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.page_item, parent, false);
+            final PageHolder holder = new PageHolder(v);
+
+            holder.item.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int page = holder.getPageNum();
+                    if (page != mBinder.getCurrentPage()) {
+                        mBinder.jumpToPage(page);
+                    }
+                }
+            });
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(PageHolder holder, int position) {
+            int color = (position != mBinder.getCurrentPage()) ?
+                    Color.BLACK :
+                    MyColors.current;
+
+            holder.item.setText("" + (position + 1));
+            holder.item.setTextColor(color);
+
+            holder.setPageNum(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mBinder.getTotalPage();
         }
     }
 }
