@@ -311,8 +311,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     break;
 
                 case R.id.first_page_button:
-                    mBinder.jumpToPage(0);
-                    dismiss();
+                    if (mBinder.getCurrentPage() > 0) {
+                        mBinder.jumpToPage(0);
+                        dismiss();
+                    }
                     break;
 
                 case R.id.prev_bottom_button:
