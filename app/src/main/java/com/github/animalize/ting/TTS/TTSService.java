@@ -705,6 +705,27 @@ public abstract class TTSService
             return true;
         }
 
+        public void backOne() {
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
+
+            // 停止
+            if (mNowState == PLAYING || mNowState == PAUSING) {
+                mSpeechSynthesizer.stop();
+                setEvent(STOP);
+            }
+
+            // 回退
+            int idx = mNowSpeechIndex - 1;
+            idx = (idx >= 0 ? idx : 0);
+            mNowSpeechIndex = mNowQueueIndex = idx;
+
+            // 播放
+            playAction(false);
+            setEvent(PLAYING);
+        }
+
         public void setSetting() {
             TTSService.this.setSetting();
         }

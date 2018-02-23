@@ -34,7 +34,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private TextView mTitleText, mProgressText, mFullprogressText;
     private int fullLengh;
 
-    private Button mPlay, mStop;
+    private Button mPlay, mStop, mBackTwo;
 
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
@@ -61,6 +61,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mStop = findViewById(R.id.stop);
         mStop.setOnClickListener(this);
 
+        mBackTwo = findViewById(R.id.back_two);
+        mBackTwo.setOnClickListener(this);
     }
 
     public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
@@ -101,6 +103,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 }
                 PageJumpDialog d = new PageJumpDialog(getContext());
                 d.show();
+                break;
+
+            case R.id.back_two:
+                mBinder.backOne();
                 break;
         }
     }
@@ -152,7 +158,9 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 return;
             }
 
-            mFullprogressText.setText(mBinder.getFullProgressText());
+            if (mFullprogressText != null) {
+                mFullprogressText.setText(mBinder.getFullProgressText());
+            }
 
             TTSService.Ju ju = mBinder.getNowJu();
             if (ju != null) {

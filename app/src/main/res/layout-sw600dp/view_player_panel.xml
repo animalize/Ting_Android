@@ -33,6 +33,12 @@
             android:minWidth="30dp"
             android:text="退" />
 
+        <TextView
+            android:id="@+id/fullprogress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black" />
+
         <Button
             android:id="@+id/page_button"
             android:layout_width="wrap_content"
