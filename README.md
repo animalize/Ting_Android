@@ -11,19 +11,19 @@
 </resources>
 ```
 
-3.  创建`/app/src/main/libs/`目录，把SDK的`com.baidu.tts_2.3.0.jar`文件放入其中。
+3.  创建`/app/src/main/libs/`目录，把SDK的jar文件放入其中。这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`。
 
-4.  创建`/app/src/main/assets/`目录，把SDK的以下3个数据文件放入其中：  
-`bd_etts_text.dat`  
-`bd_etts_speech_male.dat`  
-`bd_etts_speech_female.dat`
+4.  创建`/app/src/main/assets/`目录，把SDK的以下5个数据文件放入其中，不要改文件名：  
+`bd_etts_common_speech_as_mand_eng_high_am_v3.0.0_20170516.dat`  
+`bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat`  
+`bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat`  
+`bd_etts_common_speech_yyjw_mand_eng_high_am-mix_v3.0.0_20170512.dat`  
+`bd_etts_text.dat`
 
 5.  创建`/app/jni`目录，把SDK的二进制程序目录放入其中：  
 `armeabi-v7a`  
 `arm64-v8a`  
-（通常放这两个就可以了）
-
-6.  把`\app\src\main\java\com\github\animalize\ting\Message\Methods.java`文件里的`HOST`变量改成服务器的地址。
+（通常放这两个就可以了，如果需要在电脑上调试可以再放一个`x86`）
 
 ### 服务器端、PC端
 下载[此项目](https://github.com/animalize/ting_py)
