@@ -93,7 +93,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         mLBM.registerReceiver(
                 mPageChangeReciver,
                 TTSService.getPageChangeIntentFilter());
-        mSpeechStartReciver.onReceive(null, null);
+        mPageChangeReciver.onReceive(null, null);
 
         mLBM.registerReceiver(
                 mSpeechStartReciver,
