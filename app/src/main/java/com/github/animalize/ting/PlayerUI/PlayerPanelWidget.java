@@ -61,7 +61,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mStop = findViewById(R.id.stop);
         mStop.setOnClickListener(this);
 
-        mBackTwo = findViewById(R.id.back_two);
+        mBackTwo = findViewById(R.id.back_one);
         mBackTwo.setOnClickListener(this);
     }
 
@@ -105,7 +105,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 d.show();
                 break;
 
-            case R.id.back_two:
+            case R.id.back_one:
                 mBinder.backOne();
                 break;
         }
