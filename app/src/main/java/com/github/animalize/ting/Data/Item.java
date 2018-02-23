@@ -207,7 +207,8 @@ public class Item implements TTSService.IArticle {
         return time;
     }
 
-    public int getCjk_chars() {
+    @Override
+    public int getCJKChars() {
         return cjk_chars;
     }
 

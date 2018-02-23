@@ -86,7 +86,7 @@ public abstract class RVAdapter
         holder.cate.setText(item.getCate());
 
         if (item.isCached()) {
-            holder.chars.setText("" + item.getCjk_chars() + "汉字");
+            holder.chars.setText("" + item.getCJKChars() + "汉字");
         } else {
             holder.chars.setText("未缓存");
         }

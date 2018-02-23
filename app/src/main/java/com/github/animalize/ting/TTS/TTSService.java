@@ -312,6 +312,8 @@ public abstract class TTSService
         int[] getPageArrary();
 
         String getFullProgressText();
+
+        int getCJKChars();
     }
 
     public static class Ju {
@@ -465,6 +467,29 @@ public abstract class TTSService
 
             // broadcast
             mLBM.sendBroadcast(mPageChangeIntent);
+        }
+
+        void prevBottom() {
+            if (currentPage < 1) {
+                return;
+            }
+
+            currentPage -= 1;
+
+            // current text
+            currentBase = (currentPage == 0 ? 0 : pageArray[currentPage - 1]);
+            mPageText = mText.substring(currentBase, pageArray[currentPage]);
+
+            // 分句
+            mJus = Ju.fenJu(mPageText);
+
+            // broadcast
+            mLBM.sendBroadcast(mPageChangeIntent);
+
+            // 底部
+            int idx = mJus.size() - 2;
+            idx = (idx >= 0 ? idx : 0);
+            mNowSpeechIndex = mNowQueueIndex = idx;
         }
     }
 
@@ -635,6 +660,10 @@ public abstract class TTSService
             return mPageManager.getTotalPage();
         }
 
+        public int getCJKChars() {
+            return mArticle.getCJKChars();
+        }
+
         public void jumpToPage(int page) {
             if (mSpeechSynthesizer == null) {
                 return;
@@ -652,6 +681,28 @@ public abstract class TTSService
             // 播放
             playAction(true);
             setEvent(PLAYING);
+        }
+
+        public boolean prevBottom() {
+            if (mSpeechSynthesizer == null ||
+                    mPageManager.getCurrentPage() < 1) {
+                return false;
+            }
+
+            // 停止
+            if (mNowState == PLAYING || mNowState == PAUSING) {
+                mSpeechSynthesizer.stop();
+                setEvent(STOP);
+            }
+
+            // 跳转
+            mPageManager.prevBottom();
+
+            // 播放
+            playAction(false);
+            setEvent(PLAYING);
+
+            return true;
         }
 
         public void setSetting() {

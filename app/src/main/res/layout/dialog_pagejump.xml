@@ -4,12 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:text="跳转分页"
-        android:textSize="20sp" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跳转分页"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/page_info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pages_list"
@@ -23,6 +35,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/first_page_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="首页" />
 
         <Button
             android:id="@+id/prev_bottom_button"

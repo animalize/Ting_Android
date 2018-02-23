@@ -15,7 +15,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -97,18 +96,13 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 break;
 
             case R.id.page_button:
-                showPageDialog();
+                if (mBinder == null) {
+                    return;
+                }
+                PageJumpDialog d = new PageJumpDialog(getContext());
+                d.show();
                 break;
         }
-    }
-
-    private void showPageDialog() {
-        if (mBinder == null) {
-            return;
-        }
-
-        PageJumpDialog d = new PageJumpDialog(getContext());
-        d.show();
     }
 
     public void onStart() {
@@ -281,11 +275,20 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.dialog_pagejump);
 
             Button bt = findViewById(R.id.cancel_button);
             bt.setOnClickListener(this);
+
+            bt = findViewById(R.id.first_page_button);
+            bt.setOnClickListener(this);
+
+            bt = findViewById(R.id.prev_bottom_button);
+            bt.setOnClickListener(this);
+
+            TextView tv = findViewById(R.id.page_info_text);
+            tv.setText("  (" + mBinder.getCJKChars() +
+                    "汉字，" + mBinder.getTotalPage() + "页)");
 
             mPageList = findViewById(R.id.pages_list);
 
@@ -305,6 +308,17 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             switch (v.getId()) {
                 case R.id.cancel_button:
                     dismiss();
+                    break;
+
+                case R.id.first_page_button:
+                    mBinder.jumpToPage(0);
+                    dismiss();
+                    break;
+
+                case R.id.prev_bottom_button:
+                    if (mBinder.prevBottom()) {
+                        dismiss();
+                    }
                     break;
             }
         }
