@@ -132,9 +132,9 @@ public abstract class Setting {
         }
     }
 
-    public abstract String getTextModelFile();
+    public abstract String getTextFileName();
 
-    public abstract String getTextModelName(int idx);
+    public abstract String getModelFileName(int idx);
 
     public abstract String getApiID();
 
@@ -226,7 +226,10 @@ public abstract class Setting {
         return ss;
     }
 
-    public void setSettingToSpeechSynthesizer(SpeechSynthesizer ss) {
+    public void setSettingToSpeechSynthesizer(SpeechSynthesizer ss,
+                                              Context context) {
+        ss.setContext(context);
+
         ss.setParam(
                 SpeechSynthesizer.PARAM_VOLUME,
                 "" + getmVolume());
@@ -269,7 +272,7 @@ public abstract class Setting {
 
         // 离线模型
         final int temp = getmSpeaker();
-        ss.loadModel(getTextModelName(temp), getTextModelFile());
+        ss.loadModel(getModelFileName(temp), getTextFileName());
     }
 
     public void loadSetting(Context context) {

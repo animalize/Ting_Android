@@ -140,7 +140,7 @@ public abstract class TTSService
         Ju.setSize(s.getmFenJu());
 
         if (mSpeechSynthesizer != null) {
-            s.setSettingToSpeechSynthesizer(mSpeechSynthesizer);
+            s.setSettingToSpeechSynthesizer(mSpeechSynthesizer, this);
         }
     }
 
@@ -536,6 +536,17 @@ public abstract class TTSService
 
             mSpeechSynthesizer.resume();
             setEvent(PLAYING);
+        }
+
+        public void release() {
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
+
+            mSpeechSynthesizer.stop();
+            saveFullPosi();
+
+            mSpeechSynthesizer.release();
         }
 
         // 保存当前位置

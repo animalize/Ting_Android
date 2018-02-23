@@ -93,7 +93,7 @@ public class TTSInitializer {
         return ttsDataDir + "/" + fn;
     }
 
-    static String getTextModelName() {
+    static String getTextFileName() {
         if (ttsDataDir == null) {
             return null;
         }
