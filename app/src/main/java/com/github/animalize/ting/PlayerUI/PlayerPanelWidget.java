@@ -34,7 +34,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private TextView mTitleText, mProgressText, mFullprogressText;
     private int fullLengh;
 
-    private Button mPlay, mStop, mBackTwo;
+    private Button mPlay, mStop, mBackOne;
 
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
     private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
@@ -61,8 +61,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         mStop = findViewById(R.id.stop);
         mStop.setOnClickListener(this);
 
-        mBackTwo = findViewById(R.id.back_one);
-        mBackTwo.setOnClickListener(this);
+        mBackOne = findViewById(R.id.back_one);
+        mBackOne.setOnClickListener(this);
     }
 
     public void setTTSBinder(TTSService.ArticleTtsBinder binder) {
@@ -182,13 +182,15 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             int state = mBinder.getState();
 
             String play;
-            boolean enablePlay, enableStop;
+            boolean enablePlay, enableStop, enableBack, enablePage;
 
             switch (state) {
                 case TTSService.PLAYING:
                     play = "暂停";
                     enablePlay = true;
                     enableStop = true;
+                    enableBack = true;
+                    enablePage = true;
 
                     freshUIofItem();
                     break;
@@ -197,12 +199,16 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     play = "恢复";
                     enablePlay = true;
                     enableStop = true;
+                    enableBack = true;
+                    enablePage = true;
                     break;
 
                 case TTSService.STOP:
                     play = "播放";
                     enablePlay = true;
                     enableStop = false;
+                    enableBack = true;
+                    enablePage = true;
 
                     mProgress.setProgress(0);
                     mProgressText.setText("0% ");
@@ -212,6 +218,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     play = "播放";
                     enablePlay = true;
                     enableStop = false;
+                    enableBack = true;
+                    enablePage = true;
 
                     mProgress.setProgress(mProgress.getMax());
                     mProgressText.setText("100% ");
@@ -221,18 +229,24 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     play = "播放";
                     enablePlay = false;
                     enableStop = false;
+                    enableBack = false;
+                    enablePage = false;
                     break;
 
                 default:
                     play = "播放";
                     enablePlay = true;
                     enableStop = true;
+                    enableBack = false;
+                    enablePage = false;
             }
 
             mPlay.setEnabled(enablePlay);
             mPlay.setText(play);
 
             mStop.setEnabled(enableStop);
+            mBackOne.setEnabled(enableBack);
+            mPageButton.setEnabled(enablePage);
         }
     }
 
