@@ -1,7 +1,26 @@
-### 安卓安装包（.apk文件）编译指南
+## Ting
+
+Android的文本朗读器。
+
+### 截图
+
+<table>
+<tr>
+<td>列表</td><td>查看文本</td><td>分页跳转</td><td>设置</td>
+</tr>
+<tr>
+<td><img src="https://github.com/animalize/pics/raw/master/Ting/a.png" /></td>
+<td><img src="https://github.com/animalize/pics/raw/master/Ting/b.png" /></td>
+<td><img src="https://github.com/animalize/pics/raw/master/Ting/c.png" /></td>
+<td><img src="https://github.com/animalize/pics/raw/master/Ting/d.png" /></td>
+</tr>
+</table>
+
+### .apk文件编译指南
+
 1.  注册一个[百度语音](http://yuyin.baidu.com)帐户，并创建一个语音合成项目，得到一个分配的Key。
 
-2.  创建`/app/src/main/res/values/secrets.xml`文件，把一上步分配的Key填入：  
+2.  创建`/app/src/main/res/values/secrets.xml`文件(如下)，把一上步分配的Key填入。  
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -26,8 +45,9 @@
 （通常放这两个就可以了，如果需要在电脑上调试可以再放一个`x86`）
 
 ### 服务器端、PC端
+
 下载[此项目](https://github.com/animalize/ting_py)
 
-服务器端：把server目录放到24小时运行的服务器上运行。（需要Python 3.x和安装tornado模块）
+服务器端：把server目录放到24小时运行的服务器上运行，需要Python 3.x和安装tornado模块。（也可以在普通电脑上运行，随用随开。）
 
 PC端：给电脑安装Python 3.6并安装pyperclip、requests模块。把`/pc/vars.py`文件里的`host`变量改成服务器地址。
