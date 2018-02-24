@@ -307,11 +307,11 @@ public abstract class TTSService
 
         int getNowChar();
 
+        int getFullChar();
+
         void setNowChar(int posi, boolean flush);
 
         int[] getPageArrary();
-
-        String getFullProgressText();
 
         int getCJKChars();
     }
@@ -586,7 +586,8 @@ public abstract class TTSService
                 return "-";
             }
 
-            return mArticle.getFullProgressText();
+            int v = mPageManager.getNowFullPosi() * 100 / mArticle.getFullChar();
+            return "" + v + "% ";
         }
 
         public Object getArticle() {

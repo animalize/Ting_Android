@@ -176,18 +176,9 @@ public class Item implements TTSService.IArticle {
         }
     }
 
+    @Override
     public int getFullChar() {
         return full_char;
-    }
-
-    @Override
-    public String getFullProgressText() {
-        if (full_char == -1) {
-            return "-";
-        }
-
-        int v = now_char * 100 / full_char;
-        return "" + v + "% ";
     }
 
     public String getCate() {

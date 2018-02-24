@@ -19,32 +19,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:columnCount="5">
 
         <Button
             android:id="@+id/back_one"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
             android:minHeight="0dp"
             android:minWidth="30dp"
             android:text="退" />
 
-        <Button
-            android:id="@+id/page_button"
+        <TextView
+            android:id="@+id/progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="30dp"
-            android:text="页" />
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black" />
 
         <Button
             android:id="@+id/play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
             android:minHeight="0dp"
             android:text="播放" />
 
@@ -52,15 +55,21 @@
             android:id="@+id/stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
             android:minHeight="0dp"
             android:text="停止" />
 
-        <TextView
-            android:id="@+id/progress_text"
+        <Button
+            android:id="@+id/page_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black" />
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="30dp"
+            android:text="页" />
 
-    </LinearLayout>
+    </GridLayout>
 
 </LinearLayout>
