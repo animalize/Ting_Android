@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <gradient
-        android:centerColor="#88FF4081"
-        android:endColor="#88FF4081"
-        android:startColor="#88FF4081" />
+        android:centerColor="@color/scrollbar"
+        android:endColor="@color/scrollbar"
+        android:startColor="@color/scrollbar" />
 
     <corners android:radius="8dp" />
     <size android:width="4dp" />
