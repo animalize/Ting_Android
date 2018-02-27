@@ -44,9 +44,6 @@ public class MainListActivity
 
     private Button refreshButton, delAllButton;
 
-//    private Spinner nameSpinner;
-//    private NameListAdapter nameAdapter;
-
     private TTSService.ArticleTtsBinder mBinder;
     private ServiceConnection mServerConn = new ServiceConnection() {
         @Override
