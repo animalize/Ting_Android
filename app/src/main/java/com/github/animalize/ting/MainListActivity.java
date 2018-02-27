@@ -136,7 +136,7 @@ public class MainListActivity
     @Override
     protected void onDestroy() {
         if (mBinder != null) {
-            mBinder.release();
+            mBinder.close();
         }
 
         setNotAlive();

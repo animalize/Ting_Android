@@ -191,6 +191,7 @@ public abstract class TTSService
 
         if (soundPool != null) {
             soundPool.release();
+            soundPool = null;
         }
 
         super.onDestroy();
@@ -563,15 +564,13 @@ public abstract class TTSService
             setEvent(PLAYING);
         }
 
-        public void release() {
+        public void close() {
             if (mSpeechSynthesizer == null) {
                 return;
             }
 
             mSpeechSynthesizer.stop();
             saveFullPosi();
-
-            mSpeechSynthesizer.release();
         }
 
         // 保存当前位置
