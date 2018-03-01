@@ -6,6 +6,5 @@
         android:endColor="@color/scrollbar"
         android:startColor="@color/scrollbar" />
 
-    <corners android:radius="8dp" />
     <size android:width="4dp" />
 </shape>
