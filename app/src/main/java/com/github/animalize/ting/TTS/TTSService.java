@@ -497,9 +497,7 @@ public abstract class TTSService
 
         // 保存当前位置
         void saveFullPosi() {
-            if (mArticle != null) {
-                mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
-            }
+            mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
         }
 
         // 页内跳转
@@ -607,7 +605,9 @@ public abstract class TTSService
 
         // 保存当前位置
         void saveFullPosi() {
-            mPageManager.saveFullPosi();
+            if (mArticle != null) {
+                mPageManager.saveFullPosi();
+            }
         }
 
         public String getFullProgressText() {
