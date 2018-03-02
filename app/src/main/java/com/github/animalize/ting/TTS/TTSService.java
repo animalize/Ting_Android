@@ -501,7 +501,7 @@ public abstract class TTSService
         }
 
         // 页内跳转
-        public void setPagePosi(int posi) {
+        void setPagePosi(int posi) {
             int low = 0;
             int high = mJus.size() - 1;
 
