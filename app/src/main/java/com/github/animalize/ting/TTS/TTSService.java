@@ -239,6 +239,8 @@ public abstract class TTSService
                 playAction(true);
             } else {
                 setEvent(FINISHED);
+                mPageManager.saveFullPosi();
+
                 if (soundPool != null) {
                     soundPool.play(soundID, 1, 1, 1, 0, 1f);
                 }
@@ -419,7 +421,7 @@ public abstract class TTSService
             if (mSpeechSynthesizer == null) {
                 lazyInit();
             }
-            mBinder.setPagePosi(offset);
+            setPagePosi(offset);
         }
 
         boolean toNextPage() {
@@ -491,6 +493,36 @@ public abstract class TTSService
             int idx = mJus.size() - 2;
             idx = (idx >= 0 ? idx : 0);
             mNowSpeechIndex = mNowQueueIndex = idx;
+        }
+
+        // 保存当前位置
+        void saveFullPosi() {
+            if (mArticle != null) {
+                mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
+            }
+        }
+
+        // 页内跳转
+        public void setPagePosi(int posi) {
+            int low = 0;
+            int high = mJus.size() - 1;
+
+            while (high >= low) {
+                int mid = (low + high) / 2;
+                final Ju temp = mJus.get(mid);
+
+                if (posi < temp.begin) {
+                    high = mid - 1;
+                } else if (posi >= temp.end) {
+                    low = mid + 1;
+                } else {
+                    mNowQueueIndex = mNowSpeechIndex = mid;
+                    playAction(false);
+
+                    setEvent(PLAYING);
+                    return;
+                }
+            }
         }
     }
 
@@ -575,18 +607,16 @@ public abstract class TTSService
 
         // 保存当前位置
         void saveFullPosi() {
-            if (mArticle != null) {
-                mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
-            }
+            mPageManager.saveFullPosi();
         }
 
         public String getFullProgressText() {
             if (mArticle == null) {
-                return "-";
+                return "";
             }
 
             int v = mPageManager.getNowFullPosi() * 100 / mArticle.getFullChar();
-            return "" + v + "% ";
+            return "" + v + "%";
         }
 
         public Object getArticle() {
@@ -622,34 +652,6 @@ public abstract class TTSService
 
             return "" + (mPageManager.getCurrentPage() + 1) +
                     "/" + mPageManager.getTotalPage();
-        }
-
-        public void setPagePosi(int posi) {
-            if (mSpeechSynthesizer == null) {
-                return;
-            }
-
-            mSpeechSynthesizer.stop();
-
-            int low = 0;
-            int high = mJus.size() - 1;
-
-            while (high >= low) {
-                int mid = (low + high) / 2;
-                final Ju temp = mJus.get(mid);
-
-                if (posi < temp.begin) {
-                    high = mid - 1;
-                } else if (posi >= temp.end) {
-                    low = mid + 1;
-                } else {
-                    mNowQueueIndex = mNowSpeechIndex = mid;
-                    playAction(false);
-
-                    setEvent(PLAYING);
-                    return;
-                }
-            }
         }
 
         public int getCurrentPage() {
@@ -728,6 +730,15 @@ public abstract class TTSService
 
         public void setSetting() {
             TTSService.this.setSetting();
+        }
+
+        public void setPagePosi(int posi) {
+            if (mSpeechSynthesizer == null) {
+                return;
+            }
+            mSpeechSynthesizer.stop();
+
+            mPageManager.setPagePosi(posi);
         }
     }
 }

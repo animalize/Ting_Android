@@ -13,6 +13,7 @@
         android:layout_weight="1"
         android:background="#dddcea"
         android:fadeScrollbars="false"
+        android:scrollbarThumbVertical="@drawable/custom_scrollbar"
         android:scrollbars="vertical"
         android:verticalScrollbarPosition="left" />
 

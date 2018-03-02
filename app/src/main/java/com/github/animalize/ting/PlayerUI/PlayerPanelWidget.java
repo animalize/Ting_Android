@@ -154,7 +154,11 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
             if (mBinder.getState() == TTSService.FINISHED) {
                 mProgress.setProgress(mProgress.getMax());
-                mProgressText.setText("100% ");
+                mProgressText.setText("100%");
+
+                if (mFullprogressText != null) {
+                    mFullprogressText.setText("100%");
+                }
                 return;
             }
 
@@ -167,7 +171,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 mProgress.setProgress(ju.begin);
 
                 int v = ju.begin * 100 / fullLengh;
-                mProgressText.setText("" + v + "% ");
+                mProgressText.setText("" + v + "%");
             }
         }
     }
@@ -211,7 +215,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     enablePage = true;
 
                     mProgress.setProgress(0);
-                    mProgressText.setText("0% ");
+                    mProgressText.setText("0%");
                     break;
 
                 case TTSService.FINISHED:
@@ -222,7 +226,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     enablePage = true;
 
                     mProgress.setProgress(mProgress.getMax());
-                    mProgressText.setText("100% ");
+                    mProgressText.setText("100%");
                     break;
 
                 case TTSService.EMPTY:
