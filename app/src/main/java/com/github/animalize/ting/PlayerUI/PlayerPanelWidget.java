@@ -98,9 +98,6 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 break;
 
             case R.id.page_button:
-                if (mBinder == null) {
-                    return;
-                }
                 PageJumpDialog d = new PageJumpDialog(getContext());
                 d.show();
                 break;
