@@ -18,7 +18,8 @@ Android的文本朗读器。
 
 ### .apk文件编译指南
 
-1.  注册一个[百度语音](http://yuyin.baidu.com)帐户，并创建一个语音合成项目，得到一个分配的Key。
+1.  注册[百度语音](http://yuyin.baidu.com)帐户。  
+创建一个语音合成项目（包名填入`com.github.animalize.ting`），得到一个分配的Key。
 
 2.  创建`/app/src/main/res/values/secrets.xml`文件(如下)，把一上步分配的Key填入。  
 ```
@@ -50,6 +51,11 @@ Android的文本朗读器。
 
 下载[此项目](https://github.com/animalize/ting_py)
 
-服务器端：把server目录放到24小时运行的服务器上运行，需要Python 3.x和安装tornado模块。（也可以在普通电脑上运行，随用随开。）
+**服务器端**：  
+把server目录放到24小时运行的服务器上运行，需要Python 3.x和安装tornado模块。  
+（如果没有服务器，也可以在普通电脑上运行，程序随用随开。）
 
-PC端：给电脑安装Python 3.6并安装pyperclip、requests模块。把`/pc/vars.py`文件里的`host`变量改成服务器地址。
+**PC端**：  
+给电脑安装Python 3.6并安装pyperclip、requests模块。  
+把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
+如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
