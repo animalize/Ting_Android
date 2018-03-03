@@ -307,21 +307,21 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             super.onCreate(savedInstanceState);
 
             // 无标题栏
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             // 得到可视尺寸
             Rect displayRectangle = new Rect();
             Window window = getWindow();
             window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
 
-//            Toast.makeText(getContext(),
-//                    "" + (int) (0.8 * displayRectangle.width()),
-//                    Toast.LENGTH_SHORT).show();
+            // 400 dp -> pixel
+            final float scale = getContext().getResources().getDisplayMetrics().density;
+            final int pixels = (int) (400 * scale + 0.5f);
 
             // 设置对话框尺寸
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.copyFrom(window.getAttributes());
-            lp.width = min((int) (0.8 * displayRectangle.width()), 400);
+            lp.width = min((int) (0.8 * displayRectangle.width()), pixels);
             lp.height = (int) (0.8 * displayRectangle.height());
             window.setAttributes(lp);
 
@@ -377,13 +377,16 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         @Override
         protected void onStart() {
             super.onStart();
-            headTextView.setText(" (" + mBinder.getTotalPage() + "页，" +
-                    mBinder.getCJKChars() + "汉字" + ")");
-            mPageAdapter.notifyDataSetChanged();
 
             mLBM.registerReceiver(
                     mPageChangeReciver,
                     TTSService.getPageChangeIntentFilter());
+            
+            headTextView.setText(" (" + mBinder.getTotalPage() + "页，" +
+                    mBinder.getCJKChars() + "汉字" + ")");
+
+            mPageAdapter.notifyDataSetChanged();
+            mPageList.scrollToPosition(mBinder.getCurrentPage());
         }
 
         @Override
