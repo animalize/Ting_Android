@@ -105,7 +105,6 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             case R.id.page_button:
                 if (d == null) {
                     d = new PageJumpDialog(getContext());
-                    d.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 }
                 d.show();
                 break;
@@ -306,6 +305,9 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            // 无标题栏
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             // 得到可视尺寸
             Rect displayRectangle = new Rect();
