@@ -20,6 +20,8 @@
             android:id="@+id/page_info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -46,7 +48,7 @@
             android:id="@+id/prev_bottom_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="上页底部" />
+            android:text="前页底部" />
 
         <Button
             android:id="@+id/cancel_button"

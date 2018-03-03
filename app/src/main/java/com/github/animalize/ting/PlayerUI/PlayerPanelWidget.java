@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -25,6 +28,7 @@ import com.github.animalize.ting.Data.MyColors;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
 
+import static java.lang.Math.min;
 
 public class PlayerPanelWidget extends LinearLayout implements View.OnClickListener {
     private TTSService.ArticleTtsBinder mBinder;
@@ -40,6 +44,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
     private PageChangeReciver mPageChangeReciver = new PageChangeReciver();
+    private PageJumpDialog d;
 
     public PlayerPanelWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -98,7 +103,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 break;
 
             case R.id.page_button:
-                PageJumpDialog d = new PageJumpDialog(getContext());
+                if (d == null) {
+                    d = new PageJumpDialog(getContext());
+                    d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                }
                 d.show();
                 break;
 
@@ -289,6 +297,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         private PageChangeReciver1 mPageChangeReciver = new PageChangeReciver1();
         private RecyclerView mPageList;
         private PageAdapter mPageAdapter;
+        private TextView headTextView;
 
         public PageJumpDialog(@NonNull Context context) {
             super(context);
@@ -298,6 +307,23 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
+            // 得到可视尺寸
+            Rect displayRectangle = new Rect();
+            Window window = getWindow();
+            window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+//            Toast.makeText(getContext(),
+//                    "" + (int) (0.8 * displayRectangle.width()),
+//                    Toast.LENGTH_SHORT).show();
+
+            // 设置对话框尺寸
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(window.getAttributes());
+            lp.width = min((int) (0.8 * displayRectangle.width()), 400);
+            lp.height = (int) (0.8 * displayRectangle.height());
+            window.setAttributes(lp);
+
+            // View
             setContentView(R.layout.dialog_pagejump);
 
             Button bt = findViewById(R.id.cancel_button);
@@ -309,9 +335,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             bt = findViewById(R.id.prev_bottom_button);
             bt.setOnClickListener(this);
 
-            TextView tv = findViewById(R.id.page_info_text);
-            tv.setText("  (" + mBinder.getCJKChars() +
-                    "汉字，" + mBinder.getTotalPage() + "页)");
+            headTextView = findViewById(R.id.page_info_text);
 
             mPageList = findViewById(R.id.pages_list);
 
@@ -351,6 +375,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         @Override
         protected void onStart() {
             super.onStart();
+            headTextView.setText(" (" + mBinder.getTotalPage() + "页，" +
+                    mBinder.getCJKChars() + "汉字" + ")");
+            mPageAdapter.notifyDataSetChanged();
+
             mLBM.registerReceiver(
                     mPageChangeReciver,
                     TTSService.getPageChangeIntentFilter());
