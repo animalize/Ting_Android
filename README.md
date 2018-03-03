@@ -21,7 +21,7 @@ Android的文本朗读器。
 1.  注册[百度语音](http://yuyin.baidu.com)帐户。  
 创建一个语音合成项目（包名填入`com.github.animalize.ting`），得到一个分配的Key。
 
-2.  创建`/app/src/main/res/values/secrets.xml`文件(如下)，把一上步分配的Key填入。  
+2.  创建`/app/src/main/res/values/secrets.xml`文件(内容如下)，把一上步分配的Key填入。  
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -32,7 +32,7 @@ Android的文本朗读器。
 ```
 
 3.  创建`/app/src/main/libs/`目录，把SDK的jar文件放入其中。  
-这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`，只要确保和`build.gradle`文件里的文件名一致就可以。
+（这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`，只要确保和`build.gradle`文件里的文件名一致就可以。）
 
 4.  创建`/app/src/main/assets/`目录，把SDK的以下5个数据文件放入其中，不要改文件名：  
 `bd_etts_common_speech_as_mand_eng_high_am_v3.0.0_20170516.dat`  
@@ -56,6 +56,7 @@ Android的文本朗读器。
 （如果没有服务器，也可以在普通电脑上运行，程序随用随开。）
 
 **PC端**：  
-给电脑安装Python 3.6并安装pyperclip、requests模块。  
+给电脑安装Python 3.6并安装pyperclip、requests模块。
+
 把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
 如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
