@@ -307,7 +307,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             super.onCreate(savedInstanceState);
 
             // 无标题栏
-            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             // 得到可视尺寸
             Rect displayRectangle = new Rect();
@@ -381,7 +381,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             mLBM.registerReceiver(
                     mPageChangeReciver,
                     TTSService.getPageChangeIntentFilter());
-            
+
             headTextView.setText(" (" + mBinder.getTotalPage() + "页，" +
                     mBinder.getCJKChars() + "汉字" + ")");
 
