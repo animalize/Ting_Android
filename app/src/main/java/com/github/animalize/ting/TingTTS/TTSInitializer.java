@@ -22,6 +22,7 @@ public class TTSInitializer {
     private static Context appContext;
     private static String ttsDataDir;
 
+    // 清空一个目录的内容
     static void deleteFiles(File f) {
         for (String child : f.list()) {
             File temp = new File(f.getAbsolutePath() + "/" + child);
@@ -110,9 +111,6 @@ public class TTSInitializer {
 
     /**
      * 将sample工程需要的资源文件拷贝到SD卡中使用（授权文件为临时授权文件，请注册正式授权）
-     *
-     * @param source
-     * @param dest
      */
     private static void copyFromAssetsToSdcard(String source,
                                                String dest) {

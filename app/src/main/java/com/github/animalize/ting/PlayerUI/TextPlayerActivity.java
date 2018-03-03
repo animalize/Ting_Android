@@ -17,18 +17,12 @@ import com.github.animalize.ting.TingTTS.TingTTSService;
 public class TextPlayerActivity extends AppCompatActivity implements ServiceConnection {
 
     private DataManager dataManager = DataManager.getInstance();
-    private String mAid;
-    private boolean mAutoPlay = false;
 
     private PlayerTextWidget playerText;
     private PlayerPanelWidget playerPanel;
 
-    private TTSService.ArticleTtsBinder mBinder;
-
-    public static void actionStart(Context context, String aid, boolean autoPlay) {
+    public static void actionStart(Context context) {
         Intent i = new Intent(context, TextPlayerActivity.class);
-        i.putExtra("aid", aid);
-        i.putExtra("auto_play", autoPlay);
         context.startActivity(i);
     }
 
@@ -37,16 +31,11 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_player);
 
-        // intent
-        Intent intent = getIntent();
-        mAid = intent.getStringExtra("aid");
-        mAutoPlay = intent.getBooleanExtra("auto_play", false);
-
         // 控件
         playerText = findViewById(R.id.player_text_view);
         playerPanel = findViewById(R.id.player_panel_view);
 
-        intent = new Intent(this, TingTTSService.class);
+        Intent intent = new Intent(this, TingTTSService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
     }
 
@@ -75,35 +64,22 @@ public class TextPlayerActivity extends AppCompatActivity implements ServiceConn
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        mBinder = (TTSService.ArticleTtsBinder) service;
+        TTSService.ArticleTtsBinder mBinder = (TTSService.ArticleTtsBinder) service;
 
-        if (mAid == null) {
-            Item i = (Item) mBinder.getArticle();
-            if (i == null) {
-                return;
-            }
-
-            mAid = i.getAid();
-        }
-
-        if (mAid == null) {
+        Item i = (Item) mBinder.getArticle();
+        if (i == null) {
             return;
         }
 
-        Item item = dataManager.getItemByAid(mAid);
-
-        if (mAutoPlay) {
-            mBinder.playArticle(item);
+        String mAid = i.getAid();
+        if (mAid == null) {
+            return;
         }
 
         playerPanel.setTTSBinder(mBinder);
 
         playerText.setTTSBinder(mBinder);
         playerText.setPlayerText(mBinder.getPageText());
-
-        if (mAutoPlay) {
-            mBinder.play();
-        }
     }
 
     @Override

@@ -298,7 +298,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         private PageAdapter mPageAdapter;
         private TextView headTextView;
 
-        public PageJumpDialog(@NonNull Context context) {
+        PageJumpDialog(@NonNull Context context) {
             super(context);
         }
 
@@ -312,18 +312,20 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             // 得到可视尺寸
             Rect displayRectangle = new Rect();
             Window window = getWindow();
-            window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+            if (window != null) {
+                window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
 
-            // 400 dp -> pixel
-            final float scale = getContext().getResources().getDisplayMetrics().density;
-            final int pixels = (int) (400 * scale + 0.5f);
+                // 400 dp -> pixel
+                final float scale = getContext().getResources().getDisplayMetrics().density;
+                final int pixels = (int) (400 * scale + 0.5f);
 
-            // 设置对话框尺寸
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(window.getAttributes());
-            lp.width = min((int) (0.8 * displayRectangle.width()), pixels);
-            lp.height = (int) (0.8 * displayRectangle.height());
-            window.setAttributes(lp);
+                // 设置对话框尺寸
+                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                lp.copyFrom(window.getAttributes());
+                lp.width = min((int) (0.8 * displayRectangle.width()), pixels);
+                lp.height = (int) (0.8 * displayRectangle.height());
+                window.setAttributes(lp);
+            }
 
             // View
             setContentView(R.layout.dialog_pagejump);
@@ -344,12 +346,6 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             // 布局管理
             GridLayoutManager lm = new GridLayoutManager(getContext(), 3);
             mPageList.setLayoutManager(lm);
-            // adapter
-            mPageAdapter = new PageAdapter();
-            mPageList.setAdapter(mPageAdapter);
-
-            // 跳转
-            mPageList.scrollToPosition(mBinder.getCurrentPage());
         }
 
         @Override
@@ -360,10 +356,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     break;
 
                 case R.id.first_page_button:
-                    if (mBinder.getCurrentPage() > 0) {
-                        mBinder.jumpToPage(0);
-                        dismiss();
-                    }
+                    mBinder.jumpToPage(0);
+                    dismiss();
                     break;
 
                 case R.id.prev_bottom_button:
@@ -385,7 +379,14 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             headTextView.setText(" (" + mBinder.getTotalPage() + "页，" +
                     mBinder.getCJKChars() + "汉字" + ")");
 
-            mPageAdapter.notifyDataSetChanged();
+            // adapter
+            if (mPageAdapter == null) {
+                mPageAdapter = new PageAdapter();
+                mPageList.setAdapter(mPageAdapter);
+            } else {
+                mPageAdapter.notifyDataSetChanged();
+            }
+
             mPageList.scrollToPosition(mBinder.getCurrentPage());
         }
 
@@ -405,20 +406,20 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     }
 
     class PageHolder extends RecyclerView.ViewHolder {
-        public TextView item;
+        TextView item;
         private int pageNum;
 
-        public PageHolder(View itemView) {
+        PageHolder(View itemView) {
             super(itemView);
 
             item = itemView.findViewById(R.id.page_text);
         }
 
-        public int getPageNum() {
+        int getPageNum() {
             return pageNum;
         }
 
-        public void setPageNum(int pageNum) {
+        void setPageNum(int pageNum) {
             this.pageNum = pageNum;
         }
     }

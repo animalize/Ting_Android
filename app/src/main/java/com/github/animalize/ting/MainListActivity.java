@@ -39,7 +39,6 @@ public class MainListActivity
     private DataManager dataManager = DataManager.getInstance();
 
     private PlayerPanelWidget playerPanel;
-    private RecyclerView mainList;
     private RVAdapter listAdapter;
 
     private Button refreshButton, delAllButton;
@@ -76,7 +75,7 @@ public class MainListActivity
 
         playerPanel = findViewById(R.id.player_panel_view);
 
-        mainList = findViewById(R.id.main_list);
+        RecyclerView mainList = findViewById(R.id.main_list);
         // 布局管理
         LinearLayoutManager lm = new LinearLayoutManager(this);
         mainList.setLayoutManager(lm);
@@ -216,7 +215,7 @@ public class MainListActivity
                 break;
 
             case R.id.open_text:
-                TextPlayerActivity.actionStart(this, null, false);
+                TextPlayerActivity.actionStart(this);
                 break;
 
             case R.id.config:

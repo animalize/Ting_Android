@@ -459,6 +459,10 @@ public abstract class TTSService
         }
 
         void jumpToPage(int page) {
+            if (currentPage == page) {
+                return;
+            }
+
             currentPage = page;
 
             // current text

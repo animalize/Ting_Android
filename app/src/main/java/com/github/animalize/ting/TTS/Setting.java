@@ -9,20 +9,20 @@ import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 
 public abstract class Setting {
-    // 参数部分
-    public static final int MIX_MODE_DEFAULT = 0;
-    public static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
-    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 2;
-    public static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
-    public static final int THRESHOLD_DEFAULT = 2;
     public static final int THRESHOLD_MIN = 1;
     public static final int THRESHOLD_MAX = 10;
-    public static final int WINDOW_DEFAULT = 6;
     public static final int WINDOW_MIN = 1;
     public static final int WINDOW_MAX = 10;
-    public static final int FENJU_DEFAULT = 80;
     public static final int FENJU_MIN = 32;
     public static final int FENJU_MAX = 500;
+    // 参数部分
+    private static final int MIX_MODE_DEFAULT = 0;
+    private static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
+    private static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI = 2;
+    private static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
+    private static final int THRESHOLD_DEFAULT = 2;
+    private static final int WINDOW_DEFAULT = 6;
+    private static final int FENJU_DEFAULT = 80;
     // 保存部分
     private static final String FILE_NAME = "tts_config";
     private static final String TAG_VOLUME = "volume";
@@ -88,11 +88,11 @@ public abstract class Setting {
         return MIXMODE_NAMES;
     }
 
-    public int getmModelFileVer() {
+    int getmModelFileVer() {
         return mModelFileVer;
     }
 
-    public void setmModelFileVer(int mModelFileVer) {
+    void setmModelFileVer(int mModelFileVer) {
         this.mModelFileVer = mModelFileVer;
     }
 
@@ -208,8 +208,8 @@ public abstract class Setting {
         }
     }
 
-    public SpeechSynthesizer initTTS(Context context,
-                                     SpeechSynthesizerListener speechSynthesizerListener) {
+    SpeechSynthesizer initTTS(Context context,
+                              SpeechSynthesizerListener speechSynthesizerListener) {
 
         SpeechSynthesizer ss = SpeechSynthesizer.getInstance();
         ss.setContext(context);
@@ -226,8 +226,8 @@ public abstract class Setting {
         return ss;
     }
 
-    public void setSettingToSpeechSynthesizer(SpeechSynthesizer ss,
-                                              Context context) {
+    void setSettingToSpeechSynthesizer(SpeechSynthesizer ss,
+                                       Context context) {
         ss.setContext(context);
 
         ss.setParam(
@@ -275,7 +275,7 @@ public abstract class Setting {
         ss.loadModel(getModelFileName(temp), getTextFileName());
     }
 
-    public void loadSetting(Context context) {
+    private void loadSetting(Context context) {
         SharedPreferences sp = context.getSharedPreferences(
                 FILE_NAME,
                 Context.MODE_PRIVATE);
