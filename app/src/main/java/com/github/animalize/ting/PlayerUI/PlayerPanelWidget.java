@@ -217,9 +217,6 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                     enableStop = false;
                     enableBack = true;
                     enablePage = true;
-
-                    mProgress.setProgress(0);
-                    mProgressText.setText("0%");
                     break;
 
                 case TTSService.FINISHED:
@@ -231,6 +228,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
                     mProgress.setProgress(mProgress.getMax());
                     mProgressText.setText("100%");
+                    mFullprogressText.setText("100%");
                     break;
 
                 case TTSService.EMPTY:
