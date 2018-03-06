@@ -340,6 +340,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             headTextView = findViewById(R.id.page_info_text);
 
             mPageList = findViewById(R.id.pages_list);
+            mPageList.setHasFixedSize(true);
 
             // 布局管理
             GridLayoutManager lm = new GridLayoutManager(getContext(), 3);

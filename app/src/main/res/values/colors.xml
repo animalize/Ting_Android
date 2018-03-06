@@ -3,5 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="scrollbar">#99FF4081</color>
+    <color name="panel_bg">#c9d4de</color>
+    <color name="dialog_pagejump_bar">#99CC99</color>
 </resources>

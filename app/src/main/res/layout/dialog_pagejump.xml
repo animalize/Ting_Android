@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@color/dialog_pagejump_bar"
         android:orientation="horizontal">
 
         <TextView
@@ -30,11 +30,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fadeScrollbars="false" />
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/dialog_pagejump_bar"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
