@@ -20,21 +20,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainListActivity">
+
+        <activity
+            android:name=".MainListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".PlayerUI.TextPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity android:name=".OptionActivity"></activity>
 
         <service
             android:name=".TingTTS.TingTTSService"
             android:enabled="true"
             android:exported="false" />
-
-        <activity android:name=".PlayerUI.TextPlayerActivity" />
-        <activity android:name=".OptionActivity"></activity>
     </application>
 
 </manifest>

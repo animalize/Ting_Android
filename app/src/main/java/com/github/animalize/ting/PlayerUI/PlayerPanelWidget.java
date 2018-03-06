@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     private SpeechEventReciver mSpeechEventReciver = new SpeechEventReciver();
     private SpeechStartReciver mSpeechStartReciver = new SpeechStartReciver();
     private PageChangeReciver mPageChangeReciver = new PageChangeReciver();
-    private PageJumpDialog d;
+    private PageJumpDialog dialog;
 
     public PlayerPanelWidget(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -103,10 +104,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 break;
 
             case R.id.page_button:
-                if (d == null) {
-                    d = new PageJumpDialog(getContext());
+                if (dialog == null) {
+                    dialog = new PageJumpDialog(getContext());
                 }
-                d.show();
+                dialog.show();
                 break;
 
             case R.id.back_one:
@@ -147,6 +148,15 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
         fullLengh = mBinder.getPageText().length();
         mProgress.setMax(fullLengh > 0 ? fullLengh - 1 : fullLengh);
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (dialog != null) {
+            dialog.sizeChanged();
+        }
     }
 
     private class SpeechStartReciver extends BroadcastReceiver {
@@ -300,13 +310,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
             super(context);
         }
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            // 无标题栏
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        void sizeChanged() {
             // 得到可视尺寸
             Rect displayRectangle = new Rect();
             Window window = getWindow();
@@ -324,6 +328,17 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 lp.height = (int) (0.8 * displayRectangle.height());
                 window.setAttributes(lp);
             }
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            // 无标题栏
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            // 对话框尺寸
+            sizeChanged();
 
             // View
             setContentView(R.layout.dialog_pagejump);
