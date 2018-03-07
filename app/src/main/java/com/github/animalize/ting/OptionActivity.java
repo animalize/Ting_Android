@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.github.animalize.ting.Data.TingConfig;
 import com.github.animalize.ting.TTS.Setting;
+import com.github.animalize.ting.TTS.TTSService;
 import com.github.animalize.ting.TingTTS.TingSetting;
 
 import java.text.DateFormat;
@@ -40,7 +41,8 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     private SeekBar thresholdSeekbar, windowSeekbar, fenjuSeekbar;
     private int mNowThreshold, mNowWindow, mNowFenju;
 
-    private TextView verInfo;
+    private TextView pageCharsText;
+    private TextView verInfoText;
 
     public static void actionStart(Activity activity, int requestCode) {
         Intent i = new Intent(activity, OptionActivity.class);
@@ -132,6 +134,14 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         fenjuText = findViewById(R.id.fenju_text);
         fenjuText.setText("分句字符数 " + mTTSSetting.getmFenJu() + "：");
 
+        // 每页字符数
+        pageCharsText = findViewById(R.id.page_chars_textview);
+        pageCharsText.setText(
+                "分页字符数：" + TTSService.PAGE_SIZE + "，约合" +
+                        (int) (0.8566 * TTSService.PAGE_SIZE) +
+                        "汉字，此数值为编译时固定。"
+        );
+
         // 过滤器
         Set<String> filters = mConfig.getmFilters();
         String s = "";
@@ -146,11 +156,11 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         mHost.setText(mConfig.getHost());
 
         // 版本
-        verInfo = findViewById(R.id.ver_info);
+        verInfoText = findViewById(R.id.ver_info);
         String versionName = "程序版本：" + BuildConfig.VERSION_NAME + "\n";
         Date buildDate = new Date(BuildConfig.TIMESTAMP);
         DateFormat df = new SimpleDateFormat("编译于：yyyy-MM-dd E HH:mm", Locale.getDefault());
-        verInfo.setText(versionName + df.format(buildDate));
+        verInfoText.setText(versionName + df.format(buildDate));
 
         // 按钮
         Button bt = findViewById(R.id.ok);

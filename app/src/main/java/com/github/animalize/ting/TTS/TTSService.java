@@ -29,7 +29,7 @@ public abstract class TTSService
     public static final int FINISHED = 2;
     public static final int PLAYING = 3;
     public static final int PAUSING = 4;
-    private static final int PAGE_SIZE = 10000;
+    public static final int PAGE_SIZE = 10000;
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
