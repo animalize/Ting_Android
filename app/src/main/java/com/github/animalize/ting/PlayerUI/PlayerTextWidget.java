@@ -22,14 +22,18 @@ import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
 
 
-public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.OnGlobalLayoutListener, View.OnClickListener {
+public class PlayerTextWidget
+        extends FrameLayout
+        implements ViewTreeObserver.OnGlobalLayoutListener, View.OnClickListener {
     private TextView mTextView;
     private CheckBox mKeepScrollCheckBox;
     private boolean mKeepScroll = true;
     private Layout layout;
 
+    private int textHash;
     private Spannable spannable;
     private TTSService.Ju ju;
+    private boolean doSetSelect = false;
 
     private TTSService.ArticleTtsBinder mBinder;
     private LocalBroadcastManager mLBM = LocalBroadcastManager.getInstance(getContext());
@@ -45,17 +49,22 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
 
         mTextView = findViewById(R.id.text_view);
         mTextView.setMovementMethod(new ScrollingMovementMethod());
-    }
-
-    public void setPlayerText(String text) {
-        spannable = new SpannableString(text);
-        mTextView.setText(spannable);
 
         ViewTreeObserver vto = mTextView.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(this);
     }
 
+    public void setPlayerText(String newText) {
+        doSetSelect = true;
+        textHash = newText.hashCode();
+
+        spannable = new SpannableString(newText);
+        mTextView.setText(spannable);
+    }
+
     private void setSelect() {
+        doSetSelect = false;
+
         // 移除
         Object spansToRemove[] = spannable.getSpans(
                 0, spannable.length(),
@@ -65,7 +74,10 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
         }
 
         if (ju == null) {
-            return;
+            ju = mBinder.getNowJu();
+            if (ju == null) {
+                return;
+            }
         }
 
         // 新
@@ -80,12 +92,31 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
     }
 
     private void scrollText() {
+        layout = mTextView.getLayout();
+
         if (mKeepScroll && layout != null && ju != null) {
             final int line = layout.getLineForOffset(ju.begin);
             int y = (line + 2) * mTextView.getLineHeight()
                     - mTextView.getHeight() / 2;
 
             mTextView.scrollTo(0, y >= 0 ? y : 0);
+        }
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        if (doSetSelect && spannable != null) {
+            setSelect();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.keep_scroll:
+                mKeepScroll = mKeepScrollCheckBox.isChecked();
+                scrollText();
+                break;
         }
     }
 
@@ -115,25 +146,6 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
                 setPlayerText(s);
             }
         }
-
-        mSpeechStartReciver.onReceive(null, null);
-    }
-
-    @Override
-    public void onGlobalLayout() {
-        layout = mTextView.getLayout();
-
-        setSelect();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.keep_scroll:
-                mKeepScroll = mKeepScrollCheckBox.isChecked();
-                scrollText();
-                break;
-        }
     }
 
     private class SpeechStartReciver extends BroadcastReceiver {
@@ -144,6 +156,8 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
             }
 
             ju = mBinder.getNowJu();
+
+            doSetSelect = true;
             setSelect();
         }
     }
@@ -156,7 +170,7 @@ public class PlayerTextWidget extends FrameLayout implements ViewTreeObserver.On
             }
 
             String s = mBinder.getPageText();
-            if (s != null) {
+            if (s != null && textHash != s.hashCode()) {
                 setPlayerText(s);
             }
         }
