@@ -29,12 +29,15 @@ Android的文本朗读器。
 把server目录放到24小时运行的服务器上运行`server.py`，需要Python 3.x和安装`tornado`模块。  
 如果没有服务器，也可以在普通电脑上运行，程序随用随开。
 
+架设好服务器后，在Ting的设置界面填入服务器地址。
+
 #### PC端 
 pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`requests`模块。
 
 把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
 如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
 
+双击`pc_side.py`启动PC端程序。
 
 ### .apk文件编译指南
 
