@@ -30,7 +30,7 @@ public class PlayerTextWidget
     private boolean mKeepScroll = true;
     private Layout layout;
 
-    private int textHash;
+    private String text;
     private Spannable spannable;
     private TTSService.Ju ju;
     private boolean doSetSelect = false;
@@ -56,7 +56,7 @@ public class PlayerTextWidget
 
     public void setPlayerText(String newText) {
         doSetSelect = true;
-        textHash = newText.hashCode();
+        text = newText;
 
         spannable = new SpannableString(newText);
         mTextView.setText(spannable);
@@ -170,7 +170,7 @@ public class PlayerTextWidget
             }
 
             String s = mBinder.getPageText();
-            if (s != null && textHash != s.hashCode()) {
+            if (s != null && !s.equals(text)) {
                 setPlayerText(s);
             }
         }
