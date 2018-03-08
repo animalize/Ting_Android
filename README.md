@@ -2,6 +2,8 @@
 
 Android的文本朗读器。
 
+[点击这里](https://github.com/animalize/Ting_Android/releases)下载安卓安装包，需要Android 4.0+。
+
 ### 截图
 
 <table>
@@ -18,7 +20,7 @@ Android的文本朗读器。
 
 ### 服务器端、PC端
 
-下载[ting_py项目](https://github.com/animalize/ting_py)
+下载[ting_py项目](https://github.com/animalize/ting_py)，包括了服务器端和PC端。
 
 #### 服务器端
 把server目录放到24小时运行的服务器上运行`server.py`，需要[Python](https://www.python.org/downloads/) 3.x和安装tornado模块。  
