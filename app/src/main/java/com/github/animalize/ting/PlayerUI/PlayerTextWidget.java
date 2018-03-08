@@ -3,6 +3,7 @@ package com.github.animalize.ting.PlayerUI;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
@@ -108,6 +109,13 @@ public class PlayerTextWidget
         if (doSetSelect && spannable != null) {
             setSelect();
         }
+    }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        doSetSelect = true;
     }
 
     @Override
