@@ -2,8 +2,12 @@ package com.github.animalize.ting;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +22,12 @@ import com.github.animalize.ting.TTS.Setting;
 import com.github.animalize.ting.TTS.TTSService;
 import com.github.animalize.ting.TingTTS.TingSetting;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -25,6 +35,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OptionActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener {
 
@@ -42,11 +54,24 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     private int mNowThreshold, mNowWindow, mNowFenju;
 
     private TextView pageCharsText;
-    private TextView verInfoText;
+    private TextView verInfoText, newVerText;
+
+    private Button checkUpdateButton;
 
     public static void actionStart(Activity activity, int requestCode) {
         Intent i = new Intent(activity, OptionActivity.class);
         activity.startActivityForResult(i, requestCode);
+    }
+
+    public static Spanned getFromHtml(String html) {
+        Spanned s;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            s = Html.fromHtml(html,
+                    Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            s = Html.fromHtml(html);
+        }
+        return s;
     }
 
     @Override
@@ -162,6 +187,16 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         DateFormat df = new SimpleDateFormat("编译于：yyyy-MM-dd E HH:mm", Locale.getDefault());
         verInfoText.setText(versionName + df.format(buildDate));
 
+        TextView tv = findViewById(R.id.html_ver);
+        Spanned span = getFromHtml(getString(R.string.about));
+        tv.setMovementMethod(LinkMovementMethod.getInstance());
+        tv.setText(span);
+
+        newVerText = findViewById(R.id.new_ver);
+
+        checkUpdateButton = findViewById(R.id.check_update);
+        checkUpdateButton.setOnClickListener(this);
+
         // 按钮
         Button bt = findViewById(R.id.ok);
         bt.setOnClickListener(this);
@@ -200,6 +235,11 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.cancel:
                 setResult(RESULT_CANCELED, null);
                 finish();
+                break;
+
+            case R.id.check_update:
+                checkUpdateButton.setEnabled(false);
+                new CheckTask(this).execute();
                 break;
         }
     }
@@ -265,5 +305,71 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void updateUI(String s) {
+        checkUpdateButton.setEnabled(true);
+
+        newVerText.setText(s);
+        newVerText.setVisibility(View.VISIBLE);
+    }
+
+    private static class CheckTask extends AsyncTask<Void, Void, String> {
+        private static final String verURL =
+                "https://raw.githubusercontent.com/animalize/Ting_Android/master/app/build.gradle";
+        private WeakReference<OptionActivity> ref;
+
+        public CheckTask(OptionActivity about) {
+            ref = new WeakReference<>(about);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String html;
+
+            try {
+                URL url = new URL(verURL);
+                URLConnection con = url.openConnection();
+                con.setConnectTimeout(10 * 1000);
+                con.setReadTimeout(10 * 1000);
+                InputStream in = con.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                html = "";
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    html += line;
+                }
+
+                reader.close();
+            } catch (Exception e) {
+                return null;
+            }
+
+            String p = "versionName\\s*\"(.*?)\"";
+
+            Pattern pattern = Pattern.compile(p, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(html);
+            if (!matcher.find()) {
+                return null;
+            }
+
+            return "GitHub上最新版本：" + matcher.group(1);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            OptionActivity about = ref.get();
+            if (about == null) {
+                return;
+            }
+
+            if (s == null) {
+                s = "获取信息失败";
+            }
+            about.updateUI(s);
+        }
     }
 }

@@ -64,7 +64,7 @@ public class Methods {
         return b;
     }
 
-    public static void deleteAids(List<String> aids) {
+    public static boolean deleteAids(List<String> aids) {
         String url = TingConfig.getInstance().getHost() +
                 "/del_article";
 
@@ -84,8 +84,10 @@ public class Methods {
 
             client.newCall(request).execute();
 
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 

@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Database.DataManager;
@@ -263,7 +264,7 @@ public class MainListActivity
     }
 
     // 刷新列表
-    private class GetListAsyncTask extends AsyncTask<Void, String, Void> {
+    private class GetListAsyncTask extends AsyncTask<Void, String, Boolean> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -272,9 +273,13 @@ public class MainListActivity
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             // 下载列表
-            dataManager.loadListFromServer();
+            boolean success = dataManager.loadListFromServer();
+            if (!success) {
+                return false;
+            }
+
             publishProgress("");
 
             // 缓存文章
@@ -298,7 +303,7 @@ public class MainListActivity
                 }
             }
 
-            return null;
+            return true;
         }
 
         @Override
@@ -318,10 +323,16 @@ public class MainListActivity
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
             if (!isAlive()) {
                 return;
+            }
+
+            if (!success) {
+                Toast.makeText(MainListActivity.this,
+                        "刷新列表失败。\n请确保设置中的服务器地址正确、服务器正常运行。",
+                        Toast.LENGTH_LONG).show();
             }
 
             refreshButton.setEnabled(true);
@@ -329,7 +340,7 @@ public class MainListActivity
         }
     }
 
-    private class DeleteAidListAsyncTask extends AsyncTask<List<String>, Void, Void> {
+    private class DeleteAidListAsyncTask extends AsyncTask<List<String>, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -338,16 +349,21 @@ public class MainListActivity
         }
 
         @Override
-        protected Void doInBackground(List<String>... params) {
-            dataManager.deleteAidList(params[0]);
-            return null;
+        protected Boolean doInBackground(List<String>... params) {
+            return dataManager.deleteAidList(params[0]);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Boolean remoteDeleted) {
+            super.onPostExecute(remoteDeleted);
             if (!isAlive()) {
                 return;
+            }
+
+            if (!remoteDeleted) {
+                Toast.makeText(MainListActivity.this,
+                        "从服务器删除列表失败，仅删除本地复本，成功刷新后会重新出现。\n请确保设置中的服务器地址正确、服务器正常运行。",
+                        Toast.LENGTH_LONG).show();
             }
 
             listAdapter.setArrayList(dataManager.getFullList());

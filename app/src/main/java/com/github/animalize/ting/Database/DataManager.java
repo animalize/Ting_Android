@@ -179,7 +179,7 @@ public class DataManager {
         return aidMap.get(aid);
     }
 
-    public synchronized void deleteAidList(List<String> aidList) {
+    public synchronized boolean deleteAidList(List<String> aidList) {
         // 数据库
         List<Item> list = new ArrayList<>();
         for (Item item : fullList) {
@@ -197,7 +197,7 @@ public class DataManager {
         MyDatabaseHelper.delItems(aidList);
 
         // 从服务器删除
-        Methods.deleteAids(aidList);
+        return Methods.deleteAids(aidList);
     }
 
     public void delOldCache(List<String> delAidList) {
