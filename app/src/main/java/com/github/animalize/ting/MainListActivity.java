@@ -36,6 +36,7 @@ public class MainListActivity
     private final static int OPTION_REQ_CODE = 3333;
 
     private boolean isAlive = true;
+    private boolean netOperating = false;
 
     private DataManager dataManager = DataManager.getInstance();
 
@@ -98,6 +99,14 @@ public class MainListActivity
 
             @Override
             public void onDeleteItemClick(final String aid) {
+                if (netOperating) {
+                    Toast.makeText(
+                            MainListActivity.this,
+                            "正在进行网络操作，无法删除。",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(MainListActivity.this);
                 builder.setTitle("确认删除此文章？");
@@ -190,10 +199,18 @@ public class MainListActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.refresh:
+                if (netOperating) {
+                    return;
+                }
+
                 new GetListAsyncTask().execute();
                 break;
 
             case R.id.del_all:
+                if (netOperating) {
+                    return;
+                }
+
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(this);
                 builder.setTitle("确认删除所有文章？");
@@ -268,6 +285,8 @@ public class MainListActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            netOperating = true;
             refreshButton.setEnabled(false);
             delAllButton.setEnabled(false);
         }
@@ -337,6 +356,8 @@ public class MainListActivity
 
             refreshButton.setEnabled(true);
             delAllButton.setEnabled(true);
+
+            netOperating = false;
         }
     }
 
@@ -344,6 +365,8 @@ public class MainListActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            netOperating = true;
             refreshButton.setEnabled(false);
             delAllButton.setEnabled(false);
         }
@@ -370,6 +393,8 @@ public class MainListActivity
 
             refreshButton.setEnabled(true);
             delAllButton.setEnabled(true);
+
+            netOperating = false;
         }
     }
 }
