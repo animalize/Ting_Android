@@ -5,7 +5,7 @@ Android的文本朗读器。
 1. 使用百度语音合成服务，可在线、离线使用，提供较全面的控制选项。
 2. 有分页、进度记忆功能，长短篇皆宜。
 
-[点击这里](https://github.com/animalize/Ting_Android/releases)下载安卓安装包，需要Android 4.0+。
+[点击这里](https://github.com/animalize/Ting_Android/releases)下载编译好的安卓安装包，需要Android 4.0+。
 
 ### 截图
 
