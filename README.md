@@ -2,6 +2,9 @@
 
 Android的文本朗读器。
 
+1. 使用百度语音合成服务，可在线、离线使用，提供较全面的控制选项。
+2. 有分页、进度记忆功能，长短篇皆宜。
+
 [点击这里](https://github.com/animalize/Ting_Android/releases)下载安卓安装包，需要Android 4.0+。
 
 ### 截图
@@ -23,11 +26,11 @@ Android的文本朗读器。
 下载[ting_py项目](https://github.com/animalize/ting_py)，包括了服务器端和PC端。
 
 #### 服务器端
-把server目录放到24小时运行的服务器上运行`server.py`，需要[Python](https://www.python.org/downloads/) 3.x和安装tornado模块。  
+把server目录放到24小时运行的服务器上运行`server.py`，需要[Python](https://www.python.org/downloads/) 3.x和安装`tornado`模块。  
 如果没有服务器，也可以在普通电脑上运行，程序随用随开。
 
 #### PC端 
-pc目录为PC端程序，给电脑安装[Python](https://www.python.org/downloads/) 3.x并安装pyperclip、requests模块。
+pc目录为PC端程序，给电脑安装[Python](https://www.python.org/downloads/) 3.x并安装`pyperclip`、`requests`模块。
 
 把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
 如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
