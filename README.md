@@ -16,6 +16,21 @@ Android的文本朗读器。
 </tr>
 </table>
 
+### 服务器端、PC端
+
+下载[ting_py项目](https://github.com/animalize/ting_py)
+
+#### 服务器端
+把server目录放到24小时运行的服务器上运行`server.py`，需要[Python](https://www.python.org/downloads/) 3.x和安装tornado模块。  
+如果没有服务器，也可以在普通电脑上运行，程序随用随开。
+
+#### PC端 
+pc目录为PC端程序，给电脑安装[Python](https://www.python.org/downloads/) 3.x并安装pyperclip、requests模块。
+
+把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
+如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
+
+
 ### .apk文件编译指南
 
 1.  注册[百度语音](http://yuyin.baidu.com)帐户。  
@@ -46,17 +61,3 @@ Android的文本朗读器。
 `armeabi-v7a`  
 `arm64-v8a`  
 （通常放这两个就可以了，如果需要在电脑上调试可以再放一个`x86`）
-
-### 服务器端、PC端
-
-下载[此项目](https://github.com/animalize/ting_py)
-
-**服务器端**：  
-把server目录放到24小时运行的服务器上运行，需要Python 3.x和安装tornado模块。  
-（如果没有服务器，也可以在普通电脑上运行，程序随用随开。）
-
-**PC端**：  
-给电脑安装Python 3.6并安装pyperclip、requests模块。
-
-把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
-如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
