@@ -29,7 +29,6 @@ public class PlayerTextWidget
     private TextView mTextView;
     private CheckBox mKeepScrollCheckBox;
     private boolean mKeepScroll = true;
-    private Layout layout;
 
     private String text;
     private Spannable spannable;
@@ -93,7 +92,7 @@ public class PlayerTextWidget
     }
 
     private void scrollText() {
-        layout = mTextView.getLayout();
+        Layout layout = mTextView.getLayout();
 
         if (mKeepScroll && layout != null && ju != null) {
             final int line = layout.getLineForOffset(ju.begin);
