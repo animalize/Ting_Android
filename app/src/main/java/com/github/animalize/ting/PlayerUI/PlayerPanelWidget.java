@@ -166,10 +166,10 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
                 return;
             }
 
+            // 启动时为FINISHED
             if (mBinder.getState() == TTSService.FINISHED) {
                 mProgress.setProgress(mProgress.getMax());
                 mProgressText.setText("100%");
-
                 if (mFullprogressText != null) {
                     mFullprogressText.setText("100%");
                 }
@@ -238,7 +238,9 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
 
                     mProgress.setProgress(mProgress.getMax());
                     mProgressText.setText("100%");
-                    mFullprogressText.setText("100%");
+                    if (mFullprogressText != null) {
+                        mFullprogressText.setText("100%");
+                    }
                     break;
 
                 case TTSService.EMPTY:
