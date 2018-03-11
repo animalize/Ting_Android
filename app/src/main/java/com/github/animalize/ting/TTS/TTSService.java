@@ -550,7 +550,7 @@ public abstract class TTSService
 
             mTitle = mArticle.getTitle();
             mText = mArticle.getText();
-            if (mTitle == null || mText == null) {
+            if (mTitle == null || mText == null || mText.isEmpty()) {
                 mArticle = null;
                 mJus = null;
                 setEvent(EMPTY);
