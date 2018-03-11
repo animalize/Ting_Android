@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -465,7 +464,7 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
         @Override
         public void onBindViewHolder(PageHolder holder, int position) {
             int color = (position != mBinder.getCurrentPage()) ?
-                    Color.BLACK :
+                    MyColors.text :
                     MyColors.current;
 
             holder.item.setText("" + (position + 1));
