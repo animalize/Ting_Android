@@ -56,7 +56,7 @@ pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`reques
 ```
 
 3.  创建`/app/src/main/libs/`目录，把SDK的jar文件放入其中。  
-（这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`，只要确保和`build.gradle`文件里的文件名一致就可以。）
+（这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`）
 
 4.  创建`/app/src/main/assets/`目录，把SDK的以下5个数据文件放入其中，不要改文件名：  
 `bd_etts_common_speech_as_mand_eng_high_am_v3.0.0_20170516.dat`  
