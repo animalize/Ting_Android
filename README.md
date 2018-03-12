@@ -5,7 +5,8 @@ Android的文本朗读器。
 1. 使用百度语音合成服务，可在线、离线使用，提供较全面的控制选项。
 2. 有分页、进度记忆功能，长短篇皆宜。
 
-[点击这里](https://github.com/animalize/Ting_Android/releases)下载编译好的安卓安装包，需要Android 4.0+。
+[点击这里](https://github.com/animalize/Ting_Android/releases)下载编译好的安卓安装包，需要Android 4.0+。  
+（安装后首次运行会自动退出，重新运行即可。）
 
 ### 截图
 
@@ -55,7 +56,7 @@ pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`reques
 ```
 
 3.  创建`/app/src/main/libs/`目录，把SDK的jar文件放入其中。  
-（这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`，只要确保和`build.gradle`文件里的文件名一致就可以。）
+（这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`）
 
 4.  创建`/app/src/main/assets/`目录，把SDK的以下5个数据文件放入其中，不要改文件名：  
 `bd_etts_common_speech_as_mand_eng_high_am_v3.0.0_20170516.dat`  
