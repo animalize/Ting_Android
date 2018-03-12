@@ -132,8 +132,8 @@ public class PlayerPanelWidget extends LinearLayout implements View.OnClickListe
     }
 
     public void onStop() {
-        mLBM.unregisterReceiver(mSpeechEventReciver);
         mLBM.unregisterReceiver(mSpeechStartReciver);
+        mLBM.unregisterReceiver(mSpeechEventReciver);
         mLBM.unregisterReceiver(mPageChangeReciver);
     }
 
