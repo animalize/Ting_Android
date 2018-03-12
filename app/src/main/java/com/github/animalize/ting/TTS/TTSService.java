@@ -535,7 +535,8 @@ public abstract class TTSService
 
         public boolean playArticle(IArticle article) {
             if (mArticle != null) {
-                if (!mArticle.getAid().equals(article.getAid())) {
+                if (!mArticle.getAid().equals(article.getAid()) &&
+                        (mNowState == PLAYING || mNowState == PAUSING)) {
                     stop();
                 } else {
                     play();
