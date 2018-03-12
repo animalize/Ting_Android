@@ -79,7 +79,7 @@ public class MainListActivity
 
         RecyclerView mainList = findViewById(R.id.main_list);
         mainList.setHasFixedSize(true);
-        
+
         // 布局管理
         LinearLayoutManager lm = new LinearLayoutManager(this);
         mainList.setLayoutManager(lm);
