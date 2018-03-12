@@ -310,9 +310,9 @@ public abstract class TTSService
 
         int getNowChar();
 
-        int getFullChar();
-
         void setNowChar(int posi, boolean flush);
+
+        int getFullChar();
 
         int[] getPageArrary();
 
@@ -501,7 +501,10 @@ public abstract class TTSService
 
         // 保存当前位置
         void saveFullPosi() {
-            mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
+            mArticle.setNowChar(
+                    mNowState == FINISHED ? 0 : mPageManager.getNowFullPosi(),
+                    true
+            );
         }
 
         // 页内跳转
@@ -564,8 +567,12 @@ public abstract class TTSService
 
         public void play() {
             if (mArticle != null) {
-                playAction(false);
-                setEvent(PLAYING);
+                if (mArticle.getNowChar() == 0) {
+                    jumpToPage(0);
+                } else {
+                    playAction(false);
+                    setEvent(PLAYING);
+                }
             }
         }
 
