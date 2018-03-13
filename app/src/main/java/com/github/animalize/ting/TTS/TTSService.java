@@ -21,6 +21,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+    TTSService抽象类，基础服务
+    IArticle接口，文章需实现此接口
+    Ju类，一句在当前页中的位置
+    PagaManager私有类，分页逻辑
+    ArticleTtsBinder类，服务对外绑定的接口
+ */
+
 public abstract class TTSService
         extends Service
         implements SpeechSynthesizerListener {
@@ -239,7 +247,7 @@ public abstract class TTSService
                 playAction(true);
             } else {
                 setEvent(FINISHED);
-                mPageManager.saveFullPosi();
+                mArticle.setNowChar(0, true);
 
                 if (soundPool != null) {
                     soundPool.play(soundID, 1, 1, 1, 0, 1f);
@@ -372,7 +380,7 @@ public abstract class TTSService
         }
     }
 
-    public class PageManager {
+    private class PageManager {
         private int[] pageArray;
         private int currentPage, totalPage;
         private int currentBase;
@@ -499,14 +507,6 @@ public abstract class TTSService
             mNowSpeechIndex = mNowQueueIndex = idx;
         }
 
-        // 保存当前位置
-        void saveFullPosi() {
-            mArticle.setNowChar(
-                    mNowState == FINISHED ? 0 : mPageManager.getNowFullPosi(),
-                    true
-            );
-        }
-
         // 页内跳转
         void setPagePosi(int posi) {
             int low = 0;
@@ -583,10 +583,12 @@ public abstract class TTSService
                 return;
             }
 
-            mSpeechSynthesizer.stop();
-            setEvent(STOP);
+            if (mNowState == PLAYING || mNowState == PAUSING) {
+                mSpeechSynthesizer.stop();
+                setEvent(STOP);
 
-            saveFullPosi();
+                mArticle.setNowChar(mPageManager.getNowFullPosi(), true);
+            }
         }
 
         public void pause() {
@@ -613,14 +615,6 @@ public abstract class TTSService
             }
 
             mSpeechSynthesizer.stop();
-            saveFullPosi();
-        }
-
-        // 保存当前位置
-        void saveFullPosi() {
-            if (mArticle != null) {
-                mPageManager.saveFullPosi();
-            }
         }
 
         public String getFullProgressText() {
