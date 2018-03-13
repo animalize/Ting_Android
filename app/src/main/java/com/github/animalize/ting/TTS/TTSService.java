@@ -614,7 +614,7 @@ public abstract class TTSService
                 return;
             }
 
-            mSpeechSynthesizer.stop();
+            stop();
         }
 
         public String getFullProgressText() {
