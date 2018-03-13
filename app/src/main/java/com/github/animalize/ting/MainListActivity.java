@@ -140,10 +140,6 @@ public class MainListActivity
 
     @Override
     protected void onDestroy() {
-        if (mBinder != null) {
-            mBinder.close();
-        }
-
         setNotAlive();
         unbindService(mServerConn);
 
@@ -168,6 +164,8 @@ public class MainListActivity
                         d.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                // case起始处确保 mBinder != null
+                                mBinder.close();
                                 finish();
                             }
                         });
