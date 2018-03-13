@@ -66,11 +66,8 @@ public class MainListActivity
 
         // 防止从安装器打开出现问题
         if (!isTaskRoot()) {
-            final Intent intent = getIntent();
-            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(intent.getAction())) {
-                finish();
-                return;
-            }
+            finish();
+            return;
         }
 
         setContentView(R.layout.activity_main_list);
