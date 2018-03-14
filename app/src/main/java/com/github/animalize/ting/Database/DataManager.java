@@ -55,7 +55,7 @@ public class DataManager {
         return singleton;
     }
 
-    public synchronized void loadListFromDB() {
+    private synchronized void loadListFromDB() {
         // 读数据库
         List<Item> list = MyDatabaseHelper.getList();
         // 加载
@@ -87,16 +87,10 @@ public class DataManager {
                 item.setCate(parts[1]);
             }
 
-            // 设置cached, posi
             Item old = aidMap.get(item.getAid());
             if (old != null) {
-                item.setSegments(old.getSegments());
-                item.setCached(old.isCached());
-                item.setFullChar(old.getFullChar(), false);
-                item.setNowChar(old.getNowChar(), false);
-            }
-
-            if (!aidMap.containsKey(item.getAid())) {
+                item = old;
+            } else {
                 addList.add(item);
             }
             newFullList.add(item);
@@ -200,7 +194,7 @@ public class DataManager {
         return Methods.deleteAids(aidList);
     }
 
-    public void delOldCache(List<String> delAidList) {
+    private void delOldCache(List<String> delAidList) {
         File dir = new File(dataDirPath);
 
         for (String aid : delAidList) {
@@ -271,9 +265,7 @@ public class DataManager {
             dis.readFully(fileData);
             dis.close();
 
-            String s = new String(fileData, GB18030);
-
-            return s;
+            return new String(fileData, GB18030);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

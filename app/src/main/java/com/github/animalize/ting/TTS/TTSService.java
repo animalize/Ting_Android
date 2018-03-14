@@ -608,13 +608,9 @@ public abstract class TTSService
         }
 
         public void close() {
-            if (mSpeechSynthesizer == null) {
-                return;
-            }
-
-            stop();
-
             if (mSpeechSynthesizer != null) {
+                stop();
+
                 mSpeechSynthesizer.release();
                 mSpeechSynthesizer = null;
             }
