@@ -613,6 +613,16 @@ public abstract class TTSService
             }
 
             stop();
+
+            if (mSpeechSynthesizer != null) {
+                mSpeechSynthesizer.release();
+                mSpeechSynthesizer = null;
+            }
+
+            if (soundPool != null) {
+                soundPool.release();
+                soundPool = null;
+            }
         }
 
         public String getFullProgressText() {
