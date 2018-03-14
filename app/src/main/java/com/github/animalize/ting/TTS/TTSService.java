@@ -751,7 +751,12 @@ public abstract class TTSService
             if (mSpeechSynthesizer == null) {
                 return;
             }
-            mSpeechSynthesizer.stop();
+
+            // 停止
+            if (mNowState == PLAYING || mNowState == PAUSING) {
+                mSpeechSynthesizer.stop();
+                setEvent(STOP);
+            }
 
             mPageManager.setPagePosi(posi);
         }
