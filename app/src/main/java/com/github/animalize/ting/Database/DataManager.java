@@ -279,4 +279,8 @@ public class DataManager {
             return null;
         }
     }
+
+    public synchronized void closeDB() {
+        MyDatabaseHelper.closeDB();
+    }
 }

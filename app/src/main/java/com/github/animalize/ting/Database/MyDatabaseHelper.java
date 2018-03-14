@@ -128,6 +128,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         mDb.execSQL(sql, new String[]{String.valueOf(full_char), aid});
     }
 
+    public static void closeDB() {
+        if (mHelper != null) {
+            mHelper.close();
+            mHelper = null;
+        }
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         // 建表

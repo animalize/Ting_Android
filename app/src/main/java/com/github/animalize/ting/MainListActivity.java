@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -31,7 +30,7 @@ import java.util.List;
 
 public class MainListActivity
         extends AppCompatActivity
-        implements View.OnClickListener, ThreadHost, AdapterView.OnItemSelectedListener {
+        implements View.OnClickListener, ThreadHost {
 
     private final static int OPTION_REQ_CODE = 3333;
 
@@ -138,6 +137,18 @@ public class MainListActivity
         bindService(intent, mServerConn, BIND_AUTO_CREATE);
     }
 
+    private void closeAPP() {
+        // TTS
+        if (mBinder != null) {
+            mBinder.close();
+        }
+
+        // 数据库
+        dataManager.closeDB();
+
+        finish();
+    }
+
     @Override
     protected void onDestroy() {
         setNotAlive();
@@ -152,7 +163,7 @@ public class MainListActivity
             switch (keyCode) {
                 case KeyEvent.KEYCODE_BACK:
                     if (mBinder == null) {
-                        finish();
+                        closeAPP();
                         return true;
                     }
 
@@ -164,15 +175,13 @@ public class MainListActivity
                         d.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // case起始处确保 mBinder != null
-                                mBinder.close();
-                                finish();
+                                closeAPP();
                             }
                         });
                         d.setNegativeButton("取消", null);
                         d.show();
                     } else {
-                        finish();
+                        closeAPP();
                     }
                     return true;
             }
@@ -258,23 +267,6 @@ public class MainListActivity
     @Override
     public boolean isAlive() {
         return isAlive;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        nameAdapter.setCurrentIndex(position);
-//
-//        String name = nameAdapter.getItem(position);
-
-        List<Item> list;
-        list = dataManager.getFullList();
-
-        listAdapter.setArrayList(list);
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     // 刷新列表
