@@ -24,10 +24,14 @@ Android的文本朗读器。
 
 ### 2.配置电脑端程序
 
-按照这里的操作：  
+在安卓端进行“刷新列表”操作时，需要开启电脑端程序。
+
+配置电脑端的方法：  
 https://github.com/animalize/ting_py/releases/
 
-在使用天涯、贴吧等网站时，可以复制帖子网址，然后点击`tz2txt`按钮会自动处理。
+在使用天涯、贴吧等网站时，复制帖子网址，然后点击`tz2txt`按钮会自动处理。
+
+<img width="460" src="https://raw.githubusercontent.com/animalize/pics/master/Ting/pc.PNG" />
 
 **☆☆☆☆☆普通用户不必再看后面的内容☆☆☆☆☆**
 
