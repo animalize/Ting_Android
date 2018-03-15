@@ -22,7 +22,18 @@ Android的文本朗读器。
 </tr>
 </table>
 
-### 服务器端、PC端
+### 配置电脑端程序
+
+按照这里的操作：  
+https://github.com/animalize/ting_py/releases/
+
+在使用天涯、贴吧等网站时，可以复制帖子网址，然后点击`tz2txt`按钮会自动处理。
+
+**普通用户不必再看后面的内容**
+
+### 分别配置服务器端、PC端
+
+如果有24小时运行的服务器，可以部署服务器端程序，方法如下：
 
 下载[ting_py项目](https://github.com/animalize/ting_py)，包括了服务器端和PC端。
 
