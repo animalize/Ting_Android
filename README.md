@@ -8,7 +8,7 @@ Android的文本朗读器。
 [点击这里](https://github.com/animalize/Ting_Android/releases)下载编译好的安卓安装包，需要Android 4.0+。  
 （安装后首次运行会自动退出，重新运行即可。）
 
-### 截图
+### 1.截图
 
 <table>
 <tr>
@@ -22,7 +22,7 @@ Android的文本朗读器。
 </tr>
 </table>
 
-### 配置电脑端程序
+### 2.配置电脑端程序
 
 按照这里的操作：  
 https://github.com/animalize/ting_py/releases/
@@ -31,7 +31,7 @@ https://github.com/animalize/ting_py/releases/
 
 **☆☆☆☆☆普通用户不必再看后面的内容☆☆☆☆☆**
 
-### 分别配置服务器端、PC端
+### 3.分别配置服务器端、PC端
 
 如果有24小时运行的服务器，可以部署服务器端程序，方法如下：
 
@@ -51,7 +51,7 @@ pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`reques
 
 双击`pc_side.py`启动PC端程序。
 
-### .apk文件编译指南
+### 4.apk文件编译指南
 
 1.  注册[百度语音](http://yuyin.baidu.com)帐户。  
 创建一个语音合成项目（包名填入`com.github.animalize.ting`），得到一个分配的Key。
