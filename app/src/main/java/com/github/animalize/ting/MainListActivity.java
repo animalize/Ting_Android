@@ -58,7 +58,6 @@ public class MainListActivity
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
