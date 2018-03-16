@@ -193,6 +193,8 @@ public abstract class TTSService
     @Override
     public void onDestroy() {
         if (mSpeechSynthesizer != null) {
+            mBinder.stop();
+
             mSpeechSynthesizer.release();
             mSpeechSynthesizer = null;
         }
@@ -605,20 +607,6 @@ public abstract class TTSService
 
             mSpeechSynthesizer.resume();
             setEvent(PLAYING);
-        }
-
-        public void close() {
-            if (mSpeechSynthesizer != null) {
-                stop();
-
-                mSpeechSynthesizer.release();
-                mSpeechSynthesizer = null;
-            }
-
-            if (soundPool != null) {
-                soundPool.release();
-                soundPool = null;
-            }
         }
 
         public String getFullProgressText() {

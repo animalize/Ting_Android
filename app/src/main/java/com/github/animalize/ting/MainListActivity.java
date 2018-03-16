@@ -137,18 +137,6 @@ public class MainListActivity
         bindService(intent, mServerConn, BIND_AUTO_CREATE);
     }
 
-    private void closeAPP() {
-        // TTS
-        if (mBinder != null) {
-            mBinder.close();
-        }
-
-        // 数据库
-        dataManager.closeDB();
-
-        finish();
-    }
-
     @Override
     protected void onDestroy() {
         setNotAlive();
@@ -163,7 +151,7 @@ public class MainListActivity
             switch (keyCode) {
                 case KeyEvent.KEYCODE_BACK:
                     if (mBinder == null) {
-                        closeAPP();
+                        finish();
                         return true;
                     }
 
@@ -175,13 +163,15 @@ public class MainListActivity
                         d.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                closeAPP();
+                                // 保存进度
+                                mBinder.stop();
+                                finish();
                             }
                         });
                         d.setNegativeButton("取消", null);
                         d.show();
                     } else {
-                        closeAPP();
+                        finish();
                     }
                     return true;
             }

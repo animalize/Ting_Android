@@ -9,15 +9,11 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.animalize.ting.Data.Item;
-import com.github.animalize.ting.Database.DataManager;
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
 import com.github.animalize.ting.TingTTS.TingTTSService;
 
 public class TextPlayerActivity extends AppCompatActivity implements ServiceConnection {
-
-    private DataManager dataManager = DataManager.getInstance();
-
     private PlayerTextWidget playerText;
     private PlayerPanelWidget playerPanel;
 
