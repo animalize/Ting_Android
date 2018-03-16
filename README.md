@@ -45,8 +45,8 @@ https://github.com/animalize/ting_py/releases/
 下载[ting_py项目](https://github.com/animalize/ting_py)，包括了服务器端和PC端。
 
 #### 服务器端
-把server目录放到24小时运行的服务器上运行`server.py`，需要Python 3.x和安装`tornado`模块。  
-如果没有服务器，也可以在普通电脑上运行，程序随用随开。
+把server目录放到24小时运行的服务器上，运行`/server/web_server.py`，需要Python 3.x和安装`tornado`模块。  
+（如果没有服务器，也可以在普通电脑上运行，程序随用随开。）
 
 架设好服务器后，在Ting的设置界面填入服务器地址。
 
@@ -54,7 +54,7 @@ https://github.com/animalize/ting_py/releases/
 pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`requests`模块。
 
 把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
-如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`的路径。
+如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`文件的路径。
 
 双击`pc_side.py`启动PC端程序。
 
