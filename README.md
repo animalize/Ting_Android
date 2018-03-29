@@ -34,7 +34,7 @@ https://github.com/animalize/ting_py/releases/
 
 <img width="460" src="https://raw.githubusercontent.com/animalize/pics/master/Ting/pc.PNG" />
 
-在使用天涯、贴吧等网站时，复制帖子网址，然后点击`tz2txt`按钮会自动处理。
+在使用天涯、贴吧、百度百科、FT中文网等网站时，复制帖子/文章网址，然后点击`调用tz2txt`会自动处理。
 
 🔸🔸🔸🔸普通用户不必再看后面的内容🔸🔸🔸🔸
 
