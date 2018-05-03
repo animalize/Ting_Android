@@ -31,7 +31,6 @@
             android:layout_columnWeight="1"
             android:layout_gravity="center"
             android:minHeight="0dp"
-            android:minWidth="30dp"
             android:text="退" />
 
         <TextView
