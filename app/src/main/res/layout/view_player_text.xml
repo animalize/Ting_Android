@@ -17,7 +17,7 @@
         android:id="@+id/keep_scroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
+        android:layout_gravity="bottom|right"
         android:alpha="0.5"
         android:background="@android:color/darker_gray"
         android:checked="true" />
