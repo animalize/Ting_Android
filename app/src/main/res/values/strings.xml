@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Ting</string>
-    <string name="baidu_tts_ver">百度语音合成引擎版本：2.3.3</string>
+    <string name="baidu_tts_ver">百度语音合成引擎版本：2.3.4</string>
     <string name="about"><![CDATA[
 下载最新版的.apk安装包：<br>
 <a href="https://github.com/animalize/Ting_Android/releases">https://github.com/animalize/Ting_Android/releases</a><br><br>
