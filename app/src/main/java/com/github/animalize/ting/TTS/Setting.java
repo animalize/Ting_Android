@@ -37,10 +37,10 @@ public abstract class Setting {
     private static final String[] SPEAKER_NAMES = {
             "普通女声", "普通男声", "特别男声", "情感男声", "情感儿童声"};
     private static String[] MIXMODE_NAMES = {
-            "A：wifi在线，非wifi离线",
-            "B：wifi,3G,4G在线，其它离线",
-            "同A，在网速慢时自动离线",
-            "同B，在网速慢时自动离线"
+            "A：wifi在线，非wifi或6秒超时离线",
+            "B：wifi,3G,4G在线，其它或6秒超时离线",
+            "同A，1.2秒超时离线",
+            "同B，1.2秒超时离线"
     };
     // 音量，范围[0-9]
     private int mVolume = 5;
@@ -149,8 +149,8 @@ public abstract class Setting {
     public void setmVolume(int mVolume) {
         if (mVolume < 0) {
             this.mVolume = 0;
-        } else if (mVolume > 9) {
-            this.mVolume = 9;
+        } else if (mVolume > 15) {
+            this.mVolume = 15;
         } else {
             this.mVolume = mVolume;
         }

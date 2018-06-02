@@ -95,11 +95,11 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
         pitchSeekbar.setOnSeekBarChangeListener(this);
 
         volumeText = findViewById(R.id.volume_text);
-        volumeText.setText("音量 " + mTTSSetting.getmVolume() + "：");
+        volumeText.setText("" + mTTSSetting.getmVolume());
         speedText = findViewById(R.id.speed_text);
-        speedText.setText("语速 " + mTTSSetting.getmSpeed() + "：");
+        speedText.setText("" + mTTSSetting.getmSpeed());
         pitchText = findViewById(R.id.pitch_text);
-        pitchText.setText("语调 " + mTTSSetting.getmPitch() + "：");
+        pitchText.setText("" + mTTSSetting.getmPitch());
 
         // 朗读者
         Spinner speakerSpinner = findViewById(R.id.speaker_spinner);
@@ -248,15 +248,15 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         switch (seekBar.getId()) {
             case R.id.volume_seekbar:
-                volumeText.setText("音量 " + progress + "：");
+                volumeText.setText("" + progress);
                 break;
 
             case R.id.speed_seekbar:
-                speedText.setText("语速 " + progress + "：");
+                speedText.setText("" + progress);
                 break;
 
             case R.id.pitch_seekbar:
-                pitchText.setText("语调 " + progress + "：");
+                pitchText.setText("" + progress);
                 break;
 
             case R.id.threshold_seekbar:
