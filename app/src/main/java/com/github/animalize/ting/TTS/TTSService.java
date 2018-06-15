@@ -38,7 +38,6 @@ public abstract class TTSService
     public static final int PLAYING = 3;
     public static final int PAUSING = 4;
     public static final int PAGE_SIZE = 10000;
-    public static final String EVENT_AID = "aid";
     private static String SPEECH_EVENT_INTENT = "TTSEvent";
     private static Intent mEventIntent = new Intent(SPEECH_EVENT_INTENT);
     private static String SPEECH_START_INTENT = "SpeechStart";
@@ -550,8 +549,6 @@ public abstract class TTSService
             mArticle = article;
             if (mArticle == null) {
                 mJus = null;
-
-                mEventIntent.putExtra(EVENT_AID, "");
                 setEvent(EMPTY);
                 return false;
             }
@@ -562,13 +559,9 @@ public abstract class TTSService
                 mArticle = null;
                 mJus = null;
 
-                mEventIntent.putExtra(EVENT_AID, "");
                 setEvent(EMPTY);
                 return false;
             }
-
-            // 文章aid放入事件intent
-            mEventIntent.putExtra(EVENT_AID, mArticle.getAid());
 
             // 开始播放
             mPageManager.initArticle();
