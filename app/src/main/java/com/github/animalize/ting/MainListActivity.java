@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.github.animalize.ting.TTS.TTSService.PLAYING;
+
 public class MainListActivity
         extends AppCompatActivity
         implements View.OnClickListener, ThreadHost {
@@ -170,7 +172,7 @@ public class MainListActivity
                     }
 
                     int state = mBinder.getState();
-                    if (state == TTSService.PLAYING || state == TTSService.PAUSING) {
+                    if (state == PLAYING || state == TTSService.PAUSING) {
                         AlertDialog.Builder d = new AlertDialog.Builder(this);
                         d.setTitle("确认退出");
                         d.setMessage("此时退出将中止播放。\n（可以按Home键切换到后台运行）");
@@ -359,10 +361,12 @@ public class MainListActivity
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String aid = intent.getStringExtra(TTSService.EVENT_AID);
-            if (aid != null && !aid.equals(currentAid)) {
-                currentAid = aid;
-                listAdapter.playingColorByAid(aid);
+            if (mBinder.getState() == PLAYING) {
+                String aid = intent.getStringExtra(TTSService.EVENT_AID);
+                if (aid != null && !aid.equals(currentAid)) {
+                    currentAid = aid;
+                    listAdapter.playingColorByAid(aid);
+                }
             }
         }
     }
