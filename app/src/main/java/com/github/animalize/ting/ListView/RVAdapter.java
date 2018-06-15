@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.animalize.ting.Data.Item;
+import com.github.animalize.ting.Data.MyColors;
 import com.github.animalize.ting.R;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 public abstract class RVAdapter
         extends RecyclerView.Adapter<MyHolder> {
     private List<Item> mList;
+    private String currenAid;
 
     public abstract void onPalyItemClick(String aid);
 
@@ -50,6 +52,17 @@ public abstract class RVAdapter
         }
     }
 
+    public void playingColorByAid(String aid) {
+        String temp = currenAid;
+        currenAid = aid;
+
+        if (temp != null) {
+            refreshItemByAid(temp);
+        }
+
+        refreshItemByAid(currenAid);
+    }
+
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater
@@ -79,6 +92,12 @@ public abstract class RVAdapter
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
         Item item = mList.get(position);
+
+        if (!item.getAid().equals(currenAid)) {
+            holder.root.setCardBackgroundColor(MyColors.cardStop);
+        } else {
+            holder.root.setCardBackgroundColor(MyColors.cardPlaying);
+        }
 
         holder.setAid(item.getAid());
 

@@ -1,5 +1,6 @@
 package com.github.animalize.ting.ListView;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import com.github.animalize.ting.R;
 
 class MyHolder extends RecyclerView.ViewHolder {
+    public CardView root;
+
     public TextView title;
 
     public Button play;
@@ -20,6 +23,8 @@ class MyHolder extends RecyclerView.ViewHolder {
 
     public MyHolder(View itemView) {
         super(itemView);
+
+        root = itemView.findViewById(R.id.root);
 
         title = itemView.findViewById(R.id.title);
 

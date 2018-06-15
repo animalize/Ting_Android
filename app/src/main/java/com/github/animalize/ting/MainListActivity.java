@@ -1,12 +1,15 @@
 package com.github.animalize.ting;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +41,9 @@ public class MainListActivity
     private boolean netOperating = false;
 
     private DataManager dataManager = DataManager.getInstance();
+
+    private LocalBroadcastManager mLBM;
+    private SpeechEventReciver mEventReciver = new SpeechEventReciver();
 
     private PlayerPanelWidget playerPanel;
     private RVAdapter listAdapter;
@@ -132,12 +138,21 @@ public class MainListActivity
         List<Item> list = dataManager.getFullList();
         listAdapter.setArrayList(list);
 
+        // 绑定服务
         Intent intent = new Intent(this, TingTTSService.class);
         bindService(intent, mServerConn, BIND_AUTO_CREATE);
+
+        // 接收器
+        mLBM = LocalBroadcastManager.getInstance(this);
+        mLBM.registerReceiver(
+                mEventReciver,
+                TTSService.getSpeechEventIntentFilter());
     }
 
     @Override
     protected void onDestroy() {
+        mLBM.unregisterReceiver(mEventReciver);
+
         setNotAlive();
         unbindService(mServerConn);
 
@@ -336,6 +351,19 @@ public class MainListActivity
             delAllButton.setEnabled(true);
 
             netOperating = false;
+        }
+    }
+
+    private class SpeechEventReciver extends BroadcastReceiver {
+        private String currentAid = null;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String aid = intent.getStringExtra(TTSService.EVENT_AID);
+            if (aid != null && !aid.equals(currentAid)) {
+                currentAid = aid;
+                listAdapter.playingColorByAid(aid);
+            }
         }
     }
 
