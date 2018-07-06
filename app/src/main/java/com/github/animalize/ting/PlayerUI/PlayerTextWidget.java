@@ -80,7 +80,7 @@ public class PlayerTextWidget
             }
         }
 
-        if (ju.end >= spannable.length()) {
+        if (ju.end > spannable.length()) {
             return;
         }
 
