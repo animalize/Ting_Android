@@ -80,6 +80,10 @@ public class PlayerTextWidget
             }
         }
 
+        if (ju.end >= spannable.length()) {
+            return;
+        }
+
         // 新
         spannable.setSpan(
                 new ForegroundColorSpan(Color.BLUE),
