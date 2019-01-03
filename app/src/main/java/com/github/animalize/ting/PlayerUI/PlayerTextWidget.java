@@ -9,7 +9,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.animalize.ting.R;
@@ -26,6 +26,7 @@ import com.github.animalize.ting.TTS.TTSService;
 public class PlayerTextWidget
         extends FrameLayout
         implements ViewTreeObserver.OnGlobalLayoutListener, View.OnClickListener {
+    private ScrollView mScroller;
     private TextView mTextView;
     private CheckBox mKeepScrollCheckBox;
     private boolean mKeepScroll = true;
@@ -44,11 +45,12 @@ public class PlayerTextWidget
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.view_player_text, this);
 
+        mScroller = findViewById(R.id.scroller);
+
         mKeepScrollCheckBox = findViewById(R.id.keep_scroll);
         mKeepScrollCheckBox.setOnClickListener(this);
 
         mTextView = findViewById(R.id.text_view);
-        mTextView.setMovementMethod(new ScrollingMovementMethod());
 
         ViewTreeObserver vto = mTextView.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(this);
@@ -101,9 +103,9 @@ public class PlayerTextWidget
         if (mKeepScroll && layout != null && ju != null) {
             final int line = layout.getLineForOffset(ju.begin);
             int y = (line + 2) * mTextView.getLineHeight()
-                    - mTextView.getHeight() / 2;
+                    - mScroller.getHeight() / 2;
 
-            mTextView.scrollTo(0, y >= 0 ? y : 0);
+            mScroller.scrollTo(0, y >= 0 ? y : 0);
         }
     }
 
