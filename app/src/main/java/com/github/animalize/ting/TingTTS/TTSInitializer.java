@@ -69,24 +69,42 @@ public class TTSInitializer {
         String fn;
 
         /*
-        m15 离线男声
-        f7 离线女声
-        yyjw 度逍遥
-        as 度丫丫
+            "度小宇(标准男声)", "度小美(标准女声)",
+            "度逍遥(情感男声)", "度丫丫(情感儿童声)",
+
+            "度博文(*情感男声)", "度小童(*情感儿童声)",
+            "度小萌(*情感女声)", "度米朵(*情感儿童声)",
+            "度小娇(*情感女声)"
+
+            as 度丫丫
+            f7 离线女声
+            m15 离线男声
+            yyjw 度逍遥
         */
         switch (idx) {
-            case 0: // 普通女声
-                fn = MODELS[1];
-                break;
-            case 1: // 普通男声
-            case 2: // 特别男声
+            case 0:
                 fn = MODELS[2];
                 break;
-            case 3: // 情感男声<度逍遥>
+            case 1:
+                fn = MODELS[1];
+                break;
+            case 2:
                 fn = MODELS[3];
                 break;
-            case 4: // 情感儿童声<度丫丫>
+            case 3:
                 fn = MODELS[0];
+                break;
+
+            case 4:
+                fn = MODELS[2];
+                break;
+            case 5:
+            case 7:
+                fn = MODELS[0];
+                break;
+            case 6:
+            case 8:
+                fn = MODELS[1];
                 break;
             default:
                 fn = MODELS[1];

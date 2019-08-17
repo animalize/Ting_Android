@@ -35,26 +35,30 @@ public abstract class Setting {
     private static final String TAG_FENJU = "fenju";
     private static final String TAG_MODELFILEVER = "model_file_ver";
     private static final String[] SPEAKER_NAMES = {
-            "普通女声", "普通男声", "特别男声", "情感男声", "情感儿童声"};
+            "度小宇(标准男声)", "度小美(标准女声)",
+            "度逍遥(情感男声)", "度丫丫(情感儿童声)",
+            "度博文(*情感男声)", "度小童(*情感儿童声)",
+            "度小萌(*情感女声)", "度米朵(*情感儿童声)",
+            "度小娇(*情感女声)"};
+    private static final int[] SPEAKER_VALUES = {
+            1, 0,
+            3, 4,
+            106, 110,
+            111, 103,
+            5};
     private static String[] MIXMODE_NAMES = {
             "A：wifi在线，非wifi或6秒超时离线",
             "B：wifi,3G,4G在线，其它或6秒超时离线",
             "同A，1.2秒超时离线",
             "同B，1.2秒超时离线"
     };
-    // 音量，范围[0-9]
+    // 音量，范围[0-15]
     private int mVolume = 5;
-    // 语速，范围[0-9]
+    // 语速，范围[0-15]
     private int mSpeed = 5;
-    // 语调，范围[0-9]
+    // 语调，范围[0-15]
     private int mPitch = 5;
-    /*
-    * 0 (普通女声)
-    * 1 (普通男声)
-    * 2 (特别男声)
-    * 3 (情感男声<度逍遥>)
-    * 4 (情感儿童声<度丫丫>)
-    * */
+    /* SPEAKER_NAMES的索引 */
     private int mSpeaker = 0;
     /*
     * MIX_MODE_DEFAULT
@@ -163,8 +167,8 @@ public abstract class Setting {
     public void setmSpeed(int mSpeed) {
         if (mSpeed < 0) {
             this.mSpeed = 0;
-        } else if (mSpeed > 9) {
-            this.mSpeed = 9;
+        } else if (mSpeed > 15) {
+            this.mSpeed = 15;
         } else {
             this.mSpeed = mSpeed;
         }
@@ -177,8 +181,8 @@ public abstract class Setting {
     public void setmPitch(int mPitch) {
         if (mPitch < 0) {
             this.mPitch = 0;
-        } else if (mPitch > 9) {
-            this.mPitch = 9;
+        } else if (mPitch > 15) {
+            this.mPitch = 15;
         } else {
             this.mPitch = mPitch;
         }
@@ -189,10 +193,18 @@ public abstract class Setting {
     }
 
     public void setmSpeaker(int mSpeaker) {
-        if (mSpeaker < 0 || mSpeaker > 4) {
-            this.mSpeaker = 0;
-        } else {
+        if (mSpeaker >= 0 && mSpeaker < SPEAKER_VALUES.length) {
             this.mSpeaker = mSpeaker;
+        } else {
+            this.mSpeaker = 0;
+        }
+    }
+
+    public int getSpeakerValue() {
+        if (mSpeaker >= 0 && mSpeaker < SPEAKER_VALUES.length) {
+            return SPEAKER_VALUES[mSpeaker];
+        } else {
+            return SPEAKER_VALUES[0];
         }
     }
 
@@ -244,7 +256,7 @@ public abstract class Setting {
 
         ss.setParam(
                 SpeechSynthesizer.PARAM_SPEAKER,
-                "" + getmSpeaker());
+                "" + getSpeakerValue());
 
         // Mix的模式
         String mixMode;
