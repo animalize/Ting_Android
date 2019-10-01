@@ -1,6 +1,6 @@
 package com.github.animalize.ting.Message;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Data.TingConfig;

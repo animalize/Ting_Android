@@ -1,9 +1,10 @@
 package com.github.animalize.ting.ListView;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Data.MyColors;

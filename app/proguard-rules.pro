@@ -24,6 +24,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keep public class * implements androidx.versionedparcelable.VersionedParcelable
+
 # okhttp3
 -dontwarn okhttp3.**
 -dontwarn okio.**

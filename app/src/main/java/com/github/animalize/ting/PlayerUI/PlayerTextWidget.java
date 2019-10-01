@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -18,6 +17,8 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.github.animalize.ting.R;
 import com.github.animalize.ting.TTS.TTSService;
@@ -68,7 +69,7 @@ public class PlayerTextWidget
         doSetSelect = false;
 
         // 移除
-        Object spansToRemove[] = spannable.getSpans(
+        Object[] spansToRemove = spannable.getSpans(
                 0, spannable.length(),
                 Object.class);
         for (Object span : spansToRemove) {

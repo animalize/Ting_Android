@@ -1,7 +1,7 @@
 package com.github.animalize.ting.Database;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.github.animalize.ting.Data.Item;
 import com.github.animalize.ting.Data.TingConfig;
@@ -80,7 +80,7 @@ public class DataManager {
             // 过滤分类
             String cate = item.getCate();
             if (cate.contains("_")) {
-                String parts[] = cate.split("_", 2);
+                String[] parts = cate.split("_", 2);
                 if (!filter.contains(parts[0])) {
                     continue;
                 }
