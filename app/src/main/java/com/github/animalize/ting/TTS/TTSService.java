@@ -88,7 +88,7 @@ public abstract class TTSService
     public static Pattern getFenjuRegex() {
         if (page_regex == null) {
             page_regex = Pattern.compile(
-                    "^.*[\\n，。！？：；、”…,!?]",
+                    "^.*[\\n，。！？：；、”…,!? ]",
                     Pattern.DOTALL);
         }
         return page_regex;
