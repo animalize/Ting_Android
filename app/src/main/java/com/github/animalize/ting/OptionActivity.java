@@ -3,6 +3,7 @@ package com.github.animalize.ting;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
@@ -183,10 +184,25 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
 
         // 版本
         verInfoText = findViewById(R.id.ver_info);
-        String versionName = "程序版本：" + BuildConfig.VERSION_NAME + "\n";
         Date buildDate = new Date(BuildConfig.TIMESTAMP);
-        DateFormat df = new SimpleDateFormat("编译于：yyyy-MM-dd E HH:mm", Locale.getDefault());
-        verInfoText.setText(versionName + df.format(buildDate));
+        DateFormat df = new SimpleDateFormat("编译于：yyyy-MM-dd E HH:mm\n", Locale.getDefault());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("程序版本：" + BuildConfig.VERSION_NAME + "\n");
+        sb.append(df.format(buildDate));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            sb.append("系统可用ABI：");
+            for (int i = 0; i < Build.SUPPORTED_ABIS.length; i++) {
+                sb.append(Build.SUPPORTED_ABIS[i]);
+                if (i < Build.SUPPORTED_ABIS.length - 1) {
+                    sb.append(", ");
+                }
+            }
+        } else {
+            sb.append("系统ABI：" + Build.CPU_ABI);
+        }
+        verInfoText.setText(sb);
 
         TextView tv = findViewById(R.id.html_ver);
         Spanned span = getFromHtml(getString(R.string.about));
