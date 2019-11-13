@@ -269,7 +269,7 @@ public abstract class TTSService
     }
 
     @Override
-    public void onSynthesizeDataArrived(String s, byte[] bytes, int i) {
+    public void onSynthesizeDataArrived(String s, byte[] bytes, int i, int i1) {
     }
 
     @Override
