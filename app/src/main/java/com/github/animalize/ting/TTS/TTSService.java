@@ -149,6 +149,14 @@ public abstract class TTSService
         Ju.setSize(s.getmFenJu());
 
         if (mSpeechSynthesizer != null) {
+            // 保存TTS版本
+            String ttsVer = mSpeechSynthesizer.libVersion();
+            if (!ttsVer.equals(s.getmTTSVersion())) {
+                s.setmTTSVersion(ttsVer);
+                s.saveSetting(this);
+            }
+
+            // 设置TTS对象的参数
             s.setSettingToSpeechSynthesizer(mSpeechSynthesizer, this);
         }
     }
@@ -182,6 +190,7 @@ public abstract class TTSService
         int nowFileVer = initTTS(setting.getmModelFileVer());
         if (nowFileVer != setting.getmModelFileVer()) {
             setting.setmModelFileVer(nowFileVer);
+            setting.setmTTSVersion("");
             setting.saveSetting(this);
         }
 

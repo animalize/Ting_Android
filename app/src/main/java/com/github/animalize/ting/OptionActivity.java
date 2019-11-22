@@ -203,7 +203,7 @@ public class OptionActivity extends AppCompatActivity implements View.OnClickLis
             sb.append("系统ABI：" + Build.CPU_ABI);
         }
 
-        sb.append("\n百度语音合成引擎版本：2.5.5");
+        sb.append("\n百度语音合成引擎版本：" + mTTSSetting.getmTTSVersion());
         verInfoText.setText(sb);
 
         TextView tv = findViewById(R.id.html_ver);

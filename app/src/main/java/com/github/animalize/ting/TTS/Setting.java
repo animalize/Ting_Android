@@ -23,6 +23,7 @@ public abstract class Setting {
     private static final int THRESHOLD_DEFAULT = 2;
     private static final int WINDOW_DEFAULT = 6;
     private static final int FENJU_DEFAULT = 80;
+    private static final String TTS_VER = "";
     // 保存部分
     private static final String FILE_NAME = "tts_config";
     private static final String TAG_VOLUME = "volume";
@@ -34,6 +35,7 @@ public abstract class Setting {
     private static final String TAG_WINDOW = "window";
     private static final String TAG_FENJU = "fenju";
     private static final String TAG_MODELFILEVER = "model_file_ver";
+    private static final String TAG_TTS_VER = "tts_ver";
     private static final String[] SPEAKER_NAMES = {
             "度小宇(标准男声)", "度小美(标准女声)",
             "度逍遥(情感男声)", "度丫丫(情感儿童声)",
@@ -61,15 +63,15 @@ public abstract class Setting {
     /* SPEAKER_NAMES的索引 */
     private int mSpeaker = 0;
     /*
-    * MIX_MODE_DEFAULT
-    * (mix模式下，wifi使用在线合成，非wifi使用离线合成)
-    * MIX_MODE_HIGH_SPEED_NETWORK
-    * (mix模式下，wifi,4G,3G使用在线合成，其他使用离线合成)
-    * MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
-    * (mix模式下，仅wifi使用在线合成,返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于仅WIFI网络环境较差的情况)
-    * MIX_MODE_HIGH_SPEED_SYNTHESIZE
-    * (mix模式下，在线返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于网络环境较差的情况)
- * */
+     * MIX_MODE_DEFAULT
+     * (mix模式下，wifi使用在线合成，非wifi使用离线合成)
+     * MIX_MODE_HIGH_SPEED_NETWORK
+     * (mix模式下，wifi,4G,3G使用在线合成，其他使用离线合成)
+     * MIX_MODE_HIGH_SPEED_SYNTHESIZE_WIFI
+     * (mix模式下，仅wifi使用在线合成,返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于仅WIFI网络环境较差的情况)
+     * MIX_MODE_HIGH_SPEED_SYNTHESIZE
+     * (mix模式下，在线返回速度如果慢（超时，一般为1.2秒）直接切换离线，适用于网络环境较差的情况)
+     * */
     private int mMixMode = MIX_MODE_DEFAULT;
 
     // 服务的参数
@@ -79,6 +81,9 @@ public abstract class Setting {
 
     // 模型文件
     private int mModelFileVer = 0;
+
+    // TTS版本
+    private String mTTSVersion = TTS_VER;
 
     public Setting(Context context) {
         loadSetting(context);
@@ -220,6 +225,14 @@ public abstract class Setting {
         }
     }
 
+    public String getmTTSVersion() {
+        return mTTSVersion;
+    }
+
+    public void setmTTSVersion(String mTTSVersion) {
+        this.mTTSVersion = mTTSVersion;
+    }
+
     SpeechSynthesizer initTTS(Context context,
                               SpeechSynthesizerListener speechSynthesizerListener) {
 
@@ -323,6 +336,10 @@ public abstract class Setting {
         // 模型文件版本
         temp = sp.getInt(TAG_MODELFILEVER, getmModelFileVer());
         setmModelFileVer(temp);
+
+        // tts版本
+        String ttsVer = sp.getString(TAG_TTS_VER, getmTTSVersion());
+        setmTTSVersion(ttsVer);
     }
 
     public void saveSetting(Context context) {
@@ -344,6 +361,9 @@ public abstract class Setting {
 
         // 模型文件版本
         editor.putInt(TAG_MODELFILEVER, getmModelFileVer());
+
+        // TTS版本
+        editor.putString(TAG_TTS_VER, getmTTSVersion());
 
         editor.apply();
     }
