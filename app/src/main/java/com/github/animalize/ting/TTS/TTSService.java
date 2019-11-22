@@ -211,7 +211,11 @@ public abstract class TTSService
     @Override
     public void onSpeechStart(String s) {
         // 进度
-        mNowSpeechIndex = Integer.parseInt(s);
+        try {
+            mNowSpeechIndex = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return;
+        }
 
         mLBM.sendBroadcast(mStartIntent);
 
