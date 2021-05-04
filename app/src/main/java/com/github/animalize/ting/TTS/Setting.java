@@ -14,7 +14,7 @@ public abstract class Setting {
     public static final int WINDOW_MIN = 1;
     public static final int WINDOW_MAX = 10;
     public static final int FENJU_MIN = 32;
-    public static final int FENJU_MAX = 500;
+    public static final int FENJU_MAX = 60;
     // 参数部分
     private static final int MIX_MODE_DEFAULT = 0;
     private static final int MIX_MODE_HIGH_SPEED_NETWORK = 1;
@@ -22,7 +22,7 @@ public abstract class Setting {
     private static final int MIX_MODE_HIGH_SPEED_SYNTHESIZE = 3;
     private static final int THRESHOLD_DEFAULT = 2;
     private static final int WINDOW_DEFAULT = 6;
-    private static final int FENJU_DEFAULT = 80;
+    private static final int FENJU_DEFAULT = 60;
     private static final String TTS_VER = "";
     // 保存部分
     private static final String FILE_NAME = "tts_config";
@@ -34,16 +34,15 @@ public abstract class Setting {
     private static final String TAG_THRESHOLD = "threshold";
     private static final String TAG_WINDOW = "window";
     private static final String TAG_FENJU = "fenju";
-    private static final String TAG_MODELFILEVER = "model_file_ver";
     private static final String TAG_TTS_VER = "tts_ver";
     private static final String[] SPEAKER_NAMES = {
-            "度小宇(标准男声)", "度小美(标准女声)",
+            "普通女声", "普通男声", "特别男声",
             "度逍遥(情感男声)", "度丫丫(情感儿童声)",
-            "度博文(*情感男声)", "度小童(*情感儿童声)",
-            "度小萌(*情感女声)", "度米朵(*情感儿童声)",
-            "度小娇(*情感女声)"};
+            "度博文(情感男声)", "度小童(情感儿童声)",
+            "度小萌(情感女声)", "度米朵(情感儿童声)",
+            "度小娇(情感女声)"};
     private static final int[] SPEAKER_VALUES = {
-            1, 0,
+            0, 1, 2,
             3, 4,
             106, 110,
             111, 103,
@@ -79,9 +78,6 @@ public abstract class Setting {
     private int mWindow = WINDOW_DEFAULT;
     private int mFenJu = FENJU_DEFAULT;
 
-    // 模型文件
-    private int mModelFileVer = 0;
-
     // TTS版本
     private String mTTSVersion = TTS_VER;
 
@@ -95,14 +91,6 @@ public abstract class Setting {
 
     public static String[] getMixModeNameList() {
         return MIXMODE_NAMES;
-    }
-
-    int getmModelFileVer() {
-        return mModelFileVer;
-    }
-
-    void setmModelFileVer(int mModelFileVer) {
-        this.mModelFileVer = mModelFileVer;
     }
 
     public int getmFenJu() {
@@ -140,10 +128,6 @@ public abstract class Setting {
             this.mWindow = WINDOW_DEFAULT;
         }
     }
-
-    public abstract String getTextFileName();
-
-    public abstract String getModelFileName(int idx);
 
     public abstract String getApiID();
 
@@ -246,7 +230,13 @@ public abstract class Setting {
         ss.setApiKey(getApiKey(), getSecretKey());
 
         //AuthInfo authInfo = speechSynthesizer.auth(TtsMode.MIX);
-        ss.initTts(TtsMode.MIX);
+        ss.initTts(TtsMode.ONLINE);
+
+//        // 不使用压缩，彻底不使用so文件
+//        ss.setParam(SpeechSynthesizer.PARAM_AUDIO_ENCODE,
+//                    SpeechSynthesizer.AUDIO_ENCODE_PCM);
+//        ss.setParam(SpeechSynthesizer.PARAM_AUDIO_RATE,
+//                    SpeechSynthesizer.AUDIO_BITRATE_PCM);
 
         return ss;
     }
@@ -296,8 +286,8 @@ public abstract class Setting {
         ss.setParam(SpeechSynthesizer.PARAM_MIX_MODE, mixMode);
 
         // 离线模型
-        final int temp = getmSpeaker();
-        ss.loadModel(getModelFileName(temp), getTextFileName());
+//        final int temp = getmSpeaker();
+//        ss.loadModel(getModelFileName(temp), getTextFileName());
     }
 
     private void loadSetting(Context context) {
@@ -333,10 +323,6 @@ public abstract class Setting {
         temp = sp.getInt(TAG_FENJU, getmFenJu());
         setmFenJu(temp);
 
-        // 模型文件版本
-        temp = sp.getInt(TAG_MODELFILEVER, getmModelFileVer());
-        setmModelFileVer(temp);
-
         // tts版本
         String ttsVer = sp.getString(TAG_TTS_VER, getmTTSVersion());
         setmTTSVersion(ttsVer);
@@ -358,9 +344,6 @@ public abstract class Setting {
         editor.putInt(TAG_THRESHOLD, getmThreshold());
         editor.putInt(TAG_WINDOW, getmWindow());
         editor.putInt(TAG_FENJU, getmFenJu());
-
-        // 模型文件版本
-        editor.putInt(TAG_MODELFILEVER, getmModelFileVer());
 
         // TTS版本
         editor.putString(TAG_TTS_VER, getmTTSVersion());

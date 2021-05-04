@@ -20,11 +20,6 @@ public class TingTTSService extends TTSService {
     }
 
     @Override
-    public int initTTS(int currentVer) {
-        return TTSInitializer.initialEnv(this, currentVer);
-    }
-
-    @Override
     public void doStartForeground() {
         Notification notification;
 

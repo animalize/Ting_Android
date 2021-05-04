@@ -8,6 +8,7 @@ import android.media.SoundPool;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -135,8 +136,6 @@ public abstract class TTSService
         return -1;
     }
 
-    public abstract int initTTS(int currentVer);
-
     public abstract void doStartForeground();
 
     public abstract Setting getSetting();
@@ -185,14 +184,6 @@ public abstract class TTSService
         }
 
         Setting setting = getSetting();
-
-        // 复制引擎文件
-        int nowFileVer = initTTS(setting.getmModelFileVer());
-        if (nowFileVer != setting.getmModelFileVer()) {
-            setting.setmModelFileVer(nowFileVer);
-            setting.setmTTSVersion("");
-            setting.saveSetting(this);
-        }
 
         // 初始化引擎
         mSpeechSynthesizer = setting.initTTS(this, this);
@@ -274,6 +265,7 @@ public abstract class TTSService
 
     @Override
     public void onError(String s, SpeechError speechError) {
+        //Log.d("onError", s + speechError.description);
         onSpeechFinish(s);
     }
 
@@ -344,7 +336,7 @@ public abstract class TTSService
     }
 
     public static class Ju {
-        private static int SIZE = 80; //256;
+        private static int SIZE = 50; //256;
         public int begin;
         public int end;
 
@@ -550,6 +542,7 @@ public abstract class TTSService
     public class ArticleTtsBinder extends Binder {
 
         public boolean playArticle(IArticle article) {
+            Log.i("ArticleTtsBinder", "playArticle");
             if (mArticle != null) {
                 if (!mArticle.getAid().equals(article.getAid())) {
                     stop();

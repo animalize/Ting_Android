@@ -5,10 +5,10 @@ Android的文本朗读器。
 1. 有分页、进度记忆功能，长短篇皆宜。
 2. 使用百度语音合成服务，可在线、离线使用，提供较全面的控制选项。
 
-[点击这里](https://github.com/animalize/Ting_Android/releases)下载编译好的安卓安装包，需要Android 4.0+。  
+[点击这里](https://github.com/animalize/Ting_Android/releases)下载编译好的安卓安装包，需要Android 4.0+。
 （安装后首次运行会自动退出，重新运行即可。）
 
-🅰 不要在开车、马路行走时听，会分散注意力，很危险。  
+🅰 不要在开车、马路行走时听，会分散注意力，很危险。
 🅱 语音合成时会把文本发往百度服务器，因此有泄漏隐私、机密的风险。
 
 ### 1.截图
@@ -29,7 +29,7 @@ Android的文本朗读器。
 
 在添加文章、安卓端进行“刷新列表”操作时，需要开启电脑端程序。
 
-配置电脑端的方法：  
+配置电脑端的方法：
 https://github.com/animalize/ting_py/releases/
 
 <img width="460" src="https://raw.githubusercontent.com/animalize/pics/master/Ting/pc.PNG" />
@@ -45,25 +45,25 @@ https://github.com/animalize/ting_py/releases/
 下载[ting_py项目](https://github.com/animalize/ting_py)，包括了服务器端和PC端。
 
 #### 服务器端
-把server目录放到24小时运行的服务器上，运行`/server/web_server.py`，需要Python 3.x和安装`tornado`模块。  
+把server目录放到24小时运行的服务器上，运行`/server/web_server.py`，需要Python 3.x和安装`tornado`模块。
 （如果没有服务器，也可以在普通电脑上运行，程序随用随开。）
 
 架设好服务器后，在Ting的设置界面填入服务器地址。
 
-#### PC端 
+#### PC端
 pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`requests`模块。
 
-把`/pc/vars.py`文件里的`host`变量改成服务器地址。  
+把`/pc/vars.py`文件里的`host`变量改成服务器地址。
 如果想使用[tz2txt](https://github.com/animalize/tz2txt)，把`/pc/vars.py`文件里的`tz2txt_path`变量改成`tz2txt.py`文件的路径。
 
 双击`pc_side.py`启动PC端程序。
 
 ### 4.apk文件编译指南
 
-1.  注册[百度语音](http://yuyin.baidu.com)帐户。  
+1.  注册[百度语音](http://yuyin.baidu.com)帐户。
 创建一个语音合成项目（包名填入`com.github.animalize.ting`），得到一个分配的Key。
 
-2.  创建`/app/src/main/res/values/secrets.xml`文件(内容如下)，把一上步分配的Key填入。  
+2.  创建`/app/src/main/res/values/secrets.xml`文件(内容如下)，把一上步分配的Key填入。
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
@@ -73,18 +73,9 @@ pc目录为PC端程序，给电脑安装Python 3.x并安装`pyperclip`、`reques
 </resources>
 ```
 
-3.  创建`/app/src/main/libs/`目录，把SDK的jar文件放入其中。  
-（这里可以改一下文件名，比如改成`com.baidu.tts_2.3.1.jar`）
+3.  创建`/app/src/main/libs/`目录，把SDK的jar文件放入其中。
 
-4.  创建`/app/src/main/assets/`目录，把SDK的以下5个数据文件放入其中，不要改文件名：  
-`bd_etts_common_speech_as_mand_eng_high_am_v3.0.0_20170516.dat`  
-`bd_etts_common_speech_f7_mand_eng_high_am-mix_v3.0.0_20170512.dat`  
-`bd_etts_common_speech_m15_mand_eng_high_am-mix_v3.0.0_20170505.dat`  
-`bd_etts_common_speech_yyjw_mand_eng_high_am-mix_v3.0.0_20170512.dat`  
-`bd_etts_text.dat`  
-（如果发现文件名和这里的有任何不一致，则需要在`TTSInitializer.java`文件里修改程序。）
-
-5.  创建`/app/jni`目录，把SDK的二进制程序目录放入其中：  
-`armeabi-v7a`  
-`arm64-v8a`  
+4.  创建`/app/jni`目录，把SDK的二进制程序目录放入其中：
+`armeabi-v7a`
+`arm64-v8a`
 （通常放这两个就可以了，如果需要在电脑上调试可以再放一个`x86`）

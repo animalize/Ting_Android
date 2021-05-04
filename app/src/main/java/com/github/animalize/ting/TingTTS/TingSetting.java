@@ -23,16 +23,6 @@ public class TingSetting extends Setting {
     }
 
     @Override
-    public String getTextFileName() {
-        return TTSInitializer.getTextFileName();
-    }
-
-    @Override
-    public String getModelFileName(int idx) {
-        return TTSInitializer.getSpeechModelName(idx);
-    }
-
-    @Override
     public String getApiID() {
         return MyApplication.getContext().getString(R.string.APP_ID);
     }

@@ -147,7 +147,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="朗读者(加*为精品音库)：" />
+                            android:text="朗读者：" />
 
                         <Spinner
                             android:id="@+id/speaker_spinner"
@@ -264,7 +264,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="每句的最大字符数，加载新文章或翻页时生效。默认值80。" />
+                        android:text="每句的最大字符数，加载新文章或翻页时生效。默认值60。" />
 
                     <TextView
                         android:id="@+id/page_chars_textview"
